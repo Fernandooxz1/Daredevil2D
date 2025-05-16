@@ -2,10 +2,10 @@ class_name daredevil
 extends CharacterBody2D
 
 @export var gravity=1200
-@export var jumpspeed=400
-@export var velocidad=400
-@export var aceleracion=1500
-@export var friction=3500
+@export var jumpspeed=600
+@export var velocidad=200
+@export var aceleracion=1000
+@export var friction=4500
 var facing := 1
 
 
@@ -36,16 +36,15 @@ func _physics_process(delta):
 		if direction != 0 :
 			if Input.is_action_pressed("run"):
 				velocity.x = move_toward(velocity.x,direction * 2 * velocidad,aceleracion * delta)
-				#$RedSuite.play("run")
-				$RedSuite.play("walk")
+				$RedSuite.play("run")
 				if direction == 1 :
 					facing= 1
 				elif direction == -1 :
 					facing= -1
 				$RedSuite.position.x = 0
 				$RedSuite.position.y = 0
-				$RedSuite.scale.x = facing * 1.6
-				$RedSuite.scale.y = 1.5
+				$RedSuite.scale.x = facing * 2.4
+				$RedSuite.scale.y = 2.4
 			else:
 				velocity.x = move_toward(velocity.x,direction * velocidad,aceleracion * delta)
 				$RedSuite.play("walk")

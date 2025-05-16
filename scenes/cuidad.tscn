@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://c054f5ea76f47"]
+[gd_scene load_steps=4 format=3 uid="uid://c054f5ea76f47"]
 
 [ext_resource type="Texture2D" uid="uid://dftsxymkvaxlo" path="res://assets/fondos/Background DEF.jpg" id="1_df84d"]
 
@@ -6,12 +6,10 @@
 size = Vector2(1173, 60)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5wp4n"]
-size = Vector2(69, 729)
+size = Vector2(71.5, 703)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_el368"]
-size = Vector2(34, 754)
-
-[node name="Cuidad" type="Node2D"]
+[node name="Cuidad_inicio" type="Node2D"]
+position = Vector2(3, -23)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
@@ -26,9 +24,5 @@ position = Vector2(580, 637)
 shape = SubResource("RectangleShape2D_df84d")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(-27, 272.5)
+position = Vector2(435, 339)
 shape = SubResource("RectangleShape2D_5wp4n")
-
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(1164, 284)
-shape = SubResource("RectangleShape2D_el368")
