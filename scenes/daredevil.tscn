@@ -1,10 +1,16 @@
-[gd_scene load_steps=14 format=3 uid="uid://bbelo0p6gc24u"]
+[gd_scene load_steps=17 format=3 uid="uid://bbelo0p6gc24u"]
 
 [ext_resource type="Texture2D" uid="uid://copbe11j5qcse" path="res://assets/sprites/daredevil golpeando.png" id="1_008a6"]
 [ext_resource type="Texture2D" uid="uid://cbal1rsdrk3d1" path="res://assets/sprites/idle png.png" id="2_ef4hk"]
 [ext_resource type="Texture2D" uid="uid://c3qx3arthlgcf" path="res://assets/sprites/Run.png.png" id="3_84hc6"]
 [ext_resource type="Texture2D" uid="uid://ckh21pfytftat" path="res://assets/sprites/DDwalk.png" id="3_ef4hk"]
+[ext_resource type="Texture2D" uid="uid://dwuwwurc060lq" path="res://assets/sprites/ChatGPT Image 16 may 2025, 06_44_35 p.m..png" id="3_p8c0w"]
 [ext_resource type="Script" uid="uid://v4ce1weaj36x" path="res://scenes/camera_Daredevil.gd" id="5_t7165"]
+[ext_resource type="PackedScene" uid="uid://j77lw8kvlgu0" path="res://scenes/hud.tscn" id="6_ega6g"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xki8k"]
+atlas = ExtResource("3_p8c0w")
+region = Rect2(0, 0, 1024, 1024)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p8c0w"]
 atlas = ExtResource("3_84hc6")
@@ -46,6 +52,14 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xki8k")
+}],
+"loop": true,
+"name": &"jump",
 "speed": 5.0
 }, {
 "frames": [{
@@ -93,8 +107,8 @@ texture_filter = 1
 texture_repeat = 1
 position = Vector2(-29, 9)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"run"
-frame_progress = 0.142142
+animation = &"jump"
+frame_progress = 0.759279
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-78.746, 16.9184)
@@ -106,3 +120,7 @@ position = Vector2(-3208.91, -93.0516)
 offset = Vector2(400, -180)
 script = ExtResource("5_t7165")
 ciudad_node_path = NodePath("..")
+
+[node name="HUD" parent="Camera2D" instance=ExtResource("6_ega6g")]
+position = Vector2(-1750, -4300)
+scale = Vector2(9.11734, 7.91607)

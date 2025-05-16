@@ -15,7 +15,7 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y = velocity.y + gravity * delta
 		if velocity.y < 0:
-			#$RedSuite.play("jump")
+			$RedSuite.play("jump")
 			$RedSuite.position.x = 0
 			$RedSuite.position.y = 1
 			$RedSuite.scale.x = facing
@@ -64,7 +64,7 @@ func _physics_process(delta):
 				$RedSuite.play("hit")
 				$RedSuite.position.x = 0
 				$RedSuite.position.y = 0
-				$RedSuite.scale.x = 1 * facing
+				$RedSuite.scale.x = 0.9 * facing
 				$RedSuite.scale.y = 1
 				
 			else:
@@ -76,11 +76,10 @@ func _physics_process(delta):
 			
 		
 	else: 
-		#$RedSuite.play("jump")
-		$RedSuite.play("idle")
+		$RedSuite.play("jump")
 		$RedSuite.position.x = 0
 		$RedSuite.position.y = 0
-		$RedSuite.scale.x = facing * 2
-		$RedSuite.scale.y = 1 * 2
+		$RedSuite.scale.x = facing * 0.975
+		$RedSuite.scale.y = 0.975
 		
 	move_and_slide()

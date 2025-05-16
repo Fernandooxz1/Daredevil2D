@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bo1nwciqp1baf"]
+[gd_scene load_steps=8 format=3 uid="uid://bo1nwciqp1baf"]
 
 [ext_resource type="Script" uid="uid://ilvwat43jbog" path="res://scenes/level1.gd" id="1_53anu"]
 [ext_resource type="PackedScene" uid="uid://c054f5ea76f47" path="res://scenes/cuidad.tscn" id="1_wgevm"]
@@ -8,6 +8,8 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hwdor"]
 size = Vector2(65.75, 821)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_53anu"]
 
 [node name="Lvl 1" type="Node2D"]
 position = Vector2(-8, 15)
@@ -29,7 +31,7 @@ position = Vector2(2358, -3)
 position = Vector2(3528, -3)
 
 [node name="Daredevil" parent="." instance=ExtResource("2_l8iau")]
-position = Vector2(519, 517)
+position = Vector2(644, 481)
 scale = Vector2(0.0987319, 0.115056)
 script = ExtResource("3_hwdor")
 
@@ -43,3 +45,8 @@ shape = SubResource("RectangleShape2D_hwdor")
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(4681.12, 344)
 shape = SubResource("RectangleShape2D_hwdor")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(3936, 300)
+scale = Vector2(3.22182, 38.3481)
+shape = SubResource("RectangleShape2D_53anu")
