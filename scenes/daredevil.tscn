@@ -1,7 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://bbelo0p6gc24u"]
+[gd_scene load_steps=9 format=3 uid="uid://bbelo0p6gc24u"]
 
 [ext_resource type="Texture2D" uid="uid://copbe11j5qcse" path="res://assets/sprites/daredevil golpeando.png" id="1_008a6"]
 [ext_resource type="Texture2D" uid="uid://cbal1rsdrk3d1" path="res://assets/sprites/idle png.png" id="2_ef4hk"]
+[ext_resource type="Texture2D" uid="uid://ckh21pfytftat" path="res://assets/sprites/DDwalk.png" id="3_ef4hk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_84hc6"]
+atlas = ExtResource("3_ef4hk")
+region = Rect2(0, 0, 314, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t7165"]
+atlas = ExtResource("3_ef4hk")
+region = Rect2(325, 0, 325, 720)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ega6g"]
+atlas = ExtResource("3_ef4hk")
+region = Rect2(694, 0, 347, 720)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_cwo24"]
 animations = [{
@@ -20,6 +33,25 @@ animations = [{
 "loop": true,
 "name": &"idle",
 "speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_84hc6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t7165")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ega6g")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_m6s4t"]
@@ -35,9 +67,10 @@ texture_filter = 1
 texture_repeat = 1
 position = Vector2(-29, 9)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"hit"
+animation = &"walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(-78.746, 16.9184)
 scale = Vector2(74.492, 59.3084)
 shape = SubResource("CapsuleShape2D_m6s4t")

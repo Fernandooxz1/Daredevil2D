@@ -37,25 +37,26 @@ func _physics_process(delta):
 			if Input.is_action_pressed("run"):
 				velocity.x = move_toward(velocity.x,direction * 2 * velocidad,aceleracion * delta)
 				#$RedSuite.play("run")
+				$RedSuite.play("walk")
 				if direction == 1 :
 					facing= 1
 				elif direction == -1 :
 					facing= -1
 				$RedSuite.position.x = 0
 				$RedSuite.position.y = 0
-				$RedSuite.scale.x = facing
-				$RedSuite.scale.y = 1
+				$RedSuite.scale.x = facing * 1.6
+				$RedSuite.scale.y = 1.5
 			else:
 				velocity.x = move_toward(velocity.x,direction * velocidad,aceleracion * delta)
-				#$RedSuite.play("walk")
+				$RedSuite.play("walk")
 				if direction == 1 :
 					facing= 1
 				elif direction == -1 :
 					facing= -1
 				$RedSuite.position.x = 0
 				$RedSuite.position.y = 0
-				$RedSuite.scale.x = facing * 0.5
-				$RedSuite.scale.y = 1 * 0.5
+				$RedSuite.scale.x = facing * 1.6
+				$RedSuite.scale.y = 1.5
 				
 				
 		else:
@@ -74,5 +75,13 @@ func _physics_process(delta):
 				$RedSuite.scale.x = facing * 2
 				$RedSuite.scale.y = 1 * 2
 			
+		
+	else: 
+		#$RedSuite.play("jump")
+		$RedSuite.play("idle")
+		$RedSuite.position.x = 0
+		$RedSuite.position.y = 0
+		$RedSuite.scale.x = facing * 2
+		$RedSuite.scale.y = 1 * 2
 		
 	move_and_slide()
