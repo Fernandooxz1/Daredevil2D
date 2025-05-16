@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://bo1nwciqp1baf"]
+
+[ext_resource type="PackedScene" uid="uid://c054f5ea76f47" path="res://scenes/cuidad.tscn" id="1_wgevm"]
+[ext_resource type="PackedScene" uid="uid://bbelo0p6gc24u" path="res://scenes/daredevil.tscn" id="2_l8iau"]
+[ext_resource type="Script" uid="uid://opajw2qqlwhh" path="res://scenes/scriptDaredevil.gd" id="3_hwdor"]
+
+[node name="Lvl 1" type="Node2D"]
+position = Vector2(-8, 15)
+
+[node name="Cuidad" parent="." instance=ExtResource("1_wgevm")]
+
+[node name="Daredevil" parent="." instance=ExtResource("2_l8iau")]
+position = Vector2(129, 528)
+scale = Vector2(0.0987319, 0.115056)
+script = ExtResource("3_hwdor")
