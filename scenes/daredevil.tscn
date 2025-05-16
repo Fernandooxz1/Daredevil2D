@@ -1,15 +1,16 @@
-[gd_scene load_steps=17 format=3 uid="uid://bbelo0p6gc24u"]
+[gd_scene load_steps=18 format=3 uid="uid://bbelo0p6gc24u"]
 
 [ext_resource type="Texture2D" uid="uid://copbe11j5qcse" path="res://assets/sprites/daredevil golpeando.png" id="1_008a6"]
-[ext_resource type="Texture2D" uid="uid://cbal1rsdrk3d1" path="res://assets/sprites/idle png.png" id="2_ef4hk"]
-[ext_resource type="Texture2D" uid="uid://c3qx3arthlgcf" path="res://assets/sprites/Run.png.png" id="3_84hc6"]
+[ext_resource type="Texture2D" uid="uid://cbal1rsdrk3d1" path="res://assets/sprites/idle.png" id="2_ef4hk"]
+[ext_resource type="Texture2D" uid="uid://c3qx3arthlgcf" path="res://assets/sprites/Run.png" id="3_84hc6"]
 [ext_resource type="Texture2D" uid="uid://ckh21pfytftat" path="res://assets/sprites/DDwalk.png" id="3_ef4hk"]
-[ext_resource type="Texture2D" uid="uid://dwuwwurc060lq" path="res://assets/sprites/ChatGPT Image 16 may 2025, 06_44_35 p.m..png" id="3_p8c0w"]
+[ext_resource type="Texture2D" uid="uid://cm20dk2q1vfp6" path="res://assets/sprites/jump.png" id="3_p8c0w"]
+[ext_resource type="Texture2D" uid="uid://dwuwwurc060lq" path="res://assets/sprites/salto_hit.png" id="4_wqvkv"]
 [ext_resource type="Script" uid="uid://v4ce1weaj36x" path="res://scenes/camera_Daredevil.gd" id="5_t7165"]
 [ext_resource type="PackedScene" uid="uid://j77lw8kvlgu0" path="res://scenes/hud.tscn" id="6_ega6g"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xki8k"]
-atlas = ExtResource("3_p8c0w")
+atlas = ExtResource("4_wqvkv")
 region = Rect2(0, 0, 1024, 1024)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p8c0w"]
@@ -56,10 +57,18 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_xki8k")
+"texture": ExtResource("3_p8c0w")
 }],
 "loop": true,
 "name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xki8k")
+}],
+"loop": true,
+"name": &"jump_hit",
 "speed": 5.0
 }, {
 "frames": [{
@@ -99,7 +108,7 @@ radius = 3.36949
 height = 15.3717
 
 [node name="Daredevil" type="CharacterBody2D"]
-position = Vector2(167, 501)
+position = Vector2(167, 491)
 scale = Vector2(0.101592, 0.118214)
 
 [node name="RedSuite" type="AnimatedSprite2D" parent="."]
@@ -107,8 +116,7 @@ texture_filter = 1
 texture_repeat = 1
 position = Vector2(-29, 9)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"jump"
-frame_progress = 0.759279
+animation = &"jump_hit"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-78.746, 16.9184)
@@ -116,8 +124,9 @@ scale = Vector2(74.492, 59.3084)
 shape = SubResource("CapsuleShape2D_m6s4t")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(-3208.91, -93.0516)
+position = Vector2(-2638, 219.94)
 offset = Vector2(400, -180)
+zoom = Vector2(1.28, 1.28)
 script = ExtResource("5_t7165")
 ciudad_node_path = NodePath("..")
 

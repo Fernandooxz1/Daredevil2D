@@ -1,85 +1,66 @@
-class_name daredevil
+class_name Daredevil
 extends CharacterBody2D
 
-@export var gravity=1200
-@export var jumpspeed=600
-@export var velocidad=200
-@export var aceleracion=1000
-@export var friction=4500
+@export var gravity := 1200
+@export var jump_speed := 600
+@export var speed := 200
+@export var run_multiplier := 2.0
+@export var acceleration := 1000
+@export var friction := 4500
+
 var facing := 1
 
-
 func _physics_process(delta):
-	
-	#gravedad
-	if not is_on_floor():
-		velocity.y = velocity.y + gravity * delta
-		if velocity.y < 0:
-			$RedSuite.play("jump")
-			$RedSuite.position.x = 0
-			$RedSuite.position.y = 1
-			$RedSuite.scale.x = facing
-			$RedSuite.scale.y = 1
-	
-	#saltar
-	var jump_pressed = Input.is_action_just_pressed("jump") and is_on_floor()
-	if jump_pressed:
-		velocity.y = velocity.y - jumpspeed
-		
-	var atake = Input.is_action_pressed("attack")
+	var is_grounded := is_on_floor()
+	var direction := Input.get_axis("left", "right")
+	var is_running := Input.is_action_pressed("run")
+	var is_attacking := Input.is_action_pressed("attack")
+	var jump_pressed := Input.is_action_just_pressed("jump") and is_grounded
 
-	#move
-	var direction = Input.get_axis("left","right")
-	
-	
-	if is_on_floor():
-		if direction != 0 :
-			if Input.is_action_pressed("run"):
-				velocity.x = move_toward(velocity.x,direction * 2 * velocidad,aceleracion * delta)
-				$RedSuite.play("run")
-				if direction == 1 :
-					facing= 1
-				elif direction == -1 :
-					facing= -1
-				$RedSuite.position.x = 0
-				$RedSuite.position.y = 0
-				$RedSuite.scale.x = facing * 2.4
-				$RedSuite.scale.y = 2.4
-			else:
-				velocity.x = move_toward(velocity.x,direction * velocidad,aceleracion * delta)
-				$RedSuite.play("walk")
-				if direction == 1 :
-					facing= 1
-				elif direction == -1 :
-					facing= -1
-				$RedSuite.position.x = 0
-				$RedSuite.position.y = 0
-				$RedSuite.scale.x = facing * 1.6
-				$RedSuite.scale.y = 1.5
-				
-				
-		else:
-			velocity.x=move_toward(velocity.x,0,friction * delta)
-			if atake:
-				$RedSuite.play("hit")
-				$RedSuite.position.x = 0
-				$RedSuite.position.y = 0
-				$RedSuite.scale.x = 0.9 * facing
-				$RedSuite.scale.y = 1
-				
-			else:
-				$RedSuite.play("idle")
-				$RedSuite.position.x = 0
-				$RedSuite.position.y = 0
-				$RedSuite.scale.x = facing * 2
-				$RedSuite.scale.y = 1 * 2
-			
-		
-	else: 
-		$RedSuite.play("jump")
-		$RedSuite.position.x = 0
-		$RedSuite.position.y = 0
-		$RedSuite.scale.x = facing * 0.975
-		$RedSuite.scale.y = 0.975
-		
+	# Aplicar gravedad
+	if not is_grounded:
+		velocity.y += gravity * delta
+
+	# Saltar
+	if jump_pressed:
+		velocity.y = -jump_speed
+
+	# Movimiento horizontal
+	if direction != 0:
+		facing = sign(direction)
+		var target_speed = speed * (run_multiplier if is_running else 1)
+		velocity.x = move_toward(velocity.x, direction * target_speed, acceleration * delta)
+	else:
+		velocity.x = move_toward(velocity.x, 0, friction * delta)
+
+	# Animaciones
+	_update_animation(is_grounded, direction, is_running, is_attacking)
+
 	move_and_slide()
+
+func _update_animation(is_grounded: bool, direction: float, is_running: bool, is_attacking: bool) -> void:
+	var anim = "idle"
+	var scale_x = facing * 2.0
+	var scale_y = 2.0
+
+	if not is_grounded:
+		if is_attacking:
+			anim = "jump_hit"
+			scale_x = facing * 0.975
+			scale_y = 0.975
+		else:
+			anim = "jump"
+			scale_x = facing * 0.975
+			scale_y = 0.975
+	elif is_attacking and direction == 0:
+		anim = "hit"
+		scale_x = facing * 0.9
+		scale_y = 1.0
+	elif direction != 0:
+		anim = "run" if is_running else "walk"
+		scale_x = facing * (2.2 if is_running else 1.6)
+		scale_y = 2.2 if is_running else 1.5
+
+	$RedSuite.play(anim)
+	$RedSuite.position = Vector2(0, 0)
+	$RedSuite.scale = Vector2(scale_x, scale_y)

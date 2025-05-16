@@ -6,25 +6,25 @@
 [ext_resource type="Texture2D" uid="uid://clllcfd7it1nu" path="res://assets/sprites/sense DD.webp" id="6_0m4u7"]
 
 [node name="HUD" type="Node2D"]
-position = Vector2(-86, -58)
+position = Vector2(54, 83)
 scale = Vector2(3.88328, 3.49963)
 
 [node name="DdIconPixelart" type="Sprite2D" parent="."]
-position = Vector2(307.987, 636.924)
-scale = Vector2(0.24461, 0.274475)
+position = Vector2(289.704, 581.274)
+scale = Vector2(0.160451, 0.184147)
 texture = ExtResource("2_5pdws")
 
 [node name="DdSense" type="Sprite2D" parent="."]
-position = Vector2(245.411, 637.496)
-scale = Vector2(-0.155985, 0.202348)
+position = Vector2(242.063, 581.776)
+scale = Vector2(-0.10673, 0.136584)
 texture = ExtResource("3_hd3ao")
 
 [node name="SenseDd" type="Sprite2D" parent="."]
-position = Vector2(177.458, 637.218)
-scale = Vector2(0.0964281, 0.102799)
+position = Vector2(192.878, 582.062)
+scale = Vector2(0.0651833, 0.0697592)
 texture = ExtResource("6_0m4u7")
 
 [node name="DdFace2" type="Sprite2D" parent="."]
-position = Vector2(73, 89)
-scale = Vector2(0.411411, 0.430782)
+position = Vector2(193.651, 144.301)
+scale = Vector2(0.267719, 0.254279)
 texture = ExtResource("4_6fi6k")

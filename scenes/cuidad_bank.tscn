@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3dwedvcsm423"]
+
+[ext_resource type="Texture2D" uid="uid://drvcf6eqd0oiv" path="res://assets/fondos/fondo bank.png" id="1_q5vme"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q5vme"]
+size = Vector2(1147, 90)
+
+[node name="CuidadBank" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(573, 325)
+scale = Vector2(0.742188, 0.636719)
+texture = ExtResource("1_q5vme")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(21, 3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(545, 689)
+shape = SubResource("RectangleShape2D_q5vme")

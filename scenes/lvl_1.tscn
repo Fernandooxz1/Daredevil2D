@@ -18,20 +18,17 @@ script = ExtResource("1_53anu")
 [node name="Cuidad" parent="." instance=ExtResource("1_wgevm")]
 position = Vector2(19, -3)
 
-[node name="CuidadClon" parent="." instance=ExtResource("4_hwdor")]
+[node name="Cuidad1" parent="." instance=ExtResource("4_hwdor")]
 position = Vector2(1189, -3)
 
-[node name="CuidadClon2" parent="." instance=ExtResource("4_hwdor")]
-position = Vector2(1189, -3)
+[node name="Cuidad2" parent="." instance=ExtResource("4_hwdor")]
+position = Vector2(2337, -3)
 
-[node name="CuidadClon3" parent="." instance=ExtResource("4_hwdor")]
-position = Vector2(2358, -3)
-
-[node name="CuidadClon4" parent="." instance=ExtResource("4_hwdor")]
-position = Vector2(3528, -3)
+[node name="Cuidad3" parent="." instance=ExtResource("4_hwdor")]
+position = Vector2(3507, -3)
 
 [node name="Daredevil" parent="." instance=ExtResource("2_l8iau")]
-position = Vector2(644, 481)
+position = Vector2(598, 536)
 scale = Vector2(0.0987319, 0.115056)
 script = ExtResource("3_hwdor")
 

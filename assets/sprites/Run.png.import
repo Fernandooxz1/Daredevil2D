@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djb732r7ig2sm"
-valid=false
+uid="uid://c3qx3arthlgcf"
+path="res://.godot/imported/Run.png-3997af83509ae2774fdf0a63b8114f2a.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/sprites/Run.png"
+dest_files=["res://.godot/imported/Run.png-3997af83509ae2774fdf0a63b8114f2a.ctex"]
 
 [params]
 
