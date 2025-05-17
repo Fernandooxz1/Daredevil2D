@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bo1nwciqp1baf"]
+[gd_scene load_steps=9 format=3 uid="uid://bo1nwciqp1baf"]
 
 [ext_resource type="Script" uid="uid://ilvwat43jbog" path="res://scenes/level1.gd" id="1_53anu"]
 [ext_resource type="PackedScene" uid="uid://c054f5ea76f47" path="res://scenes/cuidad.tscn" id="1_wgevm"]
 [ext_resource type="PackedScene" uid="uid://bbelo0p6gc24u" path="res://scenes/daredevil.tscn" id="2_l8iau"]
 [ext_resource type="Script" uid="uid://opajw2qqlwhh" path="res://scenes/scriptDaredevil.gd" id="3_hwdor"]
 [ext_resource type="PackedScene" uid="uid://ctehpwis0lueh" path="res://scenes/cuidad_clon.tscn" id="4_hwdor"]
+[ext_resource type="PackedScene" uid="uid://5jopgb63rq0r" path="res://scenes/pausa.tscn" id="6_u8ilr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hwdor"]
 size = Vector2(65.75, 821)
@@ -47,3 +48,5 @@ shape = SubResource("RectangleShape2D_hwdor")
 position = Vector2(3936, 300)
 scale = Vector2(3.22182, 38.3481)
 shape = SubResource("RectangleShape2D_53anu")
+
+[node name="Pausa" parent="." instance=ExtResource("6_u8ilr")]
