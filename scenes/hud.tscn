@@ -1,30 +1,121 @@
-[gd_scene load_steps=5 format=3 uid="uid://j77lw8kvlgu0"]
+[gd_scene load_steps=16 format=3 uid="uid://j77lw8kvlgu0"]
 
 [ext_resource type="Texture2D" uid="uid://d3u6ol6tytbfr" path="res://assets/sprites/DD icon pixelart.jpg" id="2_5pdws"]
 [ext_resource type="Texture2D" uid="uid://drnoi0d0sgpcn" path="res://assets/sprites/DD sense.png" id="3_hd3ao"]
 [ext_resource type="Texture2D" uid="uid://cqrkcskckukhs" path="res://assets/sprites/DD face.png" id="4_6fi6k"]
 [ext_resource type="Texture2D" uid="uid://clllcfd7it1nu" path="res://assets/sprites/sense DD.webp" id="6_0m4u7"]
+[ext_resource type="Texture2D" uid="uid://bmv7p6yk650jn" path="res://assets/sprites/health.png" id="6_hd3ao"]
+[ext_resource type="Texture2D" uid="uid://daolfopx0w5or" path="res://assets/sprites/Health_Bar/BGTPB1.png" id="7_mphia"]
+[ext_resource type="Texture2D" uid="uid://q6twkqmmk612" path="res://assets/sprites/Health_Bar/MTPB1.png" id="8_0m4u7"]
+[ext_resource type="Texture2D" uid="uid://42oty5ge3dxr" path="res://assets/sprites/Health_Bar/BGTPB2.png" id="8_3swnk"]
+[ext_resource type="Texture2D" uid="uid://bvq7gs4s2dek0" path="res://assets/sprites/Health_Bar/MTPB2.png" id="9_qkknv"]
+[ext_resource type="Texture2D" uid="uid://0ulkcntgw1lb" path="res://assets/sprites/Health_Bar/BGTPB3.png" id="10_uxdf7"]
+[ext_resource type="Texture2D" uid="uid://cqa1rmjjavjwd" path="res://assets/sprites/Health_Bar/MTPB3.png" id="11_5357l"]
+[ext_resource type="Texture2D" uid="uid://bbwnbh77qofxq" path="res://assets/sprites/Health_Bar/BGTPB4.png" id="12_iypfu"]
+[ext_resource type="Texture2D" uid="uid://7p8j5wpba65v" path="res://assets/sprites/Health_Bar/MTPB4.png" id="13_qpprf"]
+[ext_resource type="Texture2D" uid="uid://udnushoqeabf" path="res://assets/sprites/Health_Bar/BGTPB5.png" id="14_3xg78"]
+[ext_resource type="Texture2D" uid="uid://bd30i2hfbar1h" path="res://assets/sprites/Health_Bar/MTPB5.png" id="15_48y67"]
 
 [node name="HUD" type="Node2D"]
-position = Vector2(54, 83)
+position = Vector2(337, 419)
 scale = Vector2(3.88328, 3.49963)
 
-[node name="DdIconPixelart" type="Sprite2D" parent="."]
-position = Vector2(289.704, 581.274)
-scale = Vector2(0.160451, 0.184147)
-texture = ExtResource("2_5pdws")
-
-[node name="DdSense" type="Sprite2D" parent="."]
-position = Vector2(242.063, 581.776)
-scale = Vector2(-0.10673, 0.136584)
-texture = ExtResource("3_hd3ao")
-
-[node name="SenseDd" type="Sprite2D" parent="."]
-position = Vector2(192.878, 582.062)
-scale = Vector2(0.0651833, 0.0697592)
-texture = ExtResource("6_0m4u7")
-
 [node name="DdFace2" type="Sprite2D" parent="."]
-position = Vector2(193.651, 144.301)
+position = Vector2(162.234, 63.1496)
 scale = Vector2(0.267719, 0.254279)
 texture = ExtResource("4_6fi6k")
+
+[node name="DdSense" type="Sprite2D" parent="."]
+position = Vector2(210.646, 500.625)
+rotation = 3.14159
+scale = Vector2(0.136441, -0.168956)
+texture = ExtResource("3_hd3ao")
+
+[node name="DdIconPixelart" type="Sprite2D" parent="."]
+position = Vector2(267.557, 500.053)
+scale = Vector2(0.205116, 0.227792)
+texture = ExtResource("2_5pdws")
+
+[node name="SenseDd" type="Sprite2D" parent="."]
+position = Vector2(151.418, 500.91)
+scale = Vector2(0.0833285, 0.0862931)
+texture = ExtResource("6_0m4u7")
+
+[node name="HealthBar" type="Node2D" parent="."]
+position = Vector2(22.1462, -34.5751)
+scale = Vector2(0.802441, 0.713112)
+
+[node name="TPB100" type="TextureProgressBar" parent="HealthBar"]
+offset_left = 231.058
+offset_top = 89.3562
+offset_right = 1551.06
+offset_bottom = 377.356
+scale = Vector2(0.332874, 0.373806)
+min_value = -31.0
+max_value = 115.0
+value = 100.0
+texture_under = ExtResource("7_mphia")
+texture_over = ExtResource("8_0m4u7")
+texture_progress = ExtResource("6_hd3ao")
+metadata/_edit_use_anchors_ = true
+
+[node name="TPB80" type="TextureProgressBar" parent="HealthBar"]
+visible = false
+offset_left = 231.379
+offset_top = 90.1577
+offset_right = 1551.38
+offset_bottom = 378.158
+scale = Vector2(0.332874, 0.373806)
+min_value = -31.0
+max_value = 115.0
+value = 80.0
+texture_under = ExtResource("8_3swnk")
+texture_over = ExtResource("9_qkknv")
+texture_progress = ExtResource("6_hd3ao")
+metadata/_edit_use_anchors_ = true
+
+[node name="TPB60" type="TextureProgressBar" parent="HealthBar"]
+visible = false
+offset_left = 233.946
+offset_top = 89.757
+offset_right = 1553.95
+offset_bottom = 377.757
+scale = Vector2(0.332874, 0.373806)
+min_value = -31.0
+max_value = 115.0
+value = 60.0
+texture_under = ExtResource("10_uxdf7")
+texture_over = ExtResource("11_5357l")
+texture_progress = ExtResource("6_hd3ao")
+metadata/_edit_use_anchors_ = true
+
+[node name="TPB40" type="TextureProgressBar" parent="HealthBar"]
+visible = false
+offset_left = 233.304
+offset_top = 92.1611
+offset_right = 1553.3
+offset_bottom = 380.161
+scale = Vector2(0.332874, 0.373806)
+min_value = -31.0
+max_value = 115.0
+value = 40.0
+texture_under = ExtResource("12_iypfu")
+texture_over = ExtResource("13_qpprf")
+texture_progress = ExtResource("6_hd3ao")
+metadata/_edit_use_anchors_ = true
+
+[node name="TPB20" type="TextureProgressBar" parent="HealthBar"]
+visible = false
+offset_left = 231.7
+offset_top = 91.7604
+offset_right = 1551.7
+offset_bottom = 379.76
+scale = Vector2(0.332874, 0.373806)
+min_value = -31.0
+max_value = 115.0
+step = 0.1
+value = 20.0
+texture_under = ExtResource("14_3xg78")
+texture_over = ExtResource("15_48y67")
+texture_progress = ExtResource("6_hd3ao")
+metadata/_edit_use_anchors_ = true
