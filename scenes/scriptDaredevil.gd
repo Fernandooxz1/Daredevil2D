@@ -59,12 +59,12 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 	elif is_crouching:
 		if is_attacking:
 			anim = "crouch_hit"
-			scale_x = facing * 0.85
-			scale_y = 0.85
+			scale_x = facing * 2.5
+			scale_y = 2.5
 		else:
 			anim = "crouch"
-			scale_x = facing * 0.69
-			scale_y = 0.86
+			scale_x = facing * 0.85
+			scale_y = 0.75
 	elif is_attacking and direction == 0:
 		anim = "hit"
 		scale_x = facing * 0.9

@@ -1,8 +1,9 @@
-[gd_scene load_steps=20 format=3 uid="uid://bbelo0p6gc24u"]
+[gd_scene load_steps=22 format=3 uid="uid://bbelo0p6gc24u"]
 
 [ext_resource type="Texture2D" uid="uid://copbe11j5qcse" path="res://assets/sprites/daredevil golpeando.png" id="1_008a6"]
 [ext_resource type="Texture2D" uid="uid://bw81x3e15e6es" path="res://assets/sprites/crouch.png" id="1_mpqdg"]
 [ext_resource type="Texture2D" uid="uid://cbal1rsdrk3d1" path="res://assets/sprites/idle.png" id="2_ef4hk"]
+[ext_resource type="Texture2D" uid="uid://nv2k474y5aj0" path="res://assets/sprites/crouch_hit.png" id="2_xki8k"]
 [ext_resource type="Texture2D" uid="uid://c3qx3arthlgcf" path="res://assets/sprites/Run.png" id="3_84hc6"]
 [ext_resource type="Texture2D" uid="uid://ckh21pfytftat" path="res://assets/sprites/DDwalk.png" id="3_ef4hk"]
 [ext_resource type="Texture2D" uid="uid://cm20dk2q1vfp6" path="res://assets/sprites/jump.png" id="3_p8c0w"]
@@ -13,6 +14,10 @@
 [sub_resource type="AtlasTexture" id="AtlasTexture_c82jl"]
 atlas = ExtResource("1_mpqdg")
 region = Rect2(0, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wtd7q"]
+atlas = ExtResource("2_xki8k")
+region = Rect2(0, 0, 394, 321)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xki8k"]
 atlas = ExtResource("4_wqvkv")
@@ -50,6 +55,14 @@ animations = [{
 }],
 "loop": true,
 "name": &"crouch",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wtd7q")
+}],
+"loop": true,
+"name": &"crouch_hit",
 "speed": 5.0
 }, {
 "frames": [{
@@ -129,8 +142,8 @@ texture_filter = 1
 texture_repeat = 1
 position = Vector2(-29, 9)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"crouch"
-frame_progress = 0.691451
+animation = &"crouch_hit"
+frame_progress = 0.346752
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
