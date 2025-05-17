@@ -66,6 +66,7 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 	elif is_crouching:
 		if is_attacking:
 			anim = "crouch_hit"
+<<<<<<< HEAD
 			Sscale_x = facing * 2.6
 			Sscale_y = 2.5
 			Sposition_x= facing * 50
@@ -76,6 +77,14 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 			Sscale_y = 0.8
 			Sposition_x= 0
 			Sposition_y= 150
+=======
+			scale_x = facing * 2.17
+			scale_y = 2.1
+		else:
+			anim = "crouch"
+			scale_x = facing * 0.75
+			scale_y = 0.65
+>>>>>>> 8abf6e9fa83226ca3654c221cc97fc8c38969f22
 	elif is_attacking and direction == 0:
 		anim = "hit"
 		Sscale_x = facing * 0.9

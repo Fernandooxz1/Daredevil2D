@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddub6mcsnqdrj"]
+
+[ext_resource type="Texture2D" uid="uid://csrh0rvdwkabp" path="res://assets/fondos/citiy backgrounds/city 8/5.png" id="1_62vm5"]
+
+[node name="cuidad2" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(650, 89)
+scale = Vector2(2.85056, 3.46772)
+texture = ExtResource("1_62vm5")
