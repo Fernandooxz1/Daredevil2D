@@ -44,36 +44,49 @@ func _physics_process(delta):
 
 func _update_animation(is_grounded: bool, direction: float, is_running: bool, is_attacking: bool, is_crouching: bool) -> void:
 	var anim = "idle"
-	var scale_x = facing * 2.0
-	var scale_y = 2.0
+	var Sscale_x = facing * 2.0
+	var Sscale_y = 2.0
+	var Sposition_x = 0
+	var Sposition_y = 0
+	var Cscale_x = 50.0
+	var Cscale_y = 50.0
+	var Cposition_x = 0
+	var Cposition_y = 0
+	
 
 	if not is_grounded:
 		if is_attacking:
 			anim = "jump_hit"
-			scale_x = facing * 0.975
-			scale_y = 0.975
+			Sscale_x = facing * 0.975
+			Sscale_y = 0.975
 		else:
 			anim = "jump"
-			scale_x = facing * 0.975
-			scale_y = 0.975
+			Sscale_x = facing * 0.975
+			Sscale_y = 0.975
 	elif is_crouching:
 		if is_attacking:
 			anim = "crouch_hit"
-			scale_x = facing * 2.5
-			scale_y = 2.5
+			Sscale_x = facing * 2.6
+			Sscale_y = 2.5
+			Sposition_x= facing * 50
+			Sposition_y= 150
 		else:
 			anim = "crouch"
-			scale_x = facing * 0.85
-			scale_y = 0.75
+			Sscale_x = facing * 0.85
+			Sscale_y = 0.8
+			Sposition_x= 0
+			Sposition_y= 150
 	elif is_attacking and direction == 0:
 		anim = "hit"
-		scale_x = facing * 0.9
-		scale_y = 1.0
+		Sscale_x = facing * 0.9
+		Sscale_y = 1.0
 	elif direction != 0:
 		anim = "run" if is_running else "walk"
-		scale_x = facing * (2.2 if is_running else 1.6)
-		scale_y = 2.2 if is_running else 1.5
-
+		Sscale_x = facing * (2.2 if is_running else 1.6)
+		Sscale_y = 2.2 if is_running else 1.5
+	
 	$RedSuite.play(anim)
-	$RedSuite.position = Vector2(0, 0)
-	$RedSuite.scale = Vector2(scale_x, scale_y)
+	$RedSuite.position = Vector2(Sposition_x, Sposition_y)
+	$RedSuite.scale = Vector2(Sscale_x, Sscale_y)
+	$CollisionDD.position = Vector2(Cposition_x,Cposition_x)
+	$CollisionDD.scale = Vector2(Cscale_x,Cscale_y)
