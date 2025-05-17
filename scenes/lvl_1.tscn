@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://bo1nwciqp1baf"]
+[gd_scene load_steps=9 format=3 uid="uid://bo1nwciqp1baf"]
 
 [ext_resource type="Script" uid="uid://ilvwat43jbog" path="res://scenes/level1.gd" id="1_53anu"]
 [ext_resource type="PackedScene" uid="uid://c054f5ea76f47" path="res://scenes/cuidad.tscn" id="1_wgevm"]
 [ext_resource type="PackedScene" uid="uid://bbelo0p6gc24u" path="res://scenes/daredevil.tscn" id="2_l8iau"]
+[ext_resource type="PackedScene" uid="uid://ddub6mcsnqdrj" path="res://scenes/background_cuidad.tscn" id="2_u8ilr"]
 [ext_resource type="Script" uid="uid://opajw2qqlwhh" path="res://scenes/scriptDaredevil.gd" id="3_hwdor"]
 [ext_resource type="PackedScene" uid="uid://ctehpwis0lueh" path="res://scenes/cuidad_clon.tscn" id="4_hwdor"]
 
@@ -15,17 +16,33 @@ size = Vector2(65.75, 821)
 position = Vector2(-8, 15)
 script = ExtResource("1_53anu")
 
+[node name="background_cuidad" parent="." instance=ExtResource("2_u8ilr")]
+position = Vector2(219, -381)
+scale = Vector2(1.02519, 0.770151)
+
+[node name="background_cuidad2" parent="." instance=ExtResource("2_u8ilr")]
+position = Vector2(2465, -292)
+scale = Vector2(1.2662, 0.697695)
+
+[node name="background_cuidad3" parent="." instance=ExtResource("2_u8ilr")]
+position = Vector2(1166, -199)
+scale = Vector2(1.60325, 0.486778)
+
 [node name="Cuidad" parent="." instance=ExtResource("1_wgevm")]
-position = Vector2(19, -3)
+position = Vector2(-3, -50)
+scale = Vector2(1.03201, 1.07928)
 
 [node name="Cuidad1" parent="." instance=ExtResource("4_hwdor")]
-position = Vector2(1189, -3)
+position = Vector2(1047, -33)
+scale = Vector2(1.11379, 1.05084)
 
 [node name="Cuidad2" parent="." instance=ExtResource("4_hwdor")]
-position = Vector2(2337, -3)
+position = Vector2(2175, -5)
+scale = Vector2(1.04925, 1.00466)
 
 [node name="Cuidad3" parent="." instance=ExtResource("4_hwdor")]
-position = Vector2(3507, -3)
+position = Vector2(3251, -5)
+scale = Vector2(0.954716, 1.00466)
 
 [node name="Daredevil" parent="." instance=ExtResource("2_l8iau")]
 position = Vector2(598, 536)
@@ -39,11 +56,7 @@ position = Vector2(13, -20)
 position = Vector2(-8, 279)
 shape = SubResource("RectangleShape2D_hwdor")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(4681.12, 344)
-shape = SubResource("RectangleShape2D_hwdor")
-
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(3936, 300)
-scale = Vector2(3.22182, 38.3481)
+position = Vector2(3848, 300)
+scale = Vector2(6.45153, 32.7391)
 shape = SubResource("RectangleShape2D_53anu")

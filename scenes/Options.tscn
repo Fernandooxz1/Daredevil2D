@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://bpm1bd3wpuoq1"]
 
 [ext_resource type="Script" uid="uid://b7jv0benjgrlt" path="res://scenes/options.gd" id="1_ckjey"]
-[ext_resource type="Texture2D" uid="uid://txulhj2jww1c" path="res://assets/sprites/ddvintro.jpg" id="2_nmn1p"]
+[ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_ckjey"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1atq"]
 bg_color = Color(0.933333, 0, 0, 0.698039)
@@ -41,8 +41,8 @@ color = Color(0.632225, 1.9493e-06, 3.36915e-07, 1)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-scale = Vector2(0.862654, 0.86532)
-texture = ExtResource("2_nmn1p")
+scale = Vector2(0.901557, 0.899732)
+texture = ExtResource("2_ckjey")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -51,13 +51,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = -158.0
-offset_right = -123.0
-offset_bottom = -42.0
+offset_left = -406.0
+offset_top = 42.0
+offset_right = -249.0
+offset_bottom = 158.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(3.67732, 3.04387)
+scale = Vector2(1.74883, 2.04115)
 alignment = 1
 
 [node name="Button" type="Button" parent="VBoxContainer"]
