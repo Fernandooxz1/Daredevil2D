@@ -16,6 +16,7 @@ func _physics_process(delta):
 	var is_running := Input.is_action_pressed("run")
 	var is_attacking := Input.is_action_pressed("attack")
 	var jump_pressed := Input.is_action_just_pressed("jump") and is_grounded
+	var is_crouching := Input.is_action_pressed("crouch")
 
 	# Aplicar gravedad
 	if not is_grounded:
@@ -26,7 +27,10 @@ func _physics_process(delta):
 		velocity.y = -jump_speed
 
 	# Movimiento horizontal
-	if direction != 0:
+	if is_crouching and is_grounded:
+		# No permitir movimiento al estar agachado
+		velocity.x = move_toward(velocity.x, 0, friction * delta)
+	elif direction != 0:
 		facing = sign(direction)
 		var target_speed = speed * (run_multiplier if is_running else 1)
 		velocity.x = move_toward(velocity.x, direction * target_speed, acceleration * delta)
@@ -34,11 +38,11 @@ func _physics_process(delta):
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
 
 	# Animaciones
-	_update_animation(is_grounded, direction, is_running, is_attacking)
+	_update_animation(is_grounded, direction, is_running, is_attacking, is_crouching)
 
 	move_and_slide()
 
-func _update_animation(is_grounded: bool, direction: float, is_running: bool, is_attacking: bool) -> void:
+func _update_animation(is_grounded: bool, direction: float, is_running: bool, is_attacking: bool, is_crouching: bool) -> void:
 	var anim = "idle"
 	var scale_x = facing * 2.0
 	var scale_y = 2.0
@@ -52,6 +56,15 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 			anim = "jump"
 			scale_x = facing * 0.975
 			scale_y = 0.975
+	elif is_crouching:
+		if is_attacking:
+			anim = "crouch_hit"
+			scale_x = facing * 0.85
+			scale_y = 0.85
+		else:
+			anim = "crouch"
+			scale_x = facing * 0.69
+			scale_y = 0.86
 	elif is_attacking and direction == 0:
 		anim = "hit"
 		scale_x = facing * 0.9
