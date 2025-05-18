@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://bmflohqxtk51h"]
+[gd_scene load_steps=10 format=3 uid="uid://bmflohqxtk51h"]
 
 [ext_resource type="Script" uid="uid://b3einmntpv01k" path="res://scenes/lobby.gd" id="1_5gu6x"]
 [ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_5gu6x"]
+[ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_q60fs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1atq"]
 bg_color = Color(0.933333, 0, 0, 0.698039)
@@ -61,22 +62,28 @@ scale = Vector2(2.25474, 1.86977)
 alignment = 1
 
 [node name="Button" type="Button" parent="VBoxContainer"]
+texture_filter = 1
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3_q60fs")
+theme_override_font_sizes/font_size = 40
 theme_override_styles/hover = SubResource("StyleBoxFlat_o1atq")
 theme_override_styles/normal = SubResource("StyleBoxTexture_o1atq")
 text = "Play"
 
 [node name="Button2" type="Button" parent="VBoxContainer"]
+texture_filter = 1
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3_q60fs")
+theme_override_font_sizes/font_size = 40
 theme_override_styles/hover = SubResource("StyleBoxFlat_5gu6x")
 theme_override_styles/normal = SubResource("StyleBoxTexture_5gu6x")
 text = "Options"
 
 [node name="Button3" type="Button" parent="VBoxContainer"]
+texture_filter = 1
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3_q60fs")
+theme_override_font_sizes/font_size = 40
 theme_override_styles/hover = SubResource("StyleBoxFlat_q60fs")
 theme_override_styles/normal = SubResource("StyleBoxTexture_q60fs")
 text = "Quit"

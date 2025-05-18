@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://5jopgb63rq0r"]
+[gd_scene load_steps=4 format=3 uid="uid://5jopgb63rq0r"]
 
 [ext_resource type="Texture2D" uid="uid://i2be03vglc7w" path="res://assets/sprites/fondito menu DD.jpg" id="1_3kuwy"]
 [ext_resource type="Script" uid="uid://cysjfx4x0hraw" path="res://scenes/pausa.gd" id="1_qtdsr"]
+[ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_1vvwb"]
 
 [node name="Pausa" type="CanvasLayer"]
 process_mode = 3
@@ -36,17 +37,20 @@ scale = Vector2(0.259613, 0.244121)
 [node name="Button" type="Button" parent="VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
-theme_override_font_sizes/font_size = 150
+theme_override_fonts/font = ExtResource("3_1vvwb")
+theme_override_font_sizes/font_size = 200
 text = "Resume"
 
 [node name="Button2" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 150
+theme_override_fonts/font = ExtResource("3_1vvwb")
+theme_override_font_sizes/font_size = 200
 text = "Options"
 
 [node name="Button3" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 150
+theme_override_fonts/font = ExtResource("3_1vvwb")
+theme_override_font_sizes/font_size = 200
 text = "Quit"
 
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]

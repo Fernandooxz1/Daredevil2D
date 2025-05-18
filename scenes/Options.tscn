@@ -1,22 +1,17 @@
-[gd_scene load_steps=9 format=3 uid="uid://bpm1bd3wpuoq1"]
+[gd_scene load_steps=7 format=3 uid="uid://bpm1bd3wpuoq1"]
 
 [ext_resource type="Script" uid="uid://b7jv0benjgrlt" path="res://scenes/options.gd" id="1_ckjey"]
 [ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_ckjey"]
+[ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_nmn1p"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1atq"]
-bg_color = Color(0.933333, 0, 0, 0.698039)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o1atq"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nmn1p"]
+bg_color = Color(0.933333, 0, 0, 0.741176)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5gu6x"]
 bg_color = Color(0.933333, 0, 0, 0.741176)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5gu6x"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q60fs"]
 bg_color = Color(0.933333, 0, 0, 0.784314)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q60fs"]
 
 [node name="options" type="Control"]
 layout_mode = 3
@@ -45,16 +40,17 @@ scale = Vector2(0.901557, 0.899732)
 texture = ExtResource("2_ckjey")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -406.0
-offset_top = 42.0
-offset_right = -249.0
-offset_bottom = 158.0
+offset_left = -400.0
+offset_top = 64.0
+offset_right = -233.0
+offset_bottom = 180.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.74883, 2.04115)
@@ -62,23 +58,23 @@ alignment = 1
 
 [node name="Button" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-theme_override_styles/hover = SubResource("StyleBoxFlat_o1atq")
-theme_override_styles/normal = SubResource("StyleBoxTexture_o1atq")
+theme_override_fonts/font = ExtResource("3_nmn1p")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxFlat_nmn1p")
 text = "Graphic settings"
 
 [node name="Button2" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3_nmn1p")
+theme_override_font_sizes/font_size = 30
 theme_override_styles/hover = SubResource("StyleBoxFlat_5gu6x")
-theme_override_styles/normal = SubResource("StyleBoxTexture_5gu6x")
 text = "Keyboard"
 
 [node name="Button3" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3_nmn1p")
+theme_override_font_sizes/font_size = 30
 theme_override_styles/hover = SubResource("StyleBoxFlat_q60fs")
-theme_override_styles/normal = SubResource("StyleBoxTexture_q60fs")
 text = "Back"
 
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
