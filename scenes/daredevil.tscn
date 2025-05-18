@@ -156,7 +156,6 @@ shape = SubResource("CapsuleShape2D_m6s4t")
 
 [node name="HitboxComponent" type="Area2D" parent="."]
 script = ExtResource("11_c82jl")
-damage = 1
 
 [node name="HitShapeDD" type="CollisionShape2D" parent="HitboxComponent"]
 position = Vector2(-49.2165, 0)

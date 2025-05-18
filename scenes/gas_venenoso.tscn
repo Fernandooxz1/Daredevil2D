@@ -1,6 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://cwpq5omfyinjj"]
+[gd_scene load_steps=15 format=3 uid="uid://cwpq5omfyinjj"]
 
 [ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scenes/hitbox.gd" id="1_ljl6x"]
+[ext_resource type="Script" uid="uid://dgf5urwck0rlo" path="res://scenes/collision_shape_2d.gd" id="2_mjk6j"]
 [ext_resource type="Texture2D" uid="uid://b3j3pd0ntb8b4" path="res://assets/sprites/PoisonGas.png" id="2_v30wm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_v30wm"]
@@ -89,9 +90,16 @@ position = Vector2(-1, 4)
 scale = Vector2(7.30587, 8.23017)
 shape = SubResource("CircleShape2D_v30wm")
 debug_color = Color(0.318185, 0.618569, 0.268951, 0.42)
+script = ExtResource("2_mjk6j")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(0.62069, 0.595745)
 sprite_frames = SubResource("SpriteFrames_bmign")
 animation = &"Gasesito"
 frame_progress = 0.233531
+
+[node name="TimerG" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[connection signal="timeout" from="TimerG" to="HitBox/CollisionShape2D" method="_on_timer_g_timeout"]
