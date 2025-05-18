@@ -10,7 +10,6 @@ var current_health : int = 0
 var old_health : int
 
 func _ready() -> void:
-	
 	current_health = max_health
 
 func take_heal(value: int):

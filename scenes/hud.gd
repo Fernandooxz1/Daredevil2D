@@ -7,8 +7,10 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-
-func _on_health_component_on_health_changed(health: int) -> void:
+	# Aquí podrías actualizar una barra de vida, por ejemplo:
+	# $LifeBar.value = health
+	
+func _on_health_changed(health: int) -> void:
 	$HealthBar/TPB100.value = health
 	$HealthBar/TPB80.value = health
 	$HealthBar/TPB60.value = health
