@@ -28,19 +28,19 @@ scale = Vector2(0.267719, 0.254279)
 texture = ExtResource("4_6fi6k")
 
 [node name="DdSense" type="Sprite2D" parent="."]
-position = Vector2(210.646, 500.625)
+position = Vector2(212.449, 496.052)
 rotation = 3.14159
-scale = Vector2(0.136441, -0.168956)
+scale = Vector2(0.059013, -0.0788568)
 texture = ExtResource("3_hd3ao")
 
 [node name="DdIconPixelart" type="Sprite2D" parent="."]
-position = Vector2(267.557, 500.053)
-scale = Vector2(0.205116, 0.227792)
+position = Vector2(279.918, 496.338)
+scale = Vector2(0.264844, 0.27265)
 texture = ExtResource("2_5pdws")
 
 [node name="SenseDd" type="Sprite2D" parent="."]
-position = Vector2(151.418, 500.91)
-scale = Vector2(0.0833285, 0.0862931)
+position = Vector2(140.345, 496.91)
+scale = Vector2(0.0983972, 0.0981487)
 texture = ExtResource("6_0m4u7")
 
 [node name="HealthBar" type="Node2D" parent="."]
