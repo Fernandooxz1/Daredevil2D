@@ -1,5 +1,6 @@
-[gd_scene load_steps=16 format=3 uid="uid://j77lw8kvlgu0"]
+[gd_scene load_steps=17 format=3 uid="uid://j77lw8kvlgu0"]
 
+[ext_resource type="Script" uid="uid://ci6e5ke6wxs7h" path="res://scenes/hud.gd" id="1_qkknv"]
 [ext_resource type="Texture2D" uid="uid://d3u6ol6tytbfr" path="res://assets/sprites/DD icon pixelart.jpg" id="2_5pdws"]
 [ext_resource type="Texture2D" uid="uid://drnoi0d0sgpcn" path="res://assets/sprites/DD sense.png" id="3_hd3ao"]
 [ext_resource type="Texture2D" uid="uid://cqrkcskckukhs" path="res://assets/sprites/DD face.png" id="4_6fi6k"]
@@ -19,6 +20,7 @@
 [node name="HUD" type="Node2D"]
 position = Vector2(337, 419)
 scale = Vector2(3.88328, 3.49963)
+script = ExtResource("1_qkknv")
 
 [node name="DdFace2" type="Sprite2D" parent="."]
 position = Vector2(162.234, 63.1496)
@@ -60,7 +62,6 @@ texture_progress = ExtResource("6_hd3ao")
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB80" type="TextureProgressBar" parent="HealthBar"]
-visible = false
 offset_left = 231.379
 offset_top = 90.1577
 offset_right = 1551.38
@@ -75,7 +76,6 @@ texture_progress = ExtResource("6_hd3ao")
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB60" type="TextureProgressBar" parent="HealthBar"]
-visible = false
 offset_left = 233.946
 offset_top = 89.757
 offset_right = 1553.95
@@ -90,7 +90,6 @@ texture_progress = ExtResource("6_hd3ao")
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB40" type="TextureProgressBar" parent="HealthBar"]
-visible = false
 offset_left = 233.304
 offset_top = 92.1611
 offset_right = 1553.3
@@ -105,7 +104,6 @@ texture_progress = ExtResource("6_hd3ao")
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB20" type="TextureProgressBar" parent="HealthBar"]
-visible = false
 offset_left = 231.7
 offset_top = 91.7604
 offset_right = 1551.7

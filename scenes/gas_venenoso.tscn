@@ -1,0 +1,97 @@
+[gd_scene load_steps=14 format=3 uid="uid://cwpq5omfyinjj"]
+
+[ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scenes/hitbox.gd" id="1_ljl6x"]
+[ext_resource type="Texture2D" uid="uid://b3j3pd0ntb8b4" path="res://assets/sprites/PoisonGas.png" id="2_v30wm"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v30wm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mjk6j"]
+atlas = ExtResource("2_v30wm")
+region = Rect2(0, 761, 341, 228)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qahrf"]
+atlas = ExtResource("2_v30wm")
+region = Rect2(682, 419, 341, 312)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r7vll"]
+atlas = ExtResource("2_v30wm")
+region = Rect2(682, 61, 341, 321)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ofrfl"]
+atlas = ExtResource("2_v30wm")
+region = Rect2(0, 419, 341, 312)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dv8kq"]
+atlas = ExtResource("2_v30wm")
+region = Rect2(341, 761, 341, 228)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4b25j"]
+atlas = ExtResource("2_v30wm")
+region = Rect2(0, 61, 341, 321)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kejwf"]
+atlas = ExtResource("2_v30wm")
+region = Rect2(341, 61, 341, 321)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w4bl8"]
+atlas = ExtResource("2_v30wm")
+region = Rect2(341, 419, 341, 312)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7njmi"]
+atlas = ExtResource("2_v30wm")
+region = Rect2(682, 761, 341, 228)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bmign"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mjk6j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qahrf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r7vll")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ofrfl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dv8kq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4b25j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kejwf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w4bl8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7njmi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4b25j")
+}],
+"loop": true,
+"name": &"Gasesito",
+"speed": 7.0
+}]
+
+[node name="GasVenenoso" type="Node2D"]
+
+[node name="HitBox" type="Area2D" parent="."]
+script = ExtResource("1_ljl6x")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2(-1, 4)
+scale = Vector2(7.30587, 8.23017)
+shape = SubResource("CircleShape2D_v30wm")
+debug_color = Color(0.318185, 0.618569, 0.268951, 0.42)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.62069, 0.595745)
+sprite_frames = SubResource("SpriteFrames_bmign")
+animation = &"Gasesito"
+frame_progress = 0.233531
