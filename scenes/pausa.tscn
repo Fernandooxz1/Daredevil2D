@@ -9,7 +9,7 @@ script = ExtResource("1_qtdsr")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 visible = false
-self_modulate = Color(1, 1, 1, 0.945098)
+self_modulate = Color(1, 1, 1, 0.901961)
 texture_filter = 1
 texture_repeat = 1
 anchors_preset = 15
