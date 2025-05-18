@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bo1nwciqp1baf"]
+[gd_scene load_steps=14 format=3 uid="uid://bo1nwciqp1baf"]
 
 [ext_resource type="Script" uid="uid://ilvwat43jbog" path="res://scenes/level1.gd" id="1_53anu"]
 [ext_resource type="PackedScene" uid="uid://c054f5ea76f47" path="res://scenes/cuidad.tscn" id="1_wgevm"]
@@ -8,7 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://ctehpwis0lueh" path="res://scenes/cuidad_clon.tscn" id="4_hwdor"]
 [ext_resource type="PackedScene" uid="uid://cwpq5omfyinjj" path="res://scenes/gas_venenoso.tscn" id="6_6a3rq"]
 [ext_resource type="PackedScene" uid="uid://5jopgb63rq0r" path="res://scenes/pausa.tscn" id="6_u8ilr"]
+[ext_resource type="Script" uid="uid://v4ce1weaj36x" path="res://scenes/camera_Daredevil.gd" id="7_oymhu"]
 [ext_resource type="Script" uid="uid://dhwdu3e207v7b" path="res://scenes/gas_venenoso.gd" id="7_vuq28"]
+[ext_resource type="PackedScene" uid="uid://j77lw8kvlgu0" path="res://scenes/hud.tscn" id="8_eukc1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hwdor"]
 size = Vector2(65.75, 821)
@@ -48,12 +50,22 @@ position = Vector2(3251, -5)
 scale = Vector2(0.954716, 1.00466)
 
 [node name="Daredevil" parent="." instance=ExtResource("2_l8iau")]
-position = Vector2(598, 536)
+position = Vector2(571, 512)
 scale = Vector2(0.0987319, 0.115056)
 script = ExtResource("3_hwdor")
 
+[node name="Camera2D2" type="Camera2D" parent="Daredevil"]
+position = Vector2(668.477, -1347.17)
+scale = Vector2(0.671567, 0.576356)
+zoom = Vector2(1.28, 1.28)
+script = ExtResource("7_oymhu")
+
+[node name="HUD" parent="Daredevil/Camera2D2" instance=ExtResource("8_eukc1")]
+position = Vector2(-7993.35, -3664.43)
+scale = Vector2(13.1562, 13.6648)
+
 [node name="GasVenenoso" parent="." instance=ExtResource("6_6a3rq")]
-position = Vector2(1641, 348)
+position = Vector2(1593, 525)
 script = ExtResource("7_vuq28")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]

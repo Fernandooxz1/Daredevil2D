@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bbelo0p6gc24u"]
+[gd_scene load_steps=24 format=3 uid="uid://bbelo0p6gc24u"]
 
 [ext_resource type="Texture2D" uid="uid://copbe11j5qcse" path="res://assets/sprites/daredevil golpeando.png" id="1_008a6"]
 [ext_resource type="Texture2D" uid="uid://bw81x3e15e6es" path="res://assets/sprites/crouch.png" id="1_mpqdg"]
@@ -8,8 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://ckh21pfytftat" path="res://assets/sprites/DDwalk.png" id="3_ef4hk"]
 [ext_resource type="Texture2D" uid="uid://cm20dk2q1vfp6" path="res://assets/sprites/jump.png" id="3_p8c0w"]
 [ext_resource type="Texture2D" uid="uid://dwuwwurc060lq" path="res://assets/sprites/salto_hit.png" id="4_wqvkv"]
-[ext_resource type="Script" uid="uid://v4ce1weaj36x" path="res://scenes/camera_Daredevil.gd" id="5_t7165"]
-[ext_resource type="PackedScene" uid="uid://j77lw8kvlgu0" path="res://scenes/hud.tscn" id="6_ega6g"]
 [ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scenes/hitbox.gd" id="11_c82jl"]
 [ext_resource type="Script" uid="uid://ggr6kugd2gdf" path="res://scenes/health_component.gd" id="12_wtd7q"]
 
@@ -156,17 +154,6 @@ position = Vector2(-78.746, 16.9184)
 scale = Vector2(74.492, 59.3084)
 shape = SubResource("CapsuleShape2D_m6s4t")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(-3386.09, 228.399)
-offset = Vector2(400, -180)
-zoom = Vector2(1.28, 1.28)
-script = ExtResource("5_t7165")
-ciudad_node_path = NodePath("..")
-
-[node name="HUD" parent="Camera2D" instance=ExtResource("6_ega6g")]
-position = Vector2(-1496.18, -3713.6)
-scale = Vector2(9.11734, 7.91607)
-
 [node name="HitboxComponent" type="Area2D" parent="."]
 script = ExtResource("11_c82jl")
 damage = 1
@@ -183,5 +170,3 @@ script = ExtResource("12_wtd7q")
 position = Vector2(-49.2165, 0)
 scale = Vector2(10.7497, 8.84011)
 shape = SubResource("CapsuleShape2D_c82jl")
-
-[connection signal="onHealthChanged" from="HealthComponent" to="Camera2D/HUD" method="_on_health_component_on_health_changed"]
