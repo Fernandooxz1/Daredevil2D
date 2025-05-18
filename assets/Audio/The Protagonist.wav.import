@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cgwy0u7886iln"
+path="res://.godot/imported/The Protagonist.wav-84ca31488bad7be5c369af2a09bc0b11.sample"
+
+[deps]
+
+source_file="res://assets/Audio/The Protagonist.wav"
+dest_files=["res://.godot/imported/The Protagonist.wav-84ca31488bad7be5c369af2a09bc0b11.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

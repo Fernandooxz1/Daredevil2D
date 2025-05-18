@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://bpm1bd3wpuoq1"]
+[gd_scene load_steps=9 format=3 uid="uid://bpm1bd3wpuoq1"]
 
 [ext_resource type="Script" uid="uid://b7jv0benjgrlt" path="res://scenes/options.gd" id="1_ckjey"]
 [ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_ckjey"]
 [ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_nmn1p"]
+[ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="4_w238l"]
+[ext_resource type="AudioStream" uid="uid://b0l10rbil8y25" path="res://assets/Audio/mouse_click_menus.mp3" id="5_s26ps"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nmn1p"]
 bg_color = Color(0.933333, 0, 0, 0.741176)
@@ -77,6 +79,16 @@ theme_override_font_sizes/font_size = 30
 theme_override_styles/hover = SubResource("StyleBoxFlat_q60fs")
 text = "Back"
 
+[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+stream = ExtResource("4_w238l")
+volume_db = -6.252
+
+[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+stream = ExtResource("5_s26ps")
+
+[connection signal="mouse_entered" from="VBoxContainer/Button" to="." method="_on_button_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/Button2" to="." method="_on_button_2_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/Button3" to="." method="_on_button_3_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_button_3_pressed"]
