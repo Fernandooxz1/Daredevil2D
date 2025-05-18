@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bpm1bd3wpuoq1"]
+[gd_scene load_steps=12 format=3 uid="uid://bpm1bd3wpuoq1"]
 
 [ext_resource type="Script" uid="uid://b7jv0benjgrlt" path="res://scenes/options.gd" id="1_ckjey"]
 [ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_ckjey"]
@@ -9,11 +9,17 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nmn1p"]
 bg_color = Color(0.933333, 0, 0, 0.741176)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w238l"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5gu6x"]
 bg_color = Color(0.933333, 0, 0, 0.741176)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s26ps"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q60fs"]
 bg_color = Color(0.933333, 0, 0, 0.784314)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p1xw0"]
 
 [node name="options" type="Control"]
 layout_mode = 3
@@ -59,10 +65,12 @@ scale = Vector2(1.74883, 2.04115)
 alignment = 1
 
 [node name="Button" type="Button" parent="VBoxContainer"]
+texture_filter = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_nmn1p")
 theme_override_font_sizes/font_size = 30
 theme_override_styles/hover = SubResource("StyleBoxFlat_nmn1p")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_w238l")
 text = "Graphic settings"
 
 [node name="Button2" type="Button" parent="VBoxContainer"]
@@ -70,6 +78,7 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_nmn1p")
 theme_override_font_sizes/font_size = 30
 theme_override_styles/hover = SubResource("StyleBoxFlat_5gu6x")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_s26ps")
 text = "Keyboard"
 
 [node name="Button3" type="Button" parent="VBoxContainer"]
@@ -77,6 +86,7 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_nmn1p")
 theme_override_font_sizes/font_size = 30
 theme_override_styles/hover = SubResource("StyleBoxFlat_q60fs")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_p1xw0")
 text = "Back"
 
 [node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer"]

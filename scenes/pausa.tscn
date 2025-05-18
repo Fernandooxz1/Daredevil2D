@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://5jopgb63rq0r"]
+[gd_scene load_steps=10 format=3 uid="uid://5jopgb63rq0r"]
 
 [ext_resource type="Texture2D" uid="uid://i2be03vglc7w" path="res://assets/sprites/fondito menu DD.jpg" id="1_3kuwy"]
 [ext_resource type="Script" uid="uid://cysjfx4x0hraw" path="res://scenes/pausa.gd" id="1_qtdsr"]
@@ -6,6 +6,15 @@
 [ext_resource type="Script" uid="uid://dlwpxiq44o08y" path="res://scenes/pausa_box_container.gd" id="3_eqlbv"]
 [ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="5_d1dax"]
 [ext_resource type="AudioStream" uid="uid://b0l10rbil8y25" path="res://assets/Audio/mouse_click_menus.mp3" id="6_eqlbv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eqlbv"]
+bg_color = Color(0.933333, 0, 0, 0.784314)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xa0t4"]
+bg_color = Color(0.933333, 0, 0, 0.784314)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ao72p"]
+bg_color = Color(0.933333, 0, 0, 0.784314)
 
 [node name="Pausa" type="CanvasLayer"]
 process_mode = 3
@@ -39,22 +48,24 @@ scale = Vector2(0.259613, 0.244121)
 script = ExtResource("3_eqlbv")
 
 [node name="Button" type="Button" parent="VBoxContainer"]
-texture_filter = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
+theme_override_styles/hover = SubResource("StyleBoxFlat_eqlbv")
 text = "Resume"
 
 [node name="Button2" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
+theme_override_styles/hover = SubResource("StyleBoxFlat_xa0t4")
 text = "Options"
 
 [node name="Button3" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
+theme_override_styles/hover = SubResource("StyleBoxFlat_ao72p")
 text = "Quit"
 
 [node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer"]
