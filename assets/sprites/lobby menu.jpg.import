@@ -2,20 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-<<<<<<< HEAD
-uid="uid://be60d46vr2d0f"
-=======
-uid="uid://disa3ppmklwr5"
->>>>>>> 8abf6e9fa83226ca3654c221cc97fc8c38969f22
-path="res://.godot/imported/1.png-775dbe856234480fc14a27e20a9dab39.ctex"
+uid="uid://c5aupnnp1vu8h"
+path="res://.godot/imported/lobby menu.jpg-701aa5f70c8904fb2041f2c34ad43a10.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/fondos/citiy backgrounds/city 3/1.png"
-dest_files=["res://.godot/imported/1.png-775dbe856234480fc14a27e20a9dab39.ctex"]
+source_file="res://assets/sprites/lobby menu.jpg"
+dest_files=["res://.godot/imported/lobby menu.jpg-701aa5f70c8904fb2041f2c34ad43a10.ctex"]
 
 [params]
 

@@ -146,10 +146,9 @@ scale = Vector2(0.101592, 0.118214)
 [node name="RedSuite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 texture_repeat = 1
-position = Vector2(-29, 9)
+position = Vector2(-88.5897, 42.2961)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"crouch_hit"
-frame_progress = 0.346752
+animation = &"crouch"
 
 [node name="CollisionDD" type="CollisionShape2D" parent="."]
 visible = false
@@ -158,7 +157,7 @@ scale = Vector2(74.492, 59.3084)
 shape = SubResource("CapsuleShape2D_m6s4t")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(-2638, 219.94)
+position = Vector2(-3386.09, 228.399)
 offset = Vector2(400, -180)
 zoom = Vector2(1.28, 1.28)
 script = ExtResource("5_t7165")

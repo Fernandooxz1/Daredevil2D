@@ -1,20 +1,22 @@
 [gd_scene load_steps=3 format=3 uid="uid://ctehpwis0lueh"]
 
-[ext_resource type="Texture2D" uid="uid://dftsxymkvaxlo" path="res://assets/fondos/Background DEF.jpg" id="1_y4vh0"]
+[ext_resource type="Texture2D" uid="uid://xw8jvydjlrcq" path="res://assets/fondos/fondo city 2.png" id="1_y4vh0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7mxu7"]
-size = Vector2(1173, 60)
+size = Vector2(1107.62, 60)
 
 [node name="CuidadClon" type="Node2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
 texture_repeat = 1
-position = Vector2(578, 320)
+position = Vector2(563, 356)
+scale = Vector2(0.720863, 0.625407)
 texture = ExtResource("1_y4vh0")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(579, 637)
+position = Vector2(562.5, 637)
+scale = Vector2(0.999441, 1.0258)
 shape = SubResource("RectangleShape2D_7mxu7")
