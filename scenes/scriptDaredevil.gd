@@ -11,7 +11,6 @@ var dead : int = 0
 
 func _on_dead()-> void:
 	dead = 1 
-	print("¡Daredevil ha muerto!")
 
 var facing := 1
 
