@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://bfq7enxl0is4o"]
+
+[ext_resource type="Texture2D" uid="uid://cp6745gfkc5si" path="res://assets/sprites/ladronIdle.png" id="1_n8kyn"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_n8kyn"]
+radius = 13.0
+height = 92.0
+
+[node name="Ladron" type="CharacterBody2D"]
+scale = Vector2(0.986304, 1.0102)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(675, 610)
+scale = Vector2(-0.194665, 0.192621)
+texture = ExtResource("1_n8kyn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(680.318, 590.973)
+scale = Vector2(1.27308, 1.18174)
+shape = SubResource("CapsuleShape2D_n8kyn")
