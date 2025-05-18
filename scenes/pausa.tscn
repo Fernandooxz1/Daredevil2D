@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://5jopgb63rq0r"]
+[gd_scene load_steps=7 format=3 uid="uid://5jopgb63rq0r"]
 
 [ext_resource type="Texture2D" uid="uid://i2be03vglc7w" path="res://assets/sprites/fondito menu DD.jpg" id="1_3kuwy"]
 [ext_resource type="Script" uid="uid://cysjfx4x0hraw" path="res://scenes/pausa.gd" id="1_qtdsr"]
 [ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_1vvwb"]
+[ext_resource type="Script" uid="uid://dlwpxiq44o08y" path="res://scenes/pausa_box_container.gd" id="3_eqlbv"]
+[ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="5_d1dax"]
+[ext_resource type="AudioStream" uid="uid://b0l10rbil8y25" path="res://assets/Audio/mouse_click_menus.mp3" id="6_eqlbv"]
 
 [node name="Pausa" type="CanvasLayer"]
 process_mode = 3
@@ -33,6 +36,7 @@ offset_bottom = 476.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.259613, 0.244121)
+script = ExtResource("3_eqlbv")
 
 [node name="Button" type="Button" parent="VBoxContainer"]
 texture_filter = 1
@@ -53,5 +57,18 @@ theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
 text = "Quit"
 
+[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+stream = ExtResource("5_d1dax")
+volume_db = -6.252
+
+[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+stream = ExtResource("6_eqlbv")
+
+[connection signal="mouse_entered" from="VBoxContainer/Button" to="VBoxContainer" method="_on_button_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button" to="VBoxContainer" method="_on_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/Button2" to="VBoxContainer" method="_on_button_2_mouse_entered"]
+[connection signal="pressed" from="VBoxContainer/Button2" to="VBoxContainer" method="_on_button_2_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/Button3" to="VBoxContainer" method="_on_button_3_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_button_3_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button3" to="VBoxContainer" method="_on_button_3_pressed"]

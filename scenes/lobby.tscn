@@ -1,8 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://bmflohqxtk51h"]
+[gd_scene load_steps=12 format=3 uid="uid://bmflohqxtk51h"]
 
 [ext_resource type="Script" uid="uid://b3einmntpv01k" path="res://scenes/lobby.gd" id="1_5gu6x"]
 [ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_5gu6x"]
 [ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_q60fs"]
+[ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="4_pc087"]
+[ext_resource type="AudioStream" uid="uid://b0l10rbil8y25" path="res://assets/Audio/mouse_click_menus.mp3" id="5_apkv3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1atq"]
 bg_color = Color(0.933333, 0, 0, 0.698039)
@@ -88,6 +90,16 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_q60fs")
 theme_override_styles/normal = SubResource("StyleBoxTexture_q60fs")
 text = "Quit"
 
+[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+stream = ExtResource("4_pc087")
+volume_db = -6.252
+
+[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+stream = ExtResource("5_apkv3")
+
+[connection signal="mouse_entered" from="VBoxContainer/Button" to="." method="_on_button_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/Button2" to="." method="_on_button_2_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/Button3" to="." method="_on_button_3_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_button_3_pressed"]
