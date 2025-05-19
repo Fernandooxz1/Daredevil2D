@@ -112,4 +112,6 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 		else:
 			$RedSuite.play("morido")
 			$RedSuite.scale = Vector2(2.5,2.5)
+			await get_tree().create_timer(1.0).timeout
+			get_tree().change_scene_to_file("res://scenes/gameover.tscn")
 		
