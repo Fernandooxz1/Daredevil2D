@@ -1,10 +1,11 @@
-[gd_scene load_steps=24 format=3 uid="uid://bbelo0p6gc24u"]
+[gd_scene load_steps=30 format=3 uid="uid://bbelo0p6gc24u"]
 
 [ext_resource type="Texture2D" uid="uid://copbe11j5qcse" path="res://assets/sprites/daredevil golpeando.png" id="1_008a6"]
 [ext_resource type="Texture2D" uid="uid://bw81x3e15e6es" path="res://assets/sprites/crouch.png" id="1_mpqdg"]
 [ext_resource type="Texture2D" uid="uid://cbal1rsdrk3d1" path="res://assets/sprites/idle.png" id="2_ef4hk"]
 [ext_resource type="Texture2D" uid="uid://nv2k474y5aj0" path="res://assets/sprites/crouch_hit.png" id="2_xki8k"]
 [ext_resource type="Texture2D" uid="uid://c3qx3arthlgcf" path="res://assets/sprites/Run.png" id="3_84hc6"]
+[ext_resource type="Texture2D" uid="uid://bqk6gq8omirw1" path="res://assets/sprites/Daredevil/Dead.png" id="3_c82jl"]
 [ext_resource type="Texture2D" uid="uid://ckh21pfytftat" path="res://assets/sprites/DDwalk.png" id="3_ef4hk"]
 [ext_resource type="Texture2D" uid="uid://cm20dk2q1vfp6" path="res://assets/sprites/jump.png" id="3_p8c0w"]
 [ext_resource type="Texture2D" uid="uid://dwuwwurc060lq" path="res://assets/sprites/salto_hit.png" id="4_wqvkv"]
@@ -19,9 +20,29 @@ region = Rect2(0, 0, 1024, 1024)
 atlas = ExtResource("2_xki8k")
 region = Rect2(0, 0, 394, 321)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_5m244"]
+atlas = ExtResource("3_c82jl")
+region = Rect2(29, 0, 213, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1xhoh"]
+atlas = ExtResource("3_c82jl")
+region = Rect2(258, 0, 229, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xmsp8"]
+atlas = ExtResource("3_c82jl")
+region = Rect2(491, 0, 241, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pueqy"]
+atlas = ExtResource("3_c82jl")
+region = Rect2(748, 0, 308, 1024)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_xki8k"]
 atlas = ExtResource("4_wqvkv")
 region = Rect2(0, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_18ktq"]
+atlas = ExtResource("3_c82jl")
+region = Rect2(748, 0, 308, 1024)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p8c0w"]
 atlas = ExtResource("3_84hc6")
@@ -67,6 +88,23 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_5m244")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1xhoh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xmsp8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pueqy")
+}],
+"loop": false,
+"name": &"dead",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("1_008a6")
 }],
 "loop": true,
@@ -95,6 +133,14 @@ animations = [{
 }],
 "loop": true,
 "name": &"jump_hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_18ktq")
+}],
+"loop": true,
+"name": &"morido",
 "speed": 5.0
 }, {
 "frames": [{
@@ -146,7 +192,7 @@ texture_filter = 1
 texture_repeat = 1
 position = Vector2(-88.5897, 42.2961)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"crouch"
+animation = &"dead"
 
 [node name="CollisionDD" type="CollisionShape2D" parent="."]
 visible = false
