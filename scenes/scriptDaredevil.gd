@@ -108,6 +108,7 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 			$RedSuite.play("dead")
 			await $RedSuite.animation_finished
 			if $RedSuite.animation == "dead":  # Verifica que terminó la animación correcta
+				get_tree().change_scene_to_file("res://scenes/gameover.tscn")
 				semurio = 0
 		else:
 			$RedSuite.play("morido")
