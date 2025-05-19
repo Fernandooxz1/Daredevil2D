@@ -8,6 +8,7 @@ extends CharacterBody2D
 @export var acceleration := 1000
 @export var friction := 4500
 var dead : int = 0
+var semurio = 1
 
 func _on_dead()-> void:
 	dead = 1 
@@ -60,6 +61,7 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 	var Cposition_x = 0
 	var Cposition_y = 0
 	
+	
 	if dead == 0:
 		if not is_grounded:
 			if is_attacking:
@@ -98,8 +100,16 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 		$CollisionDD.position = Vector2(Cposition_x,Cposition_x)
 		$CollisionDD.scale = Vector2(Cscale_x,Cscale_y)
 	else:
-		$RedSuite.play("crouch")
 		$RedSuite.position = Vector2(0,0)
-		$RedSuite.scale = Vector2(1,1)
+		$RedSuite.scale = Vector2(2.3,2.3)
 		$CollisionDD.position = Vector2(0,0)
 		$CollisionDD.scale = Vector2(50,50)
+		if semurio == 1:
+			$RedSuite.play("dead")
+			await $RedSuite.animation_finished
+			if $RedSuite.animation == "dead":  # Verifica que terminó la animación correcta
+				semurio = 0
+		else:
+			$RedSuite.play("morido")
+			$RedSuite.scale = Vector2(2.5,2.5)
+		
