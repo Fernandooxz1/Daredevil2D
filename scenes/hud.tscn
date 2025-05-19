@@ -5,11 +5,11 @@
 [ext_resource type="Texture2D" uid="uid://cqrkcskckukhs" path="res://assets/sprites/DD face.png" id="4_6fi6k"]
 [ext_resource type="Texture2D" uid="uid://bfa2vofgyshig" path="res://assets/sprites/throw_weapon.png" id="4_qkknv"]
 [ext_resource type="Texture2D" uid="uid://clllcfd7it1nu" path="res://assets/sprites/sense DD.webp" id="6_0m4u7"]
-[ext_resource type="Texture2D" uid="uid://bmv7p6yk650jn" path="res://assets/sprites/health.png" id="6_hd3ao"]
 [ext_resource type="Texture2D" uid="uid://daolfopx0w5or" path="res://assets/sprites/Health_Bar/BGTPB1.png" id="7_mphia"]
 [ext_resource type="Texture2D" uid="uid://q6twkqmmk612" path="res://assets/sprites/Health_Bar/MTPB1.png" id="8_0m4u7"]
 [ext_resource type="Texture2D" uid="uid://42oty5ge3dxr" path="res://assets/sprites/Health_Bar/BGTPB2.png" id="8_3swnk"]
 [ext_resource type="Texture2D" uid="uid://bvq7gs4s2dek0" path="res://assets/sprites/Health_Bar/MTPB2.png" id="9_qkknv"]
+[ext_resource type="Texture2D" uid="uid://s4exena7y2k6" path="res://assets/sprites/Health_Bar/health.png" id="9_uxdf7"]
 [ext_resource type="Texture2D" uid="uid://0ulkcntgw1lb" path="res://assets/sprites/Health_Bar/BGTPB3.png" id="10_uxdf7"]
 [ext_resource type="Texture2D" uid="uid://cqa1rmjjavjwd" path="res://assets/sprites/Health_Bar/MTPB3.png" id="11_5357l"]
 [ext_resource type="Texture2D" uid="uid://bbwnbh77qofxq" path="res://assets/sprites/Health_Bar/BGTPB4.png" id="12_iypfu"]
@@ -43,6 +43,36 @@ position = Vector2(140.345, 496.91)
 scale = Vector2(0.0983972, 0.0981487)
 texture = ExtResource("6_0m4u7")
 
+[node name="EnergyBar" type="TextureProgressBar" parent="."]
+offset_left = 241.806
+offset_top = 88.8665
+offset_right = 1561.81
+offset_bottom = 376.866
+scale = Vector2(0.211765, 0.181127)
+min_value = -31.0
+max_value = 115.0
+value = 100.0
+texture_under = ExtResource("7_mphia")
+texture_over = ExtResource("8_0m4u7")
+texture_progress = ExtResource("9_uxdf7")
+tint_progress = Color(1, 1, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="RageBar" type="TextureProgressBar" parent="."]
+offset_left = 268.587
+offset_top = 123.156
+offset_right = 1588.59
+offset_bottom = 411.156
+scale = Vector2(0.211765, 0.181127)
+min_value = -31.0
+max_value = 115.0
+value = 100.0
+texture_under = ExtResource("7_mphia")
+texture_over = ExtResource("8_0m4u7")
+texture_progress = ExtResource("9_uxdf7")
+tint_progress = Color(1, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
+
 [node name="HealthBar" type="Node2D" parent="."]
 position = Vector2(22.1462, -34.5751)
 scale = Vector2(0.802441, 0.713112)
@@ -58,7 +88,8 @@ max_value = 115.0
 value = 100.0
 texture_under = ExtResource("7_mphia")
 texture_over = ExtResource("8_0m4u7")
-texture_progress = ExtResource("6_hd3ao")
+texture_progress = ExtResource("9_uxdf7")
+tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB80" type="TextureProgressBar" parent="HealthBar"]
@@ -72,7 +103,8 @@ max_value = 115.0
 value = 80.0
 texture_under = ExtResource("8_3swnk")
 texture_over = ExtResource("9_qkknv")
-texture_progress = ExtResource("6_hd3ao")
+texture_progress = ExtResource("9_uxdf7")
+tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB60" type="TextureProgressBar" parent="HealthBar"]
@@ -86,7 +118,8 @@ max_value = 115.0
 value = 60.0
 texture_under = ExtResource("10_uxdf7")
 texture_over = ExtResource("11_5357l")
-texture_progress = ExtResource("6_hd3ao")
+texture_progress = ExtResource("9_uxdf7")
+tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB40" type="TextureProgressBar" parent="HealthBar"]
@@ -100,7 +133,8 @@ max_value = 115.0
 value = 40.0
 texture_under = ExtResource("12_iypfu")
 texture_over = ExtResource("13_qpprf")
-texture_progress = ExtResource("6_hd3ao")
+texture_progress = ExtResource("9_uxdf7")
+tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB20" type="TextureProgressBar" parent="HealthBar"]
@@ -115,5 +149,6 @@ step = 0.1
 value = 20.0
 texture_under = ExtResource("14_3xg78")
 texture_over = ExtResource("15_48y67")
-texture_progress = ExtResource("6_hd3ao")
+texture_progress = ExtResource("9_uxdf7")
+tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
