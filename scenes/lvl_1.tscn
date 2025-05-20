@@ -73,6 +73,10 @@ scale = Vector2(13.1562, 13.6648)
 position = Vector2(1593, 525)
 script = ExtResource("7_vuq28")
 
+[node name="GasVenenoso2" parent="." instance=ExtResource("6_6a3rq")]
+position = Vector2(2693, 539)
+script = ExtResource("7_vuq28")
+
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(13, -20)
 
