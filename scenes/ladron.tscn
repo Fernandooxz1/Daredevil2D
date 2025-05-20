@@ -1,9 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://bfq7enxl0is4o"]
+[gd_scene load_steps=16 format=3 uid="uid://bfq7enxl0is4o"]
 
 [ext_resource type="Texture2D" uid="uid://cp6745gfkc5si" path="res://assets/sprites/ladronIdle.png" id="1_n8kyn"]
 [ext_resource type="Script" uid="uid://btb7fb7nsx5hp" path="res://scenes/scriptLadron.gd" id="1_v07dk"]
 [ext_resource type="Texture2D" uid="uid://1wgxgowa2jbg" path="res://assets/sprites/LadronAttack.png" id="2_1retn"]
 [ext_resource type="Texture2D" uid="uid://2cah87d7vf6e" path="res://assets/sprites/LadronTakingDamage.png" id="3_v07dk"]
+[ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scenes/hitbox.gd" id="5_ydokj"]
+[ext_resource type="Script" uid="uid://ggr6kugd2gdf" path="res://scenes/health_component.gd" id="6_yk101"]
+[ext_resource type="Texture2D" uid="uid://s4exena7y2k6" path="res://assets/sprites/Health_Bar/health.png" id="7_yk101"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tqgxs"]
 atlas = ExtResource("1_n8kyn")
@@ -14,10 +17,6 @@ atlas = ExtResource("2_1retn")
 region = Rect2(200, 100, 612, 612)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n8kyn"]
-atlas = ExtResource("1_n8kyn")
-region = Rect2(200, 100, 612, 612)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yk101"]
 atlas = ExtResource("1_n8kyn")
 region = Rect2(200, 100, 612, 612)
 
@@ -48,19 +47,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_yk101")
-}, {
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_sirfx")
 }],
 "loop": false,
 "name": &"take_damage",
-"speed": 3.0
+"speed": 1.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_n8kyn"]
 radius = 13.0
 height = 92.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_sirfx"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_q8myo"]
 
 [node name="Ladron" type="CharacterBody2D"]
 scale = Vector2(0.986304, 1.0102)
@@ -71,9 +71,46 @@ position = Vector2(677.276, 589.982)
 rotation = 0.0129428
 scale = Vector2(-0.193367, 0.190042)
 sprite_frames = SubResource("SpriteFrames_dbi3t")
-animation = &"idle"
+animation = &"take_damage"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(680.318, 590.973)
 scale = Vector2(1.27308, 1.18174)
 shape = SubResource("CapsuleShape2D_n8kyn")
+
+[node name="HitboxComponent" type="Area2D" parent="."]
+script = ExtResource("5_ydokj")
+metadata/_custom_type_script = "uid://c6eqkofolywxl"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+position = Vector2(680.318, 572.164)
+scale = Vector2(1.10536, 0.940253)
+shape = SubResource("CapsuleShape2D_sirfx")
+
+[node name="HealthComponent" type="Area2D" parent="."]
+light_mask = 2
+visibility_layer = 2
+script = ExtResource("6_yk101")
+metadata/_custom_type_script = "uid://ggr6kugd2gdf"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HealthComponent"]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(680.318, 590.972)
+scale = Vector2(1.28624, 3.56342)
+shape = SubResource("CapsuleShape2D_q8myo")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="."]
+offset_left = 640.776
+offset_top = 523.659
+offset_right = 1960.78
+offset_bottom = 811.659
+scale = Vector2(0.05439, 0.0401419)
+value = 100.0
+texture_progress = ExtResource("7_yk101")
+tint_progress = Color(0, 1, 0, 1)
+
+[connection signal="onDamageTook" from="HealthComponent" to="." method="_on_health_component_on_damage_took"]
+[connection signal="onDead" from="HealthComponent" to="." method="_on_health_component_on_dead"]
+[connection signal="onHealthChanged" from="HealthComponent" to="." method="_on_health_component_on_health_changed"]
