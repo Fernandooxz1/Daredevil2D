@@ -68,6 +68,7 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 				anim = "jump_hit"
 				Sscale_x = facing * 0.975
 				Sscale_y = 0.975
+				
 			else:
 				anim = "jump"
 				Sscale_x = facing * 0.975
@@ -79,6 +80,7 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 				Sscale_y = 2.5
 				Sposition_x= facing * 50
 				Sposition_y= 150
+				
 			else:
 				anim = "crouch"
 				Sscale_x = facing * 0.85
@@ -99,6 +101,21 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 		$RedSuite.scale = Vector2(Sscale_x, Sscale_y)
 		$CollisionDD.position = Vector2(Cposition_x,Cposition_x)
 		$CollisionDD.scale = Vector2(Cscale_x,Cscale_y)
+		if anim == "hit" :
+			$HitboxComponent/HitShapeDD.position = Vector2(350 * facing,-200)
+			$HitboxComponent/HitShapeDD.disabled = false
+			await get_tree().create_timer(0.1).timeout
+			$HitboxComponent/HitShapeDD.disabled = true
+		elif anim == "crouch_hit":
+			$HitboxComponent/HitShapeDD.position = Vector2(450 * facing,-100)
+			$HitboxComponent/HitShapeDD.disabled = false
+			await get_tree().create_timer(0.1).timeout
+			$HitboxComponent/HitShapeDD.disabled = true
+		elif anim == "jump_hit":
+			$HitboxComponent/HitShapeDD.position = Vector2(420 * facing,200)
+			$HitboxComponent/HitShapeDD.disabled = false
+			await get_tree().create_timer(0.1).timeout
+			$HitboxComponent/HitShapeDD.disabled = true
 	else:
 		$RedSuite.position = Vector2(0,0)
 		$RedSuite.scale = Vector2(2.3 * facing,2.3)
