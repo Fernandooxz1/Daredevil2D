@@ -1,4 +1,4 @@
-class_name Daredevil
+
 extends CharacterBody2D
 
 @export var gravity := 1200
