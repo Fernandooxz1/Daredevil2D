@@ -101,7 +101,7 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 		$CollisionDD.scale = Vector2(Cscale_x,Cscale_y)
 	else:
 		$RedSuite.position = Vector2(0,0)
-		$RedSuite.scale = Vector2(2.3,2.3)
+		$RedSuite.scale = Vector2(2.3 * facing,2.3)
 		$CollisionDD.position = Vector2(0,0)
 		$CollisionDD.scale = Vector2(50,50)
 		if semurio == 1:
@@ -111,7 +111,7 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 				semurio = 0
 		else:
 			$RedSuite.play("morido")
-			$RedSuite.scale = Vector2(2.5,2.5)
+			$RedSuite.scale = Vector2(2.5 * facing,2.5)
 			await get_tree().create_timer(1.0).timeout
 			get_tree().change_scene_to_file("res://scenes/gameover.tscn")
 		
