@@ -12,5 +12,5 @@ func _ready() -> void:
 	health_comp.connect("onHealthChanged", Callable(JuD, "_on_health_changed"))
 	health_comp.connect("onDead", Callable(DD,"_on_dead"))
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass

@@ -52,7 +52,7 @@ position = Vector2(3251, -5)
 scale = Vector2(0.954716, 1.00466)
 
 [node name="Ladron" parent="." instance=ExtResource("5_hg73m")]
-position = Vector2(149, -39)
+position = Vector2(159, -42)
 
 [node name="Daredevil" parent="." instance=ExtResource("2_l8iau")]
 position = Vector2(571, 512)
@@ -93,3 +93,4 @@ shape = SubResource("RectangleShape2D_53anu")
 
 [node name="Tamer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_xinjc")
+volume_db = -16.306

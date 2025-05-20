@@ -1,6 +1,62 @@
-[gd_scene load_steps=3 format=3 uid="uid://bfq7enxl0is4o"]
+[gd_scene load_steps=12 format=3 uid="uid://bfq7enxl0is4o"]
 
 [ext_resource type="Texture2D" uid="uid://cp6745gfkc5si" path="res://assets/sprites/ladronIdle.png" id="1_n8kyn"]
+[ext_resource type="Script" uid="uid://btb7fb7nsx5hp" path="res://scenes/scriptLadron.gd" id="1_v07dk"]
+[ext_resource type="Texture2D" uid="uid://1wgxgowa2jbg" path="res://assets/sprites/LadronAttack.png" id="2_1retn"]
+[ext_resource type="Texture2D" uid="uid://2cah87d7vf6e" path="res://assets/sprites/LadronTakingDamage.png" id="3_v07dk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tqgxs"]
+atlas = ExtResource("1_n8kyn")
+region = Rect2(200, 100, 612, 612)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ydokj"]
+atlas = ExtResource("2_1retn")
+region = Rect2(200, 100, 612, 612)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n8kyn"]
+atlas = ExtResource("1_n8kyn")
+region = Rect2(200, 100, 612, 612)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yk101"]
+atlas = ExtResource("1_n8kyn")
+region = Rect2(200, 100, 612, 612)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sirfx"]
+atlas = ExtResource("3_v07dk")
+region = Rect2(200, 100, 612, 612)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dbi3t"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tqgxs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ydokj")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n8kyn")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yk101")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sirfx")
+}],
+"loop": false,
+"name": &"take_damage",
+"speed": 3.0
+}]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_n8kyn"]
 radius = 13.0
@@ -8,11 +64,14 @@ height = 92.0
 
 [node name="Ladron" type="CharacterBody2D"]
 scale = Vector2(0.986304, 1.0102)
+script = ExtResource("1_v07dk")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(675, 610)
-scale = Vector2(-0.194665, 0.192621)
-texture = ExtResource("1_n8kyn")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(677.276, 589.982)
+rotation = 0.0129428
+scale = Vector2(-0.193367, 0.190042)
+sprite_frames = SubResource("SpriteFrames_dbi3t")
+animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(680.318, 590.973)
