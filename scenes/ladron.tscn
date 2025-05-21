@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bfq7enxl0is4o"]
+[gd_scene load_steps=15 format=3 uid="uid://bfq7enxl0is4o"]
 
 [ext_resource type="Texture2D" uid="uid://cp6745gfkc5si" path="res://assets/sprites/ladronIdle.png" id="1_n8kyn"]
 [ext_resource type="Texture2D" uid="uid://1wgxgowa2jbg" path="res://assets/sprites/LadronAttack.png" id="2_1retn"]
@@ -10,6 +10,10 @@
 [sub_resource type="AtlasTexture" id="AtlasTexture_ydokj"]
 atlas = ExtResource("2_1retn")
 region = Rect2(200, 100, 612, 612)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yk101"]
+atlas = ExtResource("1_n8kyn")
+region = Rect2(0, 0, 1007, 840)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n8kyn"]
 atlas = ExtResource("1_n8kyn")
@@ -24,10 +28,13 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ydokj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yk101")
 }],
 "loop": false,
 "name": &"attack",
-"speed": 1.0
+"speed": 4.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -64,6 +71,8 @@ rotation = 0.0129428
 scale = Vector2(0.192937, 0.187931)
 sprite_frames = SubResource("SpriteFrames_dbi3t")
 animation = &"attack"
+frame = 1
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-2.02964, 12.925)
@@ -71,12 +80,14 @@ scale = Vector2(1.09621, 1.1213)
 shape = SubResource("CapsuleShape2D_n8kyn")
 
 [node name="HitboxComponent" type="Area2D" parent="."]
+position = Vector2(-1.01482, 3.97693)
 script = ExtResource("5_ydokj")
+damage = 1
 metadata/_custom_type_script = "uid://c6eqkofolywxl"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
-position = Vector2(4.60148e-05, -10.9365)
-scale = Vector2(1.10536, 0.940253)
+position = Vector2(-1.01482, -12.925)
+scale = Vector2(1.11386, 0.278164)
 shape = SubResource("CapsuleShape2D_sirfx")
 
 [node name="HealthComponent" type="Area2D" parent="."]
@@ -93,11 +104,11 @@ scale = Vector2(1.28624, 3.56342)
 shape = SubResource("CapsuleShape2D_q8myo")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="."]
-offset_left = -74.0819
-offset_top = -63.6307
-offset_right = 1245.92
-offset_bottom = 224.369
-scale = Vector2(0.094514, 0.0677146)
+offset_left = -43.6373
+offset_top = -59.654
+offset_right = 1276.36
+offset_bottom = 228.346
+scale = Vector2(0.0628308, 0.0289379)
 min_value = -28.0
 max_value = 115.0
 value = 100.0

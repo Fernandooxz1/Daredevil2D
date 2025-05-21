@@ -72,10 +72,12 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 				Sscale_x = facing * 0.975
 				Sscale_y = 0.975
 				
+				
 			else:
 				anim = "jump"
 				Sscale_x = facing * 0.975
 				Sscale_y = 0.975
+				
 		elif is_crouching:
 			if is_attacking:
 				anim = "crouch_hit"
@@ -83,21 +85,27 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 				Sscale_y = 2.5
 				Sposition_x= facing * 50
 				Sposition_y= 150
-				
+				$HealthComponent/HealthShapeDD.position.y = 150
+				$HealthComponent/HealthShapeDD.scale.y = 25
 			else:
 				anim = "crouch"
 				Sscale_x = facing * 0.85
 				Sscale_y = 0.8
 				Sposition_x= 0
 				Sposition_y= 150
+				$HealthComponent/HealthShapeDD.position.y = 150
+				$HealthComponent/HealthShapeDD.scale.y = 25
 		elif is_attacking and direction == 0:
 			anim = "hit"
 			Sscale_x = facing * 0.9
 			Sscale_y = 1.0
+			$HealthComponent/HealthShapeDD.position.y = 0
+			$HealthComponent/HealthShapeDD.scale.y = 30
 		elif direction != 0:
 			anim = "run" if is_running else "walk"
 			Sscale_x = facing * (2.2 if is_running else 1.6)
 			Sscale_y = 2.2 if is_running else 1.5
+			
 		
 		$RedSuite.play(anim)
 		$RedSuite.position = Vector2(Sposition_x, Sposition_y)
@@ -111,6 +119,8 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 			$HitboxComponent/HitShapeDD.disabled = true
 		elif anim == "crouch_hit":
 			$HitboxComponent/HitShapeDD.position = Vector2(450 * facing,-100)
+			$HealthComponent/HealthShapeDD.position.y = 150
+			$HealthComponent/HealthShapeDD.scale.y = 25
 			$HitboxComponent/HitShapeDD.disabled = false
 			await get_tree().create_timer(0.1).timeout
 			$HitboxComponent/HitShapeDD.disabled = true

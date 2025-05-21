@@ -216,6 +216,6 @@ shape = SubResource("CapsuleShape2D_xki8k")
 script = ExtResource("12_wtd7q")
 
 [node name="HealthShapeDD" type="CollisionShape2D" parent="HealthComponent"]
-position = Vector2(-9.84332, 0)
-scale = Vector2(19.667, 29.7002)
+position = Vector2(-19.6866, 25.3777)
+scale = Vector2(19.71, 32.4267)
 shape = SubResource("CapsuleShape2D_c82jl")
