@@ -11,3 +11,7 @@ func _ready() -> void:
 func hit(area):
 	if area is HealthComponent:
 		area.take_damage(damage)
+
+
+func _on_health_component_on_dead() -> void:
+	pass # Replace with function body.

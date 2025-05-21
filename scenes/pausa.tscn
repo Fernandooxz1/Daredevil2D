@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://5jopgb63rq0r"]
+[gd_scene load_steps=10 format=3 uid="uid://5jopgb63rq0r"]
 
 [ext_resource type="Texture2D" uid="uid://i2be03vglc7w" path="res://assets/sprites/fondito menu DD.jpg" id="1_3kuwy"]
 [ext_resource type="Script" uid="uid://cysjfx4x0hraw" path="res://scenes/pausa.gd" id="1_qtdsr"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" uid="uid://dlwpxiq44o08y" path="res://scenes/pausa_box_container.gd" id="3_eqlbv"]
 [ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="5_d1dax"]
 [ext_resource type="AudioStream" uid="uid://b0l10rbil8y25" path="res://assets/Audio/mouse_click_menus.mp3" id="6_eqlbv"]
-[ext_resource type="Script" uid="uid://gg1rq5xgrth7" path="res://scenes/options2.gd" id="7_xa0t4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eqlbv"]
 bg_color = Color(0.933333, 0, 0, 0.784314)
@@ -83,7 +82,6 @@ offset_top = 473.0
 offset_right = 1481.0
 offset_bottom = 982.0
 scale = Vector2(0.273316, 0.25472)
-script = ExtResource("7_xa0t4")
 
 [node name="Button4" type="Button" parent="options"]
 layout_mode = 2

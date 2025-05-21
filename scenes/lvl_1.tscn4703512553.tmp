@@ -52,6 +52,11 @@ scale = Vector2(1.04925, 1.00466)
 position = Vector2(3251, -5)
 scale = Vector2(0.954716, 1.00466)
 
+[node name="Ladron" parent="." instance=ExtResource("5_hg73m")]
+position = Vector2(159, -42)
+up_direction = Vector2(0.707107, -0.707107)
+script = ExtResource("6_k5cx7")
+
 [node name="Daredevil" parent="." instance=ExtResource("2_l8iau")]
 position = Vector2(571, 512)
 scale = Vector2(0.0987319, 0.115056)
@@ -66,10 +71,6 @@ script = ExtResource("7_oymhu")
 [node name="HUD" parent="Daredevil/Camera2D2" instance=ExtResource("8_eukc1")]
 position = Vector2(-7993.35, -3664.43)
 scale = Vector2(13.1562, 13.6648)
-
-[node name="Ladron" parent="." instance=ExtResource("5_hg73m")]
-position = Vector2(808, 532)
-script = ExtResource("6_k5cx7")
 
 [node name="GasVenenoso" parent="." instance=ExtResource("6_6a3rq")]
 position = Vector2(1593, 525)

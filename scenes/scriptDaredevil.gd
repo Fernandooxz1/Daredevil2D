@@ -10,6 +10,9 @@ extends CharacterBody2D
 var dead : int = 0
 var semurio = 1
 
+func _ready() -> void:
+	$HitboxComponent/HitShapeDD.disabled = true
+
 func _on_dead()-> void:
 	dead = 1 
 
@@ -57,7 +60,7 @@ func _update_animation(is_grounded: bool, direction: float, is_running: bool, is
 	var Sposition_x = 0
 	var Sposition_y = 0
 	var Cscale_x = 50.0
-	var Cscale_y = 50.0
+	var Cscale_y = 65.0
 	var Cposition_x = 0
 	var Cposition_y = 0
 	

@@ -51,7 +51,6 @@ position = Vector2(22.1462, -34.5751)
 scale = Vector2(0.802441, 0.713112)
 
 [node name="TPB100" type="TextureProgressBar" parent="HealthBar"]
-visible = false
 offset_left = 231.058
 offset_top = 89.3562
 offset_right = 1551.06
@@ -115,6 +114,7 @@ tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB20" type="TextureProgressBar" parent="HealthBar"]
+visible = false
 offset_left = 231.7
 offset_top = 91.7604
 offset_right = 1551.7
