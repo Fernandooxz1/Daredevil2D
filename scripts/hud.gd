@@ -41,3 +41,22 @@ func _on_health_changed(health: int) -> void:
 		$HealthBar/TPB60.visible = false
 		$HealthBar/TPB40.visible = false
 		$HealthBar/TPB20.visible = true
+
+
+func _on_daredevil_actual_weapon(arma_actual) -> void:
+	if arma_actual == 1:
+		$"Puños".visible = true
+		$"Baston".visible = false
+		$"Dual-wield".visible = false
+	elif arma_actual == 2:
+		$"Puños".visible = false
+		$"Baston".visible = true
+		$"Dual-wield".visible = false
+	elif arma_actual == 3:
+		$"Puños".visible = false
+		$"Baston".visible = false
+		$"Dual-wield".visible = true
+	else:
+		$"Puños".visible = false
+		$"Baston".visible = false
+		$"Dual-wield".visible = false
