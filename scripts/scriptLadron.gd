@@ -46,7 +46,7 @@ func _physics_process(delta):
 		atacar(direccion)
 	elif distancia <= distancia_detectar:
 		velocity.x = direccion * velocidad
-		animacion.play("run")
+		#animacion.play("run")
 	else:
 		velocity.x = 0
 		animacion.play("idle")

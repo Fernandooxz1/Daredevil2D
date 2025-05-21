@@ -3,8 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://cp6745gfkc5si" path="res://assets/sprites/ladronIdle.png" id="1_n8kyn"]
 [ext_resource type="Texture2D" uid="uid://1wgxgowa2jbg" path="res://assets/sprites/LadronAttack.png" id="2_1retn"]
 [ext_resource type="Texture2D" uid="uid://2cah87d7vf6e" path="res://assets/sprites/LadronTakingDamage.png" id="3_v07dk"]
-[ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scenes/hitbox.gd" id="5_ydokj"]
-[ext_resource type="Script" uid="uid://ggr6kugd2gdf" path="res://scenes/health_component.gd" id="6_yk101"]
+[ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scripts/hitbox.gd" id="5_ydokj"]
+[ext_resource type="Script" uid="uid://ggr6kugd2gdf" path="res://scripts/health_component.gd" id="6_yk101"]
 [ext_resource type="Texture2D" uid="uid://s4exena7y2k6" path="res://assets/sprites/Health_Bar/health.png" id="7_yk101"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ydokj"]
@@ -82,7 +82,7 @@ shape = SubResource("CapsuleShape2D_n8kyn")
 [node name="HitboxComponent" type="Area2D" parent="."]
 position = Vector2(-1.01482, 3.97693)
 script = ExtResource("5_ydokj")
-damage = 1
+damage = 10
 metadata/_custom_type_script = "uid://c6eqkofolywxl"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
@@ -104,11 +104,11 @@ scale = Vector2(1.28624, 3.56342)
 shape = SubResource("CapsuleShape2D_q8myo")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="."]
-offset_left = -43.6373
-offset_top = -59.654
-offset_right = 1276.36
-offset_bottom = 228.346
-scale = Vector2(0.0628308, 0.0289379)
+offset_left = -47.6966
+offset_top = -62.6367
+offset_right = 1272.3
+offset_bottom = 225.363
+scale = Vector2(0.0641343, 0.0471643)
 min_value = -28.0
 max_value = 115.0
 value = 100.0

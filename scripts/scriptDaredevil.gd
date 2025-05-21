@@ -58,7 +58,7 @@ func _physics_process(delta):
 func _update_animation(is_blocking,is_grounded: bool, direction: float, is_running: bool, is_attacking: bool, is_crouching: bool) -> void:
 	var anim = "idle"
 	$HealthComponent/HealthShapeDD.disabled = false
-	var Sscale_x = facing * 2.0
+	var Sscale_x = facing * 2.2
 	var Sscale_y = 2.0
 	var Sposition_x = 0
 	var Sposition_y = 0
@@ -111,8 +111,8 @@ func _update_animation(is_blocking,is_grounded: bool, direction: float, is_runni
 			elif is_blocking:
 				#anim = "blocking"
 				anim = "idle"
-				Sscale_x = facing * 1
-				Sscale_y = 1
+				Sscale_x = facing * 2.3
+				Sscale_y = 2
 				$HealthComponent/HealthShapeDD.disabled = true
 				$HealthComponent/HealthShapeDD.position.y = 0
 				$HealthComponent/HealthShapeDD.scale.y = 30
