@@ -203,6 +203,7 @@ shape = SubResource("CapsuleShape2D_m6s4t")
 light_mask = 2
 visibility_layer = 2
 script = ExtResource("11_c82jl")
+damage = 5
 
 [node name="HitShapeDD" type="CollisionShape2D" parent="HitboxComponent"]
 light_mask = 2

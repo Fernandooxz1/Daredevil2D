@@ -66,7 +66,7 @@ func _physics_process(delta):
 	move_and_slide()	
 
 func _on_health_component_on_health_changed(health: int) -> void:
-	$TextureProgressBar.value = health - 60
+	$TextureProgressBar.value = health
 
 func _on_health_component_on_damage_took() -> void:
 	mepegaron = 1
