@@ -57,7 +57,7 @@ func recibir_danio():
 	animacion.play("take_damage")
 	velocity.x = 0
 	mepegaron = false
-	await get_tree().create_timer(0.5).timeout  # delay por recibir daño
+	await get_tree().create_timer(0.2).timeout  # delay por recibir daño
 
 func atacar(direccion):
 	nopuedopegar = true
@@ -65,7 +65,7 @@ func atacar(direccion):
 	animacion.play("attack")
 	$HitboxComponent/CollisionShape2D.disabled = false
 	$HitboxComponent/CollisionShape2D.position.x = 30 * direccion
-	await get_tree().create_timer(0.5).timeout  # duración del hit activo
+	await get_tree().create_timer(0.1).timeout  # duración del hit activo
 	$HitboxComponent/CollisionShape2D.disabled = true
 	await get_tree().create_timer(tiempo_cooldown).timeout
 	nopuedopegar = false
