@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://bmflohqxtk51h"]
 
-[ext_resource type="Script" uid="uid://b3einmntpv01k" path="res://scenes/lobby.gd" id="1_5gu6x"]
+[ext_resource type="Script" uid="uid://b3einmntpv01k" path="res://scripts/lobby.gd" id="1_5gu6x"]
 [ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_5gu6x"]
 [ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_q60fs"]
 [ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="4_pc087"]

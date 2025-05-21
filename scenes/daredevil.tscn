@@ -1,7 +1,9 @@
-[gd_scene load_steps=30 format=3 uid="uid://bbelo0p6gc24u"]
+[gd_scene load_steps=34 format=3 uid="uid://bbelo0p6gc24u"]
 
+[ext_resource type="Texture2D" uid="uid://cql38afi52cj5" path="res://assets/sprites/attack_one_handed_weapon.png" id="1_5m244"]
 [ext_resource type="Texture2D" uid="uid://copbe11j5qcse" path="res://assets/sprites/daredevil golpeando.png" id="1_008a6"]
 [ext_resource type="Texture2D" uid="uid://bw81x3e15e6es" path="res://assets/sprites/crouch.png" id="1_mpqdg"]
+[ext_resource type="Texture2D" uid="uid://djmnjhuid04xh" path="res://assets/sprites/attack_one_handed_weapon-sheet.png" id="2_1xhoh"]
 [ext_resource type="Texture2D" uid="uid://cbal1rsdrk3d1" path="res://assets/sprites/idle.png" id="2_ef4hk"]
 [ext_resource type="Texture2D" uid="uid://nv2k474y5aj0" path="res://assets/sprites/crouch_hit.png" id="2_xki8k"]
 [ext_resource type="Texture2D" uid="uid://c3qx3arthlgcf" path="res://assets/sprites/Run.png" id="3_84hc6"]
@@ -11,6 +13,10 @@
 [ext_resource type="Texture2D" uid="uid://dwuwwurc060lq" path="res://assets/sprites/salto_hit.png" id="4_wqvkv"]
 [ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scripts/hitbox.gd" id="11_c82jl"]
 [ext_resource type="Script" uid="uid://ggr6kugd2gdf" path="res://scripts/health_component.gd" id="12_wtd7q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_olym4"]
+atlas = ExtResource("1_5m244")
+region = Rect2(0, 0, 500, 500)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c82jl"]
 atlas = ExtResource("1_mpqdg")
@@ -35,6 +41,10 @@ region = Rect2(491, 0, 241, 1024)
 [sub_resource type="AtlasTexture" id="AtlasTexture_pueqy"]
 atlas = ExtResource("3_c82jl")
 region = Rect2(748, 0, 308, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kp7v8"]
+atlas = ExtResource("2_1xhoh")
+region = Rect2(0, 0, 500, 500)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xki8k"]
 atlas = ExtResource("4_wqvkv")
@@ -70,6 +80,14 @@ region = Rect2(694, 0, 347, 720)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_cwo24"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_olym4")
+}],
+"loop": true,
+"name": &"baston_idle",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_c82jl")
@@ -110,6 +128,14 @@ animations = [{
 "loop": true,
 "name": &"hit",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kp7v8")
+}],
+"loop": false,
+"name": &"hit_baston",
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -192,7 +218,7 @@ texture_filter = 1
 texture_repeat = 1
 position = Vector2(-88.5897, 42.2961)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"crouch"
+animation = &"hit_baston"
 
 [node name="CollisionDD" type="CollisionShape2D" parent="."]
 position = Vector2(-78.746, 16.9184)

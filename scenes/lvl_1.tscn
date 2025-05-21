@@ -68,7 +68,7 @@ position = Vector2(-7993.35, -3664.43)
 scale = Vector2(13.1562, 13.6648)
 
 [node name="Ladron" parent="." instance=ExtResource("5_hg73m")]
-position = Vector2(808, 532)
+position = Vector2(1337, 438)
 script = ExtResource("6_k5cx7")
 
 [node name="GasVenenoso" parent="." instance=ExtResource("6_6a3rq")]
@@ -96,3 +96,5 @@ shape = SubResource("RectangleShape2D_53anu")
 [node name="Tamer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_xinjc")
 volume_db = -16.306
+
+[connection signal="actual_weapon" from="Daredevil" to="Daredevil/Camera2D2/HUD" method="_on_daredevil_actual_weapon"]

@@ -1,10 +1,12 @@
-[gd_scene load_steps=20 format=3 uid="uid://j77lw8kvlgu0"]
+[gd_scene load_steps=22 format=3 uid="uid://j77lw8kvlgu0"]
 
-[ext_resource type="Script" uid="uid://ci6e5ke6wxs7h" path="res://scenes/hud.gd" id="1_qkknv"]
+[ext_resource type="Script" uid="uid://ci6e5ke6wxs7h" path="res://scripts/hud.gd" id="1_qkknv"]
 [ext_resource type="Texture2D" uid="uid://drnoi0d0sgpcn" path="res://assets/sprites/DD sense.png" id="3_hd3ao"]
 [ext_resource type="Texture2D" uid="uid://cqrkcskckukhs" path="res://assets/sprites/DD face.png" id="4_6fi6k"]
-[ext_resource type="Texture2D" uid="uid://bfa2vofgyshig" path="res://assets/sprites/throw_weapon.png" id="4_qkknv"]
+[ext_resource type="Texture2D" uid="uid://4q4a00ev3vky" path="res://assets/sprites/dual_weapon.png" id="4_iypfu"]
+[ext_resource type="Texture2D" uid="uid://baqamecg1c57d" path="res://assets/sprites/one_handed_weapon.png" id="5_3xg78"]
 [ext_resource type="Texture2D" uid="uid://clllcfd7it1nu" path="res://assets/sprites/sense DD.webp" id="6_0m4u7"]
+[ext_resource type="Texture2D" uid="uid://fhf5byhh8k4" path="res://assets/sprites/Daredevil/puñito.png" id="6_48y67"]
 [ext_resource type="Texture2D" uid="uid://daolfopx0w5or" path="res://assets/sprites/Health_Bar/BGTPB1.png" id="7_mphia"]
 [ext_resource type="Texture2D" uid="uid://q6twkqmmk612" path="res://assets/sprites/Health_Bar/MTPB1.png" id="8_0m4u7"]
 [ext_resource type="Texture2D" uid="uid://42oty5ge3dxr" path="res://assets/sprites/Health_Bar/BGTPB2.png" id="8_3swnk"]
@@ -36,10 +38,22 @@ rotation = 3.14159
 scale = Vector2(0.059013, -0.0788568)
 texture = ExtResource("3_hd3ao")
 
-[node name="DdWeapon" type="Sprite2D" parent="."]
+[node name="Dual-wield" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(163.007, 173.161)
 scale = Vector2(0.272057, 0.327341)
-texture = ExtResource("4_qkknv")
+texture = ExtResource("4_iypfu")
+
+[node name="Baston" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(163.007, 173.161)
+scale = Vector2(0.272057, 0.327341)
+texture = ExtResource("5_3xg78")
+
+[node name="Puños" type="Sprite2D" parent="."]
+position = Vector2(163.007, 173.161)
+scale = Vector2(0.194828, 0.214471)
+texture = ExtResource("6_48y67")
 
 [node name="SenseDd" type="Sprite2D" parent="."]
 position = Vector2(140.345, 496.91)
