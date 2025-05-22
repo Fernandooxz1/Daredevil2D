@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bo1nwciqp1baf"]
+[gd_scene load_steps=15 format=3 uid="uid://bo1nwciqp1baf"]
 
 [ext_resource type="Script" uid="uid://ilvwat43jbog" path="res://scripts/level1.gd" id="1_53anu"]
 [ext_resource type="PackedScene" uid="uid://c054f5ea76f47" path="res://scenes/cuidad.tscn" id="1_wgevm"]
@@ -8,10 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://ctehpwis0lueh" path="res://scenes/cuidad_clon.tscn" id="4_hwdor"]
 [ext_resource type="PackedScene" uid="uid://bfq7enxl0is4o" path="res://scenes/ladron.tscn" id="5_hg73m"]
 [ext_resource type="PackedScene" uid="uid://cwpq5omfyinjj" path="res://scenes/gas_venenoso.tscn" id="6_6a3rq"]
-[ext_resource type="Script" uid="uid://btb7fb7nsx5hp" path="res://scripts/scriptLadron.gd" id="6_k5cx7"]
 [ext_resource type="PackedScene" uid="uid://5jopgb63rq0r" path="res://scenes/pausa.tscn" id="6_u8ilr"]
 [ext_resource type="Script" uid="uid://v4ce1weaj36x" path="res://scripts/camera_Daredevil.gd" id="7_oymhu"]
-[ext_resource type="Script" uid="uid://dhwdu3e207v7b" path="res://scripts/gas_venenoso.gd" id="7_vuq28"]
 [ext_resource type="PackedScene" uid="uid://j77lw8kvlgu0" path="res://scenes/hud.tscn" id="8_eukc1"]
 [ext_resource type="AudioStream" uid="uid://c5mkfefijny4" path="res://assets/Audio/Tamer - Beautiful Crime Instrumental-yt.savetube.me.mp3" id="13_xinjc"]
 
@@ -69,15 +67,12 @@ scale = Vector2(13.1562, 13.6648)
 
 [node name="Ladron" parent="." instance=ExtResource("5_hg73m")]
 position = Vector2(1337, 438)
-script = ExtResource("6_k5cx7")
 
 [node name="GasVenenoso" parent="." instance=ExtResource("6_6a3rq")]
 position = Vector2(1593, 525)
-script = ExtResource("7_vuq28")
 
 [node name="GasVenenoso2" parent="." instance=ExtResource("6_6a3rq")]
 position = Vector2(2693, 539)
-script = ExtResource("7_vuq28")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(13, -20)

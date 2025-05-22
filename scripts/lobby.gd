@@ -4,6 +4,7 @@ extends Control
 func _ready() -> void:
 	if not AudioManager2.get_node("AudioStreamPlayer").playing:
 		AudioManager2.get_node("AudioStreamPlayer").play()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 # Boton 1 "Play"
 func _on_button_mouse_entered() -> void:
