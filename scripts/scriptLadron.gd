@@ -1,80 +1,78 @@
 extends CharacterBody2D
 
 @export var gravity := 1200
-@export var velocidad := 130
-@export var distancia_ataque := 45
-@export var distancia_detectar := 300
-@export var tiempo_cooldown: float = 0.75
+@export var speed := 130
+@export var attack_range := 45
+@export var detection_range := 300
+@export var cooldown_time: float = 0.75
 
-var ladron: Node2D
-var jugador: Node2D
-var estado: String = "idle"
-var mepegaron := false
-var memori := false
-var nopuedopegar := false
+var state: String = "idle"
+var took_hit := false
+var is_dead := false
+var can_attack := true
 
-@onready var animacion = $AnimatedSprite2D
+@onready var player: Node2D = get_parent().get_node("Daredevil")
+@onready var animation: AnimatedSprite2D = $AnimatedSprite2D
+@onready var hitbox: CollisionShape2D = $HitboxComponent/CollisionShape2D
 
 func _ready():
-	$HitboxComponent/CollisionShape2D.disabled = true
-	jugador = get_parent().get_node("Daredevil")
-	ladron = self
+	hitbox.disabled = true
 
 func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
-	if memori:
-		animacion.play("idle")
-		velocity.x = 0
-		move_and_slide()
+	if is_dead:
+		_stop("idle")
 		return
 
-	if mepegaron:
-		recibir_danio()
+	if took_hit:
+		_play_hit_animation()
 		return
 
-	var distancia = abs(jugador.position.x - ladron.position.x)
-	var direccion = sign(jugador.global_position.x - global_position.x)
+	var distance = abs(player.position.x - position.x)
+	var direction = sign(player.global_position.x - global_position.x)
 
-	# Girar sprite según dirección
-	if direccion != 0 and sign(direccion) != sign($AnimatedSprite2D.scale.x):
-		$AnimatedSprite2D.scale.x *= -1
+	_update_facing(direction)
 
-	# Si está en rango de ataque y no hay cooldown
-	if distancia <= distancia_ataque and not nopuedopegar:
-		atacar(direccion)
-	elif distancia <= distancia_detectar:
-		velocity.x = direccion * velocidad
-		#animacion.play("run")
+	if distance <= attack_range and can_attack:
+		attack(direction)
+	elif distance <= detection_range:
+		velocity.x = direction * speed
+		animation.play("run")
 	else:
-		velocity.x = 0
-		animacion.play("idle")
+		_stop("idle")
 
 	move_and_slide()
 
-func recibir_danio():
-	animacion.play("take_damage")
+func _stop(anim: String):
 	velocity.x = 0
-	mepegaron = false
-	await get_tree().create_timer(0.2).timeout  # delay por recibir daño
+	animation.play(anim)
 
-func atacar(direccion):
-	nopuedopegar = true
-	velocity.x = 0
-	animacion.play("attack")
-	$HitboxComponent/CollisionShape2D.disabled = false
-	$HitboxComponent/CollisionShape2D.position.x = 30 * direccion
-	await get_tree().create_timer(0.1).timeout  # duración del hit activo
-	$HitboxComponent/CollisionShape2D.disabled = true
-	await get_tree().create_timer(tiempo_cooldown).timeout
-	nopuedopegar = false
+func _update_facing(direction: int):
+	if direction != 0 and sign(direction) != sign(animation.scale.x):
+		animation.scale.x *= -1
+
+func _play_hit_animation():
+	_stop("take_damage")
+	took_hit = false
+	await get_tree().create_timer(0.2).timeout
+
+func attack(direction: int):
+	can_attack = false
+	_stop("attack")
+	hitbox.position.x = 30 * direction
+	hitbox.disabled = false
+	await get_tree().create_timer(0.1).timeout
+	hitbox.disabled = true
+	await get_tree().create_timer(cooldown_time).timeout
+	can_attack = true
 
 func _on_health_component_on_health_changed(health: int) -> void:
 	$TextureProgressBar.value = health
 
 func _on_health_component_on_damage_took() -> void:
-	mepegaron = true
+	took_hit = true
 
 func _on_health_component_on_dead() -> void:
-	memori = true
+	is_dead = true
