@@ -3,7 +3,7 @@ extends CharacterBody2D
 @export var gravity := 1200
 @export var speed := 130
 @export var attack_range := 45
-@export var detection_range := 300
+@export var detection_range := 450
 @export var cooldown_time: float = 0.75
 
 var state: String = "idle"
@@ -39,7 +39,7 @@ func _physics_process(delta):
 		attack(direction)
 	elif distance <= detection_range:
 		velocity.x = direction * speed
-		animation.play("run")
+		#animation.play("run")
 	else:
 		_stop("idle")
 
