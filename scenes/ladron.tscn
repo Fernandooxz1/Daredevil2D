@@ -1,8 +1,10 @@
-[gd_scene load_steps=15 format=3 uid="uid://bfq7enxl0is4o"]
+[gd_scene load_steps=18 format=3 uid="uid://bfq7enxl0is4o"]
 
 [ext_resource type="Texture2D" uid="uid://cp6745gfkc5si" path="res://assets/sprites/ladronIdle.png" id="1_n8kyn"]
+[ext_resource type="Script" uid="uid://btb7fb7nsx5hp" path="res://scripts/scriptLadron.gd" id="1_yk101"]
 [ext_resource type="Texture2D" uid="uid://1wgxgowa2jbg" path="res://assets/sprites/LadronAttack.png" id="2_1retn"]
 [ext_resource type="Texture2D" uid="uid://2cah87d7vf6e" path="res://assets/sprites/LadronTakingDamage.png" id="3_v07dk"]
+[ext_resource type="Texture2D" uid="uid://fhf5byhh8k4" path="res://assets/sprites/Daredevil/puñito.png" id="4_sirfx"]
 [ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scripts/hitbox.gd" id="5_ydokj"]
 [ext_resource type="Script" uid="uid://ggr6kugd2gdf" path="res://scripts/health_component.gd" id="6_yk101"]
 [ext_resource type="Texture2D" uid="uid://s4exena7y2k6" path="res://assets/sprites/Health_Bar/health.png" id="7_yk101"]
@@ -14,6 +16,10 @@ region = Rect2(200, 100, 612, 612)
 [sub_resource type="AtlasTexture" id="AtlasTexture_yk101"]
 atlas = ExtResource("1_n8kyn")
 region = Rect2(0, 0, 1007, 840)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q8myo"]
+atlas = ExtResource("4_sirfx")
+region = Rect2(0, 0, 1024, 1024)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n8kyn"]
 atlas = ExtResource("1_n8kyn")
@@ -35,6 +41,14 @@ animations = [{
 "loop": false,
 "name": &"attack",
 "speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q8myo")
+}],
+"loop": true,
+"name": &"dead",
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -64,15 +78,14 @@ height = 92.0
 [node name="Ladron" type="CharacterBody2D"]
 position = Vector2(2, 3)
 scale = Vector2(0.985396, 1.0058)
+script = ExtResource("1_yk101")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(2.28988, 6.26581)
 rotation = 0.0129428
 scale = Vector2(0.192937, 0.187931)
 sprite_frames = SubResource("SpriteFrames_dbi3t")
-animation = &"attack"
-frame = 1
-frame_progress = 1.0
+animation = &"dead"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-2.02964, 12.925)

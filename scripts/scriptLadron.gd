@@ -14,16 +14,19 @@ var can_attack := true
 @onready var player: Node2D = get_parent().get_node("Daredevil")
 @onready var animation: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: CollisionShape2D = $HitboxComponent/CollisionShape2D
+@onready var Colision = $CollisionShape2D
 
 func _ready():
 	hitbox.disabled = true
+	_stop("idle")
 
 func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
 	if is_dead:
-		_stop("idle")
+		_stop("dead")
+		Colision.disabled = true
 		return
 
 	if took_hit:
