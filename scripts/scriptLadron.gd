@@ -4,7 +4,6 @@ extends CharacterBody2D
 @export var speed := 130
 @export var attack_range := 45
 @export var detection_range := 450
-@export var cooldown_time: float = 0.75
 
 var state: String = "idle"
 var took_hit := false
@@ -68,7 +67,7 @@ func attack(direction: int):
 	hitbox.disabled = false
 	await get_tree().create_timer(0.1).timeout
 	hitbox.disabled = true
-	await get_tree().create_timer(cooldown_time).timeout
+	await get_tree().create_timer(0.75).timeout
 	can_attack = true
 
 func _on_health_component_on_health_changed(health: int) -> void:

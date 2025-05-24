@@ -2,8 +2,9 @@ extends Area2D
 class_name HealthComponent #vida
 
 signal onDead
-signal onDamageTook
+signal onDamageTook(deltavida:int)
 signal onHealthChanged(health: int)
+
 
 @export var max_health: int = 100
 var current_health : int = 0
@@ -30,7 +31,7 @@ func set_health(value: int):
 		dead()
 		return
 	elif current_health >= 0 and current_health < old_health :
-		onDamageTook.emit()
+		onDamageTook.emit(-value)
 
 func dead():
 	onDead.emit()
