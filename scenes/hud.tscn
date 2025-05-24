@@ -165,7 +165,6 @@ offset_top = 33.7178
 offset_right = 1531.16
 offset_bottom = 321.718
 scale = Vector2(0.271728, 0.25677)
-value = 25.0
 fill_mode = 4
 texture_progress = ExtResource("17_uxdf7")
 metadata/_edit_use_anchors_ = true

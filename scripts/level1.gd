@@ -35,7 +35,6 @@ func _physics_process(delta: float) -> void:
 		crear(gasesito,Vector2(3000,400))
 		crear(gasesito,Vector2(3600,400))
 	
-	print(DD.position.x,"   ",DD.position.y)
 	
 	if DD.position.x >= 3700 and win == 1:
 		win = win + 1
