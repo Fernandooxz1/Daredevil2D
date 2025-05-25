@@ -35,7 +35,7 @@ func _ready() -> void:
 	
 	hitbox.disabled = true
 	health_shape.disabled = false
-	Rbar.value = 50
+	Rbar.value = 0
 	Ebar.value = 100
 	# Señales de vida (por si las necesitamos para algo)
 	$HealthComponent.onDamageTook.connect(on_damage_took)
@@ -49,7 +49,7 @@ func _physics_process(delta):
 	var direction := Input.get_axis("left", "right")
 	var is_running := Input.is_action_pressed("run")
 	var is_attacking := Input.is_action_pressed("attack")
-	var jump_pressed := Input.is_action_just_pressed("jump") and (is_grounded)
+	var jump_pressed := Input.is_action_just_pressed("jump")
 	var is_crouching := Input.is_action_pressed("crouch")
 	var is_blocking := Input.is_action_pressed("blokear")
 	var change_weapon := Input.is_action_just_pressed("Cambiar Arma")
@@ -65,22 +65,25 @@ func _physics_process(delta):
 		if Ebar.value > 100:
 			Ebar.value = 100
 		
-	# print("Ebar.value: ",Ebar.value,"    Rbar.value: ",Rbar.value)
 	
 	if not is_grounded:
 		velocity.y += gravity * delta
-
+		
 	if is_dead:
 		_process_death()
 		return
-
+		
 	if change_weapon:
 		arma_actual += 1
 		if arma_actual > 3:
 			arma_actual = 1
 		actual_weapon.emit(arma_actual)
-
-	if jump_pressed and Ebar.value > 0:
+		
+	if  jump_pressed and is_on_wall() and Ebar.value > 0 and is_running and not is_grounded:
+		velocity.x = 600 * -facing
+		velocity.y = -jump_speed
+		quitar_energia(1,10)
+	elif is_grounded and jump_pressed and Ebar.value > 0:
 		velocity.y = -jump_speed
 		quitar_energia(1,10)
 
@@ -126,7 +129,9 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 
 	# Movimiento
 	if not is_grounded:
-		anim = "jump_hit" if is_attacking and Ebar.value > 0 else "jump"
+		if is_attacking and Ebar.value > 0:
+			anim = "jump_hit" 
+		else: anim = "jump"
 		sprite_scale = Vector2(facing * 0.975, 0.975)
 		if is_attacking and Ebar.value > 0 :
 			await activar_hitbox(Vector2(420 * facing, 200))
