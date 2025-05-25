@@ -218,7 +218,7 @@ texture_filter = 1
 texture_repeat = 1
 position = Vector2(-88.5897, 42.2961)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"hit"
+animation = &"dead"
 
 [node name="CollisionDD" type="CollisionShape2D" parent="."]
 position = Vector2(-78.746, 16.9184)
