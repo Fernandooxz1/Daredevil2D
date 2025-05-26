@@ -230,7 +230,7 @@ shape = SubResource("CapsuleShape2D_m6s4t")
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("11_c82jl")
-damage = 10
+damage = 20
 
 [node name="HitShapeDD" type="CollisionShape2D" parent="HitboxComponent"]
 light_mask = 2
@@ -241,7 +241,7 @@ shape = SubResource("CapsuleShape2D_xki8k")
 
 [node name="HealthComponent" type="Area2D" parent="."]
 collision_layer = 2
-collision_mask = 4
+collision_mask = 20
 script = ExtResource("12_wtd7q")
 
 [node name="HealthShapeDD" type="CollisionShape2D" parent="HealthComponent"]

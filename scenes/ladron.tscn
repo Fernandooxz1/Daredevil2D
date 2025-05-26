@@ -86,7 +86,7 @@ position = Vector2(2.28988, 6.26581)
 rotation = 0.0129428
 scale = Vector2(0.192937, 0.187931)
 sprite_frames = SubResource("SpriteFrames_dbi3t")
-animation = &"dead"
+animation = &"take_damage"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-2.02964, 12.925)

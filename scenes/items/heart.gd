@@ -1,14 +1,13 @@
 extends Area2D
-class_name itemComponent #daño
+class_name itemComponent
 
-@export var cura :int = 10
+@export var cura: int = 10
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	area_entered.connect(curar)
+	connect("area_entered", Callable(self, "_on_area_entered"))
+	$"../AnimationPlayer".play("moving")
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func curar(area):
+func _on_area_entered(area: Area2D) -> void:
 	if area is HealthComponent:
 		area.take_heal(cura)
 		$"..".queue_free()

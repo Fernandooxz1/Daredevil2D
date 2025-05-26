@@ -213,10 +213,10 @@ func Enojado(senojo) -> void:
 		if Rbar.value < 0:
 			Rbar.value = 0
 		enojado = 1 # estara enojado mientras la barra baje
-		$HitboxComponent.damage = 30 # aumentar daño de daredevil si enojado = 1
+		$HitboxComponent.damage = 40 # aumentar daño de daredevil si enojado = 1
 		if Rbar.value == 0: # deja de estar enojado si Rbar.value = 0
 			enojado = 0
-			$HitboxComponent.damage = 10 # restaurar daño de daredevil si enojado = 0
+			$HitboxComponent.damage = 20 # restaurar daño de daredevil si enojado = 0
 
 
 
