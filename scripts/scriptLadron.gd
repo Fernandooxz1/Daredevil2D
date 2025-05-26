@@ -9,8 +9,10 @@ var state: String = "idle"
 var took_hit := false
 var is_dead := false
 var can_attack := true
+var is_attacking := false
 
 @onready var player: Node2D = get_parent().get_node("Daredevil")
+@onready var corazoncito = preload("res://scenes/items/heart.tscn")
 @onready var animation: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: CollisionShape2D = $HitboxComponent/CollisionShape2D
 @onready var Colision = $CollisionShape2D
@@ -26,6 +28,8 @@ func _physics_process(delta):
 	if is_dead:
 		_stop("dead")
 		Colision.disabled = true
+		queue_free()
+		
 		return
 
 	if took_hit:
@@ -37,13 +41,13 @@ func _physics_process(delta):
 
 	_update_facing(direction)
 
-	if distance <= attack_range and can_attack:
+	if distance <= attack_range:
 		attack(direction)
-	elif distance <= detection_range:
+	elif distance <= detection_range and distance >= attack_range - 5:
 		velocity.x = direction * speed
-		#animation.play("run")
 	else:
 		_stop("idle")
+		
 
 	move_and_slide()
 
@@ -60,15 +64,27 @@ func _play_hit_animation():
 	took_hit = false
 	await get_tree().create_timer(0.2).timeout
 
-func attack(direction: int):
+func attack(direction: int) -> void:
+	if is_attacking or not can_attack:
+		return
+
+	is_attacking = true
 	can_attack = false
-	_stop("attack")
+
+	velocity.x = 0
+	animation.play("attack")
+
 	hitbox.position.x = 30 * direction
 	hitbox.disabled = false
 	await get_tree().create_timer(0.1).timeout
 	hitbox.disabled = true
-	await get_tree().create_timer(0.75).timeout
+
+	await animation.animation_finished
+	await get_tree().create_timer(0.5).timeout
+
 	can_attack = true
+	is_attacking = false
+
 
 func _on_health_component_on_health_changed(health: int) -> void:
 	$TextureProgressBar.value = health
@@ -78,3 +94,8 @@ func _on_health_component_on_damage_took() -> void:
 
 func _on_health_component_on_dead() -> void:
 	is_dead = true
+
+func crear(sce,pos):
+	var inst = sce.instantiate()
+	add_child(inst)
+	inst.position = pos

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://lsjjiv1v3hdj"]
+
+[ext_resource type="Texture2D" uid="uid://b3ju1qhuylwg4" path="res://assets/sprites/newsprites/RashoMakuin.png" id="1_a4tq3"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.0411004, 0.0407062)
+texture = ExtResource("1_a4tq3")

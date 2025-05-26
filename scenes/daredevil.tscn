@@ -212,6 +212,7 @@ height = 15.3717
 [node name="Daredevil" type="CharacterBody2D"]
 position = Vector2(167, 491)
 scale = Vector2(0.101592, 0.118214)
+collision_layer = 2
 
 [node name="RedSuite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -226,8 +227,8 @@ scale = Vector2(74.492, 59.3084)
 shape = SubResource("CapsuleShape2D_m6s4t")
 
 [node name="HitboxComponent" type="Area2D" parent="."]
-light_mask = 2
-visibility_layer = 2
+collision_layer = 2
+collision_mask = 4
 script = ExtResource("11_c82jl")
 damage = 10
 
@@ -239,9 +240,12 @@ scale = Vector2(8.5424, 8.40894)
 shape = SubResource("CapsuleShape2D_xki8k")
 
 [node name="HealthComponent" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
 script = ExtResource("12_wtd7q")
 
 [node name="HealthShapeDD" type="CollisionShape2D" parent="HealthComponent"]
 position = Vector2(-19.6866, 25.3777)
 scale = Vector2(19.71, 32.4267)
 shape = SubResource("CapsuleShape2D_c82jl")
+debug_color = Color(0, 0.886275, 0, 0.419608)
