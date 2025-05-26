@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bn2ryo06y6x20"]
+
+[ext_resource type="Texture2D" uid="uid://k1odedd62cr2" path="res://assets/sprites/newsprites/Papers2.png" id="1_003mg"]
+[ext_resource type="Texture2D" uid="uid://c864ag6v0frmq" path="res://assets/sprites/newsprites/papers.png" id="2_ioot1"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.0949593, 0.111436)
+texture = ExtResource("1_003mg")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(3.8147e-06, 0)
+scale = Vector2(0.0305453, 0.0262525)
+texture = ExtResource("2_ioot1")

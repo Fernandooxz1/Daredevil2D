@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://qgniui6vo10i"]
+
+[ext_resource type="Texture2D" uid="uid://ct57n1ng5q74q" path="res://assets/sprites/newsprites/llave.png" id="1_t2qfp"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.0567689, 0.0803808)
+texture = ExtResource("1_t2qfp")

@@ -72,6 +72,8 @@ position = Vector2(-7993.35, -3664.43)
 scale = Vector2(13.1562, 13.6648)
 
 [node name="Ladron" parent="." instance=ExtResource("5_hg73m")]
+light_mask = 2
+visibility_layer = 2
 position = Vector2(1337, 438)
 
 [node name="GasVenenoso" parent="." instance=ExtResource("6_6a3rq")]
