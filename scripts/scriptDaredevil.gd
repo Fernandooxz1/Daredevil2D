@@ -173,7 +173,7 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 					quitar_energia(1,1)
 					
 		elif is_blocking and Ebar.value > 0:
-			anim = "idle" # Cambiar por "blocking"
+			anim = "blocking"
 			sprite_scale = Vector2(facing * 2.3, 2)
 			health_shape.disabled = true
 	else:
