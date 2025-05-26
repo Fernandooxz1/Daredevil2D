@@ -5,41 +5,42 @@ signal actual_weapon
 @export var gravity := 1200
 @export var speed := 200
 
-#flag de energia
-var Egen : int = 1
-#flags de ira
-var Rdegen : int = 1 # inicializo el relog de Degeneracion de ira
-var senojo : int = 0 # bandera que se enciende si la barra de ira llega al 100 y se apaga en 0
-var enojado : int = 0 # detecta el estado "enojado"
+# --- Estado y energía ---
+var Egen: int = 1
+var Rdegen: int = 1
+var senojo: int = 0
+var enojado: int = 0
+var is_dead := false
+var already_dead := false
+var arma_actual: int = 1
+var facing := 1
 
+# --- Movimiento ---
 var jump_speed := 600
 var acceleration := 1000
 var friction := 4500
 var run_multiplier := 2.0
-var is_dead := false
-var already_dead := false
-var arma_actual : int = 1 # 1 = puños, 2 = bastón, 3 = duales
-var facing := 1
 
+# --- Referencias ---
 @onready var red_suite = $RedSuite
+@onready var hitboxC = $HitboxComponent
 @onready var hitbox = $HitboxComponent/HitShapeDD
 @onready var health_shape = $HealthComponent/HealthShapeDD
 @onready var health_comp = $HealthComponent
 @onready var collision = $CollisionDD
 @onready var Ebar = $Camera2D2/HUD/EnergyBar
 @onready var Rbar = $Camera2D2/HUD/RageBar
+@onready var anim = "idle"
 
 const GAME_OVER_SCENE_PATH := "res://scenes/gameover.tscn"
 
 func _ready() -> void:
-	
 	hitbox.disabled = true
 	health_shape.disabled = false
 	Rbar.value = 0
 	Ebar.value = 100
-	# Señales de vida (por si las necesitamos para algo)
-	$HealthComponent.onDamageTook.connect(on_damage_took)
-	$HealthComponent.onHealthChanged.connect(on_health_changed)
+	health_comp.onDamageTook.connect(on_damage_took)
+	health_comp.onHealthChanged.connect(on_health_changed)
 
 func _on_dead() -> void:
 	is_dead = true
@@ -54,68 +55,62 @@ func _physics_process(delta):
 	var is_blocking := Input.is_action_pressed("blokear")
 	var change_weapon := Input.is_action_just_pressed("Cambiar Arma")
 
-
-# reloj de generacion de 1 punto de energia
-	Egen = Egen + 1
+	# Regeneración de energía
+	Egen += 1
 	if Egen > 10:
 		Egen = 0
-	# Barra de Energia
 	if Egen == 10:
-		Ebar.value = Ebar.value + 1
-		if Ebar.value > 100:
-			Ebar.value = 100
-		
-	
+		Ebar.value = min(Ebar.value + 1, 100)
+
 	if not is_grounded:
 		velocity.y += gravity * delta
-		
+
 	if is_dead:
 		_process_death()
 		return
-		
+
 	if change_weapon:
-		arma_actual += 1
-		if arma_actual > 3:
-			arma_actual = 1
+		arma_actual = arma_actual % 3 + 1
 		actual_weapon.emit(arma_actual)
-		
-	if  jump_pressed and is_on_wall() and Ebar.value > 0 and is_running and not is_grounded:
+
+	# Saltos
+	if jump_pressed and is_on_wall() and Ebar.value > 0 and is_running and not is_grounded:
 		velocity.x = 600 * -facing
 		velocity.y = -jump_speed
-		quitar_energia(1,10)
-	elif is_grounded and jump_pressed and Ebar.value > 0:
+		quitar_energia(1, 10)
+	elif jump_pressed and is_grounded and Ebar.value > 0:
 		velocity.y = -jump_speed
-		quitar_energia(1,10)
+		quitar_energia(1, 10)
 
+	# Movimiento
 	if is_crouching and is_grounded:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
 	elif direction != 0:
 		facing = sign(direction)
-		if Ebar.value > 40:
-			run_multiplier = 2.0
-		else: run_multiplier = 1.25
-		var target_speed = speed * (run_multiplier if is_running and (Ebar.value > 20) else 0.75)
+		run_multiplier = 2.0 if Ebar.value > 40 else 1.25
+		var target_speed = speed * (run_multiplier if is_running and Ebar.value > 20 else 0.75)
 		velocity.x = move_toward(velocity.x, direction * target_speed, acceleration * delta)
 		if target_speed == speed * run_multiplier:
-			quitar_energia(0,2)
+			quitar_energia(0, 2)
 	else:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
 
+	# Animaciones y estado
 	_update_animation(is_blocking, is_grounded, direction, is_running, is_attacking, is_crouching)
+	_update_damage(anim,arma_actual)
 	senojo = _detectar_enojo()
 	Enojado(senojo)
 	move_and_slide()
 
-# -------------------- Animación y Visuales --------------------
+# -------------------- Animación --------------------
 
 func _update_animation(is_blocking, is_grounded: bool, direction: float, is_running: bool, is_attacking: bool, is_crouching: bool) -> void:
-	var anim = "idle"
+	self.anim = "idle"
 	var sprite_scale = Vector2(facing * 2.2, 2.0)
 	var sprite_pos = Vector2.ZERO
 	var collision_scale = Vector2(50, 65)
 	var collision_pos = Vector2.ZERO
 
-	# Idle básico por arma
 	match arma_actual:
 		1:
 			anim = "idle"
@@ -124,54 +119,28 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 			anim = "baston_idle"
 			set_health_shape(Vector2(-200 * facing, 0), Vector2(15, 30))
 		3:
-			anim = "idle" # Cambiar por "idle_dual"
+			anim = "idle"
 			set_health_shape(Vector2.ZERO, Vector2(15, 30))
 
-	# Movimiento
+	# Animaciones según el estado
 	if not is_grounded:
-		if is_attacking and Ebar.value > 0:
-			anim = "jump_hit" 
-		else: anim = "jump"
+		anim = "jump_hit" if is_attacking and Ebar.value > 0 else "jump"
 		sprite_scale = Vector2(facing * 0.975, 0.975)
-		if is_attacking and Ebar.value > 0 :
-			await activar_hitbox(Vector2(420 * facing, 200))
-			quitar_energia(1,1)
 	elif is_crouching:
-		if is_attacking:
-			anim = "crouch_hit"
-			sprite_scale = Vector2(facing * 2.6, 2.5)
-			sprite_pos = Vector2(facing * 50, 150)
-			set_health_shape(Vector2(0, 150), Vector2(15, 25))
-			await activar_hitbox(Vector2(450 * facing, -100))
-			quitar_energia(1,1)
-		else:
-			anim = "crouch"
-			sprite_scale = Vector2(facing * 0.85, 0.8)
-			sprite_pos = Vector2(0, 150)
-			set_health_shape(Vector2(0, 150), Vector2(15, 25))
+		anim = "crouch_hit" if is_attacking else "crouch"
+		sprite_scale = Vector2(facing * (2.6 if is_attacking else 0.85), 2.5 if is_attacking else 0.8)
+		sprite_pos = Vector2(facing * 50, 150) if is_attacking else Vector2(0, 150)
+		set_health_shape(Vector2(0, 150), Vector2(15, 25))
 	elif direction == 0:
-		if is_attacking and Ebar.value > 0 :
+		if is_attacking and Ebar.value > 0:
 			match arma_actual:
 				1:
 					anim = "hit"
 					sprite_scale = Vector2(facing * 0.9, 1.0)
-					await activar_hitbox(Vector2(350 * facing, -200))
-					quitar_energia(1,1)
-					
-				2:
+				2, 3:
 					anim = "hit_baston"
 					sprite_scale = Vector2(facing * 2, 2)
 					set_health_shape(Vector2(0, 0), Vector2(15, 30))
-					await activar_hitbox(Vector2(475 * facing, -175))
-					quitar_energia(1,1)
-				
-				3:
-					anim = "hit_baston"
-					sprite_scale = Vector2(facing * 2, 2)
-					set_health_shape(Vector2(0, 0), Vector2(15, 30))
-					await activar_hitbox(Vector2(475 * facing, -175))
-					quitar_energia(1,1)
-					
 		elif is_blocking and Ebar.value > 0:
 			anim = "blocking"
 			sprite_scale = Vector2(facing * 2.3, 2)
@@ -180,62 +149,82 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 		anim = "run" if is_running and Ebar.value > 20 else "walk"
 		sprite_scale = Vector2(facing * (2.2 if is_running else 1.6), 2.2 if is_running else 1.5)
 
-	# Aplicar valores finales
 	red_suite.play(anim)
 	red_suite.position = sprite_pos
 	red_suite.scale = sprite_scale
 	collision.position = collision_pos
 	collision.scale = collision_scale
 
-# -------------------- Utilidades, Healtbox y Hitbox --------------------
-func quitar_energia(D_act_rel,cansancio):
-	Egen = Egen + 1
+# -------------------- Actualizar daño --------------------
+func _update_damage(a, w):
+	var hit_data: Dictionary = {}
+
+	match w:
+		1:
+			match a:
+				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(420, 200)}
+				"crouch_hit": hit_data = {"damage": 15, "offset": Vector2(450, -100)}
+				"hit": hit_data = {"damage": 20, "offset": Vector2(350, -200)}
+				_: hitboxC.damage = 20
+		2:
+			match a:
+				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(420, 200)}
+				"crouch_hit": hit_data = {"damage": 20, "offset": Vector2(450, -100)}
+				"hit_baston": hit_data = {"damage": 25, "offset": Vector2(350, -200)}
+				_: hitboxC.damage = 25
+		3:
+			match a:
+				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(420, 200)}
+				"crouch_hit": hit_data = {"damage": 7, "offset": Vector2(450, -100)}
+				"hit_baston": hit_data = {"damage": 10, "offset": Vector2(350, -200)}
+				_: hitboxC.damage = 15
+
+	if hit_data:
+		hitboxC.damage = hit_data["damage"]
+		if Ebar.value > 0:
+			var offset = hit_data["offset"]
+			offset.x *= facing
+			await activar_hitbox(offset)
+			quitar_energia(1, 1)
+	
+# -------------------- Utilidades --------------------
+
+func quitar_energia(D_act_rel, cansancio):
+	Egen += 1
 	if Egen > 10:
 		Egen = 0
 	if Egen == 10 or D_act_rel:
-		Ebar.value = Ebar.value - cansancio
-	if Ebar.value < -15:
-		Ebar.value = -15
+		Ebar.value -= cansancio
+	Ebar.value = max(Ebar.value, -15)
 
 func _detectar_enojo() -> int:
-	if Rbar.value == 100:
-		return 1
-	else: return 0
+	return 1 if Rbar.value == 100 else 0
 
 func Enojado(senojo) -> void:
-	var deltaira = 1
-	if senojo == 1 or enojado == 1: # entra si detecta 100 en la barra o esta enojado
-		Rdegen = Rdegen + 1
+	if senojo == 1 or enojado == 1:
+		Rdegen += 1
 		if Rdegen > 10:
 			Rdegen = 0
 		if Rdegen == 10:
-			Rbar.value = Rbar.value - deltaira
-		if Rbar.value < 0:
-			Rbar.value = 0
-		enojado = 1 # estara enojado mientras la barra baje
-		$HitboxComponent.damage = 40 # aumentar daño de daredevil si enojado = 1
-		if Rbar.value == 0: # deja de estar enojado si Rbar.value = 0
+			Rbar.value -= 1
+			Rbar.value = max(Rbar.value, 0)
+
+		enojado = 1
+		hitboxC.damage += 20
+
+		if Rbar.value == 0:
 			enojado = 0
-			$HitboxComponent.damage = 20 # restaurar daño de daredevil si enojado = 0
+			hitboxC.damage -= 20
 
-
-
-# funciones de vida
+func Enojarse(senojo):
+	Rbar.value = min(Rbar.value + senojo, 100)
 
 func on_damage_took(deltavida) -> void:
 	Enojarse(deltavida)
-	# print(deltavida)
-	pass
 
 func on_health_changed(nueva_vida):
 	pass
 
-func Enojarse(senojo):
-	Rbar.value = Rbar.value + senojo
-	if Rbar.value > 100:
-		Rbar.value = 100
-	
-@warning_ignore("shadowed_variable_base_class")
 func set_health_shape(pos: Vector2, scale: Vector2) -> void:
 	health_shape.disabled = false
 	health_shape.position = pos

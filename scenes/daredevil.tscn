@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://djmnjhuid04xh" path="res://assets/sprites/attack_one_handed_weapon-sheet.png" id="2_1xhoh"]
 [ext_resource type="Texture2D" uid="uid://cbal1rsdrk3d1" path="res://assets/sprites/idle.png" id="2_ef4hk"]
 [ext_resource type="Texture2D" uid="uid://nv2k474y5aj0" path="res://assets/sprites/crouch_hit.png" id="2_xki8k"]
-[ext_resource type="Texture2D" uid="uid://ec1cvla42lev" path="res://assets/sprites/block.png" id="2_xmsp8"]
+[ext_resource type="Texture2D" uid="uid://ba76cqmthiga6" path="res://assets/sprites/block.png" id="2_xmsp8"]
 [ext_resource type="Texture2D" uid="uid://c3qx3arthlgcf" path="res://assets/sprites/Run.png" id="3_84hc6"]
 [ext_resource type="Texture2D" uid="uid://bqk6gq8omirw1" path="res://assets/sprites/Daredevil/Dead.png" id="3_c82jl"]
 [ext_resource type="Texture2D" uid="uid://ckh21pfytftat" path="res://assets/sprites/DDwalk.png" id="3_ef4hk"]
@@ -243,7 +243,6 @@ shape = SubResource("CapsuleShape2D_m6s4t")
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("11_c82jl")
-
 damage = 20
 
 [node name="HitShapeDD" type="CollisionShape2D" parent="HitboxComponent"]
