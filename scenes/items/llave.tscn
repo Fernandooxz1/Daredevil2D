@@ -1,9 +1,37 @@
-[gd_scene load_steps=2 format=3 uid="uid://qgniui6vo10i"]
+[gd_scene load_steps=5 format=3 uid="uid://qgniui6vo10i"]
 
 [ext_resource type="Texture2D" uid="uid://ct57n1ng5q74q" path="res://assets/sprites/newsprites/llave.png" id="1_t2qfp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_otfq2"]
+size = Vector2(40, 18)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ppd70"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_otfq2"]
 
 [node name="Node2D" type="Node2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.57997
 scale = Vector2(0.0567689, 0.0803808)
 texture = ExtResource("1_t2qfp")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(-8, 2)
+shape = SubResource("RectangleShape2D_otfq2")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(12, -2)
+scale = Vector2(1.50495, 1.38861)
+shape = SubResource("CircleShape2D_ppd70")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(4.65661e-10, -1)
+rotation = 1.56607
+scale = Vector2(1.73455, 2.18921)
+shape = SubResource("CapsuleShape2D_otfq2")
+debug_color = Color(2.35841e-06, 0.64454, 0.278853, 0.42)

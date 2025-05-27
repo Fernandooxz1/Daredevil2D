@@ -20,6 +20,8 @@ var jump_speed := 600
 var acceleration := 1000
 var friction := 4500
 var run_multiplier := 2.0
+var relojitodigo = 0
+var sholodigo = 1
 
 # --- Referencias ---
 @onready var red_suite = $RedSuite
@@ -140,7 +142,7 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 				2, 3:
 					anim = "hit_baston"
 					sprite_scale = Vector2(facing * 2, 2)
-					set_health_shape(Vector2(0, 0), Vector2(15, 30))
+					set_health_shape(Vector2(-200 * facing, 0), Vector2(15, 30))
 		elif is_blocking and Ebar.value > 0:
 			anim = "blocking"
 			sprite_scale = Vector2(facing * 2.3, 2)
@@ -162,29 +164,31 @@ func _update_damage(a, w):
 	match w:
 		1:
 			match a:
-				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(420, 200)}
-				"crouch_hit": hit_data = {"damage": 15, "offset": Vector2(450, -100)}
-				"hit": hit_data = {"damage": 20, "offset": Vector2(350, -200)}
+				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(280, 100),"rotation":0.75 * PI,"scale":Vector2(10, 15)}
+				"crouch_hit": hit_data = {"damage": 15, "offset": Vector2(350, -50),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
+				"hit": hit_data = {"damage": 20, "offset": Vector2(300, -200),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
 				_: hitboxC.damage = 20
 		2:
 			match a:
-				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(420, 200)}
-				"crouch_hit": hit_data = {"damage": 20, "offset": Vector2(450, -100)}
-				"hit_baston": hit_data = {"damage": 25, "offset": Vector2(350, -200)}
+				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(280, 100),"rotation":0.75 * PI,"scale":Vector2(10, 15)}
+				"crouch_hit": hit_data = {"damage": 20, "offset": Vector2(350, -50),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
+				"hit_baston": hit_data = {"damage": 25, "offset": Vector2(200, -100),"rotation":0.4 * PI,"scale":Vector2(6, 25)}
 				_: hitboxC.damage = 25
 		3:
 			match a:
-				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(420, 200)}
-				"crouch_hit": hit_data = {"damage": 7, "offset": Vector2(450, -100)}
-				"hit_baston": hit_data = {"damage": 10, "offset": Vector2(350, -200)}
+				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(280, 100),"rotation":0.75 * PI,"scale":Vector2(10, 15)}
+				"crouch_hit": hit_data = {"damage": 7, "offset": Vector2(350, -50),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
+				"hit_baston": hit_data = {"damage": 10, "offset": Vector2(200, -100),"rotation":0.4 * PI,"scale":Vector2(6, 25)}
 				_: hitboxC.damage = 15
 
 	if hit_data:
 		hitboxC.damage = hit_data["damage"]
 		if Ebar.value > 0:
 			var offset = hit_data["offset"]
+			var rotation = hit_data["rotation"]
+			var scale = hit_data["scale"]
 			offset.x *= facing
-			await activar_hitbox(offset)
+			await activar_hitbox(offset,rotation,scale)
 			quitar_energia(1, 1)
 	
 # -------------------- Utilidades --------------------
@@ -230,10 +234,12 @@ func set_health_shape(pos: Vector2, scale: Vector2) -> void:
 	health_shape.position = pos
 	health_shape.scale = scale
 
-func activar_hitbox(pos: Vector2, tiempo := 0.1) -> void:
+func activar_hitbox(pos: Vector2,rot,scale: Vector2) -> void:
 	hitbox.position = pos
+	hitbox.rotation = rot * facing
+	hitbox.scale = scale
 	hitbox.disabled = false
-	await get_tree().create_timer(tiempo).timeout
+	await get_tree().create_timer(0.1).timeout
 	hitbox.disabled = true
 
 # -------------------- Muerte --------------------
