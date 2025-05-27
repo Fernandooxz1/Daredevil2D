@@ -15,12 +15,15 @@ var is_attacking := false
 var stun_timer := 0.0
 var is_stunned := false
 
+
 # === NODE REFERENCES ===
 @onready var player: Node2D = get_parent().get_node("Daredevil")
 @onready var corazoncito = preload("res://scenes/items/heart.tscn")
 @onready var animation: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: CollisionShape2D = $HitboxComponent/CollisionShape2D
+@onready var healthbox: CollisionShape2D = $HealthComponent/CollisionShape2D
 @onready var Colision = $CollisionShape2D
+@onready var direction = 1
 
 # === READY ===
 func _ready():
@@ -30,7 +33,7 @@ func _ready():
 # === MAIN LOOP ===
 func _physics_process(delta):
 	var distance = abs(player.position.x - position.x)
-	var direction = sign(player.global_position.x - global_position.x)
+	direction = sign(player.global_position.x - global_position.x)
 
 	# Aplicar gravedad si está en el aire
 	if not is_on_floor():
@@ -46,6 +49,8 @@ func _physics_process(delta):
 	# Si está aturdido
 	if is_stunned:
 		stun_timer -= delta
+		if stun_timer <= 0.40: # terminar knockback
+			velocity.x = 0
 		if stun_timer <= 0:
 			is_stunned = false
 			is_attacking = false
@@ -122,12 +127,13 @@ func _on_health_component_on_damage_took(daño) -> void:
 		return
 	is_stunned = true
 	_stop("take_damage")
+	velocity.x = -sign(direction) * 100 #knockback
 	stun_timer = clamp(daño * 0.025, 0.1, 1)
-	print("daño: ", daño,"  stun: ", daño * 0.025)
+	# print("daño: ", daño,"  stun: ", daño * 0.025)
 
 func _on_health_component_on_dead() -> void:
 	is_dead = true
-	$HealthComponent/CollisionShape2D.disabled = true
+	healthbox.disabled = true
 	crear(corazoncito, Vector2(0, -10))
 
 # === DROP CREATION ===

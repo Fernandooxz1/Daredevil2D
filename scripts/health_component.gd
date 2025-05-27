@@ -5,7 +5,6 @@ signal onDead
 signal onDamageTook(deltavida:int)
 signal onHealthChanged(health: int)
 
-
 @export var max_health: int = 100
 var current_health : int = 0
 var old_health : int
