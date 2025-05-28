@@ -32,9 +32,11 @@ func _ready():
 
 # === MAIN LOOP ===
 func _physics_process(delta):
+	# var distance = abs(player.position.x - position.x)
+	# direction = sign(player.global_position.x - global_position.x)
+	direction = sign(player.position.x - position.x)
 	var distance = abs(player.position.x - position.x)
-	direction = sign(player.global_position.x - global_position.x)
-
+		
 	# Aplicar gravedad si está en el aire
 	if not is_on_floor():
 		velocity.y += gravity * delta

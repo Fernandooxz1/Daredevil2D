@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djmnjhuid04xh"
-path="res://.godot/imported/attack_one_handed_weapon-sheet.png-7ecf89250aa4bd9eadac23927db0d87c.ctex"
+uid="uid://df2k2j72j5ikg"
+path="res://.godot/imported/Atakes4.png-4e027d09f2eb1d793511c26cf5cd5dab.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/attack_one_handed_weapon-sheet.png"
-dest_files=["res://.godot/imported/attack_one_handed_weapon-sheet.png-7ecf89250aa4bd9eadac23927db0d87c.ctex"]
+source_file="res://assets/sprites/Daredevil/Atakes4.png"
+dest_files=["res://.godot/imported/Atakes4.png-4e027d09f2eb1d793511c26cf5cd5dab.ctex"]
 
 [params]
 

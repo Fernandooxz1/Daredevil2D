@@ -15,6 +15,12 @@ var already_dead := false
 var arma_actual: int = 1
 var facing := 1
 
+# Relojes
+var AttackClock : int = 0
+
+# Flags
+var is_attackanding = false
+
 # --- Movimiento ---
 var jump_speed := 600
 var acceleration := 1000
@@ -51,12 +57,24 @@ func _physics_process(delta):
 	var is_grounded := is_on_floor()
 	var direction := Input.get_axis("left", "right")
 	var is_running := Input.is_action_pressed("run")
+	var ataco := Input.is_action_just_pressed("attack")
 	var is_attacking := Input.is_action_pressed("attack")
 	var jump_pressed := Input.is_action_just_pressed("jump")
 	var is_crouching := Input.is_action_pressed("crouch")
 	var is_blocking := Input.is_action_pressed("blokear")
 	var change_weapon := Input.is_action_just_pressed("Cambiar Arma")
 
+
+	# Rutina de Combos
+	if ataco or is_attackanding: # Entra si se cumple alguna
+		is_attackanding = true
+		# que no pueda atacar denuevo si " is_attackanding" solo cuando la anim termine
+		AttackClock = AttackClock + 1 # el reloj deberia activarse despues de la animacion
+		print(AttackClock)
+		if AttackClock >= 10:
+			print("listo")
+			AttackClock = 0
+			is_attackanding = false
 	# Regeneración de energía
 	Egen += 1
 	if Egen > 10:
@@ -119,7 +137,7 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 			set_health_shape(Vector2.ZERO, Vector2(15, 30))
 		2:
 			anim = "baston_idle"
-			set_health_shape(Vector2(-200 * facing, 0), Vector2(15, 30))
+			set_health_shape(Vector2.ZERO, Vector2(15, 30))
 		3:
 			anim = "idle"
 			set_health_shape(Vector2.ZERO, Vector2(15, 30))
@@ -132,17 +150,23 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 		anim = "crouch_hit" if is_attacking else "crouch"
 		sprite_scale = Vector2(facing * (2.6 if is_attacking else 0.85), 2.5 if is_attacking else 0.8)
 		sprite_pos = Vector2(facing * 50, 150) if is_attacking else Vector2(0, 150)
-		set_health_shape(Vector2(0, 150), Vector2(15, 25))
+		set_health_shape(Vector2(0, 250), Vector2(15, 25))
 	elif direction == 0:
 		if is_attacking and Ebar.value > 0:
 			match arma_actual:
 				1:
 					anim = "hit"
 					sprite_scale = Vector2(facing * 0.9, 1.0)
+					#anim = "hit2"
+					#sprite_scale = Vector2(facing * 0.9, 1.0)
+					#anim = "hit3"
+					#sprite_scale = Vector2(facing * 1.5, 1.5)
+					#anim = "hit4"
+					#sprite_scale = Vector2(facing * 2.4, 2.4)
 				2, 3:
 					anim = "hit_baston"
 					sprite_scale = Vector2(facing * 2, 2)
-					set_health_shape(Vector2(-200 * facing, 0), Vector2(15, 30))
+					#set_health_shape(Vector2(-200 * facing, 0), Vector2(15, 30))
 		elif is_blocking and Ebar.value > 0:
 			anim = "blocking"
 			sprite_scale = Vector2(facing * 2.3, 2)
@@ -156,6 +180,7 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 	red_suite.scale = sprite_scale
 	collision.position = collision_pos
 	collision.scale = collision_scale
+	await red_suite.animation_finished
 
 # -------------------- Actualizar daño --------------------
 func _update_damage(a, w):
@@ -167,18 +192,21 @@ func _update_damage(a, w):
 				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(280, 100),"rotation":0.75 * PI,"scale":Vector2(10, 15)}
 				"crouch_hit": hit_data = {"damage": 15, "offset": Vector2(350, -50),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
 				"hit": hit_data = {"damage": 20, "offset": Vector2(300, -200),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
+				"hit2": hit_data = {"damage": 20, "offset": Vector2(300, -200),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
+				"hit3": hit_data = {"damage": 20, "offset": Vector2(300, -200),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
+				"hit4": hit_data = {"damage": 20, "offset": Vector2(300, -200),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
 				_: hitboxC.damage = 20
 		2:
 			match a:
 				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(280, 100),"rotation":0.75 * PI,"scale":Vector2(10, 15)}
 				"crouch_hit": hit_data = {"damage": 20, "offset": Vector2(350, -50),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
-				"hit_baston": hit_data = {"damage": 25, "offset": Vector2(200, -100),"rotation":0.4 * PI,"scale":Vector2(6, 25)}
+				"hit_baston": hit_data = {"damage": 25, "offset": Vector2(250, -100),"rotation":0.4 * PI,"scale":Vector2(6, 25)}
 				_: hitboxC.damage = 25
 		3:
 			match a:
 				"jump_hit": hit_data = {"damage": 25, "offset": Vector2(280, 100),"rotation":0.75 * PI,"scale":Vector2(10, 15)}
 				"crouch_hit": hit_data = {"damage": 7, "offset": Vector2(350, -50),"rotation":0.5 * PI,"scale":Vector2(6, 10)}
-				"hit_baston": hit_data = {"damage": 10, "offset": Vector2(200, -100),"rotation":0.4 * PI,"scale":Vector2(6, 25)}
+				"hit_baston": hit_data = {"damage": 10, "offset": Vector2(250, -100),"rotation":0.4 * PI,"scale":Vector2(6, 25)}
 				_: hitboxC.damage = 15
 
 	if hit_data:
@@ -233,6 +261,7 @@ func set_health_shape(pos: Vector2, scale: Vector2) -> void:
 	health_shape.disabled = false
 	health_shape.position = pos
 	health_shape.scale = scale
+
 
 func activar_hitbox(pos: Vector2,rot,scale: Vector2) -> void:
 	hitbox.position = pos
