@@ -20,6 +20,10 @@ var AttackClock : int = 0
 
 # Flags
 var is_attackanding = false
+var anim_fin = false
+var is_attacking := false
+var combo_step := 0
+var can_combo := false
 
 # --- Movimiento ---
 var jump_speed := 600
@@ -30,6 +34,7 @@ var relojitodigo = 0
 var sholodigo = 1
 
 # --- Referencias ---
+@onready var combo_timer := $ComboTimer  # Agrega un Timer hijo del personaje y conéctalo
 @onready var red_suite = $RedSuite
 @onready var hitboxC = $HitboxComponent
 @onready var hitbox = $HitboxComponent/HitShapeDD
@@ -58,7 +63,6 @@ func _physics_process(delta):
 	var direction := Input.get_axis("left", "right")
 	var is_running := Input.is_action_pressed("run")
 	var ataco := Input.is_action_just_pressed("attack")
-	var is_attacking := Input.is_action_pressed("attack")
 	var jump_pressed := Input.is_action_just_pressed("jump")
 	var is_crouching := Input.is_action_pressed("crouch")
 	var is_blocking := Input.is_action_pressed("blokear")
@@ -66,15 +70,12 @@ func _physics_process(delta):
 
 
 	# Rutina de Combos
-	if ataco or is_attackanding: # Entra si se cumple alguna
-		is_attackanding = true
-		# que no pueda atacar denuevo si " is_attackanding" solo cuando la anim termine
-		AttackClock = AttackClock + 1 # el reloj deberia activarse despues de la animacion
-		print(AttackClock)
-		if AttackClock >= 10:
-			print("listo")
-			AttackClock = 0
-			is_attackanding = false
+	if ataco:
+		if !is_attacking:
+			_start_combo_attack(1)
+		elif can_combo:
+			_start_combo_attack(combo_step + 1)
+
 	# Regeneración de energía
 	Egen += 1
 	if Egen > 10:
@@ -288,3 +289,32 @@ func _process_death() -> void:
 		red_suite.scale = Vector2(2.5 * facing, 2.5)
 		await get_tree().create_timer(1.0).timeout
 		get_tree().change_scene_to_file(GAME_OVER_SCENE_PATH)
+
+func _start_combo_attack(step):
+	is_attacking = true
+	can_combo = false
+	combo_step = step
+
+	match step:
+		1:
+			anim = "hit"
+		2:
+			anim = "hit2"
+		3:
+			anim = "hit3"
+		4:
+			anim = "hit4"
+		_:
+			anim = "hit"
+			combo_step = 1
+
+	red_suite.play(anim)
+	await red_suite.animation_finished
+
+	is_attacking = false
+	can_combo = true
+	combo_timer.start(0.5)  # Tiempo para continuar el combo
+
+func _on_combo_timer_timeout() -> void:
+	can_combo = false
+	combo_step = 0

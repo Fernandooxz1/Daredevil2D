@@ -141,7 +141,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_g5qpc")
 }],
-"loop": true,
+"loop": false,
 "name": &"Victory",
 "speed": 5.0
 }, {
@@ -149,7 +149,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_olym4")
 }],
-"loop": true,
+"loop": false,
 "name": &"baston_idle",
 "speed": 5.0
 }, {
@@ -157,7 +157,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_kl2xt")
 }],
-"loop": true,
+"loop": false,
 "name": &"blocking",
 "speed": 5.0
 }, {
@@ -165,7 +165,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_c82jl")
 }],
-"loop": true,
+"loop": false,
 "name": &"crouch",
 "speed": 5.0
 }, {
@@ -173,7 +173,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_wtd7q")
 }],
-"loop": true,
+"loop": false,
 "name": &"crouch_hit",
 "speed": 5.0
 }, {
@@ -200,15 +200,15 @@ animations = [{
 }],
 "loop": false,
 "name": &"hit",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_jd6rt")
 }],
-"loop": true,
+"loop": false,
 "name": &"hit2",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -237,7 +237,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"hit3",
-"speed": 14.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -263,7 +263,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"hit4",
-"speed": 14.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -271,13 +271,13 @@ animations = [{
 }],
 "loop": false,
 "name": &"hit_baston",
-"speed": 1.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("2_ef4hk")
 }],
-"loop": true,
+"loop": false,
 "name": &"idle",
 "speed": 5.0
 }, {
@@ -285,7 +285,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("3_p8c0w")
 }],
-"loop": true,
+"loop": false,
 "name": &"jump",
 "speed": 5.0
 }, {
@@ -293,33 +293,33 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_xki8k")
 }],
-"loop": true,
+"loop": false,
 "name": &"jump_hit",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ctjg8")
 }],
-"loop": true,
+"loop": false,
 "name": &"kick",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_hluos")
 }],
-"loop": true,
+"loop": false,
 "name": &"kick2",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_18ktq")
 }],
-"loop": true,
+"loop": false,
 "name": &"morido",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -334,7 +334,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_mpqdg")
 }],
-"loop": true,
+"loop": false,
 "name": &"run",
 "speed": 6.0
 }, {
@@ -348,7 +348,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ega6g")
 }],
-"loop": true,
+"loop": false,
 "name": &"walk",
 "speed": 5.0
 }]
@@ -371,7 +371,9 @@ texture_filter = 1
 texture_repeat = 1
 position = Vector2(-88.5897, 42.2961)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"Victory"
+animation = &"run"
+frame = 3
+frame_progress = 1.0
 
 [node name="CollisionDD" type="CollisionShape2D" parent="."]
 position = Vector2(-78.746, 16.9184)
