@@ -71,6 +71,9 @@ script = ExtResource("7_oymhu")
 position = Vector2(-7993.35, -3664.43)
 scale = Vector2(13.1562, 13.6648)
 
+[node name="ComboTimer" type="Timer" parent="Daredevil"]
+one_shot = true
+
 [node name="Ladron" parent="." instance=ExtResource("5_hg73m")]
 light_mask = 2
 visibility_layer = 2
@@ -150,3 +153,4 @@ stream = ExtResource("13_xinjc")
 volume_db = -16.306
 
 [connection signal="actual_weapon" from="Daredevil" to="Daredevil/Camera2D2/HUD" method="_on_daredevil_actual_weapon"]
+[connection signal="timeout" from="Daredevil/ComboTimer" to="Daredevil" method="_on_combo_timer_timeout"]
