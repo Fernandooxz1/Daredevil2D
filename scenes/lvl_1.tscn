@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bo1nwciqp1baf"]
+[gd_scene format=3 uid="uid://bo1nwciqp1baf"]
 
 [ext_resource type="Script" uid="uid://ilvwat43jbog" path="res://scripts/level1.gd" id="1_53anu"]
 [ext_resource type="PackedScene" uid="uid://c054f5ea76f47" path="res://scenes/cuidad.tscn" id="1_wgevm"]
@@ -24,131 +24,131 @@ size = Vector2(392.625, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xinjc"]
 size = Vector2(20, 287)
 
-[node name="Lvl 1" type="Node2D"]
+[node name="Lvl 1" type="Node2D" unique_id=934709400]
 position = Vector2(-8, 15)
 script = ExtResource("1_53anu")
 
-[node name="background_cuidad" parent="." instance=ExtResource("2_u8ilr")]
+[node name="background_cuidad" parent="." unique_id=767123950 instance=ExtResource("2_u8ilr")]
 position = Vector2(219, -381)
 scale = Vector2(1.02519, 0.770151)
 
-[node name="background_cuidad2" parent="." instance=ExtResource("2_u8ilr")]
+[node name="background_cuidad2" parent="." unique_id=18829343 instance=ExtResource("2_u8ilr")]
 position = Vector2(2465, -292)
 scale = Vector2(1.2662, 0.697695)
 
-[node name="background_cuidad3" parent="." instance=ExtResource("2_u8ilr")]
+[node name="background_cuidad3" parent="." unique_id=1446923160 instance=ExtResource("2_u8ilr")]
 position = Vector2(1166, -199)
 scale = Vector2(1.60325, 0.486778)
 
-[node name="Cuidad" parent="." instance=ExtResource("1_wgevm")]
+[node name="Cuidad" parent="." unique_id=1700761271 instance=ExtResource("1_wgevm")]
 position = Vector2(-3, -50)
 scale = Vector2(1.03201, 1.07928)
 
-[node name="Cuidad1" parent="." instance=ExtResource("4_hwdor")]
+[node name="Cuidad1" parent="." unique_id=568583328 instance=ExtResource("4_hwdor")]
 position = Vector2(1047, -33)
 scale = Vector2(1.11379, 1.05084)
 
-[node name="Cuidad2" parent="." instance=ExtResource("4_hwdor")]
+[node name="Cuidad2" parent="." unique_id=2114415588 instance=ExtResource("4_hwdor")]
 position = Vector2(2175, -5)
 scale = Vector2(1.04925, 1.00466)
 
-[node name="Cuidad3" parent="." instance=ExtResource("4_hwdor")]
+[node name="Cuidad3" parent="." unique_id=1425742073 instance=ExtResource("4_hwdor")]
 position = Vector2(3251, -5)
 scale = Vector2(0.954716, 1.00466)
 
-[node name="Daredevil" parent="." instance=ExtResource("2_l8iau")]
+[node name="Daredevil" parent="." unique_id=1417777564 instance=ExtResource("2_l8iau")]
 position = Vector2(571, 512)
 scale = Vector2(0.0987319, 0.115056)
 script = ExtResource("3_hwdor")
 
-[node name="Camera2D2" type="Camera2D" parent="Daredevil"]
+[node name="Camera2D2" type="Camera2D" parent="Daredevil" unique_id=1006703400]
 position = Vector2(668.477, -1347.17)
 scale = Vector2(0.671567, 0.576356)
 zoom = Vector2(1.28, 1.28)
 script = ExtResource("7_oymhu")
 
-[node name="HUD" parent="Daredevil/Camera2D2" instance=ExtResource("8_eukc1")]
+[node name="HUD" parent="Daredevil/Camera2D2" unique_id=1930462682 instance=ExtResource("8_eukc1")]
 position = Vector2(-7993.35, -3664.43)
 scale = Vector2(13.1562, 13.6648)
 
-[node name="ComboTimer" type="Timer" parent="Daredevil"]
+[node name="ComboTimer" type="Timer" parent="Daredevil" unique_id=1229612174]
 one_shot = true
 
-[node name="Ladron" parent="." instance=ExtResource("5_hg73m")]
+[node name="Ladron" parent="." unique_id=1321653501 instance=ExtResource("5_hg73m")]
 light_mask = 2
 visibility_layer = 2
 position = Vector2(1337, 438)
 
-[node name="GasVenenoso" parent="." instance=ExtResource("6_6a3rq")]
+[node name="GasVenenoso" parent="." unique_id=1812344447 instance=ExtResource("6_6a3rq")]
 position = Vector2(1593, 525)
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=770542816]
 position = Vector2(13, -20)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1834741933]
 position = Vector2(-8, 279)
 shape = SubResource("RectangleShape2D_hwdor")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D" unique_id=310282977]
 position = Vector2(3848, 300)
 scale = Vector2(6.45153, 32.7391)
 shape = SubResource("RectangleShape2D_53anu")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=1952188309]
 position = Vector2(829, 18)
 shape = SubResource("RectangleShape2D_hg73m")
 
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D" unique_id=420856534]
 position = Vector2(1243.69, 40)
 shape = SubResource("RectangleShape2D_hg73m")
 
-[node name="CollisionShape2D5" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="StaticBody2D" unique_id=1562928543]
 position = Vector2(1946, 41)
 shape = SubResource("RectangleShape2D_hg73m")
 
-[node name="CollisionShape2D6" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="StaticBody2D" unique_id=926606594]
 position = Vector2(2356, 66)
 shape = SubResource("RectangleShape2D_hg73m")
 
-[node name="CollisionShape2D7" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="StaticBody2D" unique_id=364345245]
 position = Vector2(3026, 62)
 shape = SubResource("RectangleShape2D_hg73m")
 
-[node name="CollisionShape2D8" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="StaticBody2D" unique_id=1028837671]
 position = Vector2(3391, 68)
 shape = SubResource("RectangleShape2D_hg73m")
 
-[node name="CollisionShape2D9" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="StaticBody2D" unique_id=1162020168]
 position = Vector2(645, 169)
 shape = SubResource("RectangleShape2D_xinjc")
 
-[node name="CollisionShape2D10" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D10" type="CollisionShape2D" parent="StaticBody2D" unique_id=364055568]
 position = Vector2(332, -137)
 shape = SubResource("RectangleShape2D_xinjc")
 
-[node name="CollisionShape2D11" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D11" type="CollisionShape2D" parent="StaticBody2D" unique_id=420872857]
 position = Vector2(1756, 185)
 shape = SubResource("RectangleShape2D_xinjc")
 
-[node name="CollisionShape2D12" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D12" type="CollisionShape2D" parent="StaticBody2D" unique_id=2056979381]
 position = Vector2(1419, 185)
 shape = SubResource("RectangleShape2D_xinjc")
 
-[node name="CollisionShape2D13" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D13" type="CollisionShape2D" parent="StaticBody2D" unique_id=525850896]
 position = Vector2(2843, 216)
 shape = SubResource("RectangleShape2D_xinjc")
 
-[node name="CollisionShape2D14" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D14" type="CollisionShape2D" parent="StaticBody2D" unique_id=86737870]
 position = Vector2(2521, 211)
 shape = SubResource("RectangleShape2D_xinjc")
 
-[node name="CollisionShape2D15" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D15" type="CollisionShape2D" parent="StaticBody2D" unique_id=2028147321]
 position = Vector2(3563, 216)
 shape = SubResource("RectangleShape2D_xinjc")
 
-[node name="Pausa" parent="." instance=ExtResource("6_u8ilr")]
+[node name="Pausa" parent="." unique_id=399387021 instance=ExtResource("6_u8ilr")]
 
-[node name="Tamer" type="AudioStreamPlayer" parent="."]
+[node name="Tamer" type="AudioStreamPlayer" parent="." unique_id=1985489002]
 stream = ExtResource("13_xinjc")
 volume_db = -16.306
 

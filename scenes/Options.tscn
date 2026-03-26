@@ -1,27 +1,35 @@
-[gd_scene load_steps=12 format=3 uid="uid://bpm1bd3wpuoq1"]
+[gd_scene format=3 uid="uid://bpm1bd3wpuoq1"]
 
-[ext_resource type="Script" uid="uid://b7jv0benjgrlt" path="res://scenes/options.gd" id="1_ckjey"]
+[ext_resource type="Script" uid="uid://b7jv0benjgrlt" path="res://scripts/options.gd" id="1_ckjey"]
 [ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_ckjey"]
 [ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_nmn1p"]
+[ext_resource type="Shader" uid="uid://dv74ddfejlfhe" path="res://scenes/Options.gdshader" id="3_s26ps"]
 [ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="4_w238l"]
 [ext_resource type="AudioStream" uid="uid://b0l10rbil8y25" path="res://assets/Audio/mouse_click_menus.mp3" id="5_s26ps"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p1xw0"]
+shader = ExtResource("3_s26ps")
+shader_parameter/fog_color = Vector4(0.8, 0.5, 0.5, 0.1)
+shader_parameter/speed_x = 0.0005
+shader_parameter/speed_y = 0.0005
+shader_parameter/density = 1.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w238l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nmn1p"]
 bg_color = Color(0.933333, 0, 0, 0.741176)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w238l"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s26ps"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5gu6x"]
 bg_color = Color(0.933333, 0, 0, 0.741176)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s26ps"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p1xw0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q60fs"]
 bg_color = Color(0.933333, 0, 0, 0.784314)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p1xw0"]
-
-[node name="options" type="Control"]
+[node name="options" type="Control" unique_id=1741645876]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,14 +38,23 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ckjey")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1208910095]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 scale = Vector2(0.901557, 0.899732)
 texture = ExtResource("2_ckjey")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="OptionsFog" type="ColorRect" parent="." unique_id=993955049]
+material = SubResource("ShaderMaterial_p1xw0")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=65552312]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
@@ -54,36 +71,36 @@ grow_vertical = 2
 scale = Vector2(1.74883, 2.04115)
 alignment = 1
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="Button" type="Button" parent="VBoxContainer" unique_id=1577689650]
 texture_filter = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_nmn1p")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/hover = SubResource("StyleBoxFlat_nmn1p")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_w238l")
+theme_override_styles/hover = SubResource("StyleBoxFlat_nmn1p")
 text = "Graphic settings"
 
-[node name="Button2" type="Button" parent="VBoxContainer"]
+[node name="Button2" type="Button" parent="VBoxContainer" unique_id=1205478118]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_nmn1p")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/hover = SubResource("StyleBoxFlat_5gu6x")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_s26ps")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5gu6x")
 text = "Keyboard"
 
-[node name="Button3" type="Button" parent="VBoxContainer"]
+[node name="Button3" type="Button" parent="VBoxContainer" unique_id=1036769952]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_nmn1p")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/hover = SubResource("StyleBoxFlat_q60fs")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_p1xw0")
+theme_override_styles/hover = SubResource("StyleBoxFlat_q60fs")
 text = "Back"
 
-[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=1939680947]
 stream = ExtResource("4_w238l")
 volume_db = -6.252
 
-[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=1870943873]
 stream = ExtResource("5_s26ps")
 
 [connection signal="mouse_entered" from="VBoxContainer/Button" to="." method="_on_button_mouse_entered"]

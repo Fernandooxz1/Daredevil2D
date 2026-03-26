@@ -1,9 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://5jopgb63rq0r"]
+[gd_scene format=3 uid="uid://5jopgb63rq0r"]
 
 [ext_resource type="Texture2D" uid="uid://i2be03vglc7w" path="res://assets/sprites/fondito menu DD.jpg" id="1_3kuwy"]
-[ext_resource type="Script" uid="uid://cysjfx4x0hraw" path="res://scenes/pausa.gd" id="1_qtdsr"]
+[ext_resource type="Script" uid="uid://cysjfx4x0hraw" path="res://scripts/pausa.gd" id="1_qtdsr"]
 [ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_1vvwb"]
-[ext_resource type="Script" uid="uid://dlwpxiq44o08y" path="res://scenes/pausa_box_container.gd" id="3_eqlbv"]
+[ext_resource type="Script" uid="uid://dlwpxiq44o08y" path="res://scripts/pausa_box_container.gd" id="3_eqlbv"]
 [ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="5_d1dax"]
 [ext_resource type="AudioStream" uid="uid://b0l10rbil8y25" path="res://assets/Audio/mouse_click_menus.mp3" id="6_eqlbv"]
 
@@ -16,11 +16,11 @@ bg_color = Color(0.933333, 0, 0, 0.784314)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ao72p"]
 bg_color = Color(0.933333, 0, 0, 0.784314)
 
-[node name="Pausa" type="CanvasLayer"]
+[node name="Pausa" type="CanvasLayer" unique_id=319671211]
 process_mode = 3
 script = ExtResource("1_qtdsr")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1205880596]
 visible = false
 self_modulate = Color(1, 1, 1, 0.901961)
 texture_filter = 1
@@ -32,7 +32,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_3kuwy")
 
-[node name="Menu1" type="VBoxContainer" parent="."]
+[node name="Menu1" type="VBoxContainer" parent="." unique_id=939511035]
 visible = false
 self_modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
@@ -47,35 +47,35 @@ grow_vertical = 2
 scale = Vector2(0.259613, 0.244121)
 script = ExtResource("3_eqlbv")
 
-[node name="Button" type="Button" parent="Menu1"]
+[node name="Button" type="Button" parent="Menu1" unique_id=746981675]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
 theme_override_styles/hover = SubResource("StyleBoxFlat_eqlbv")
 text = "Resume"
 
-[node name="Button2" type="Button" parent="Menu1"]
+[node name="Button2" type="Button" parent="Menu1" unique_id=1985042479]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
 theme_override_styles/hover = SubResource("StyleBoxFlat_xa0t4")
 text = "Options"
 
-[node name="Button3" type="Button" parent="Menu1"]
+[node name="Button3" type="Button" parent="Menu1" unique_id=207342335]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
 theme_override_styles/hover = SubResource("StyleBoxFlat_ao72p")
 text = "Quit"
 
-[node name="MoveSound" type="AudioStreamPlayer" parent="Menu1"]
+[node name="MoveSound" type="AudioStreamPlayer" parent="Menu1" unique_id=1626534125]
 stream = ExtResource("5_d1dax")
 volume_db = -6.252
 
-[node name="SelectSound" type="AudioStreamPlayer" parent="Menu1"]
+[node name="SelectSound" type="AudioStreamPlayer" parent="Menu1" unique_id=111113628]
 stream = ExtResource("6_eqlbv")
 
-[node name="options" type="VBoxContainer" parent="."]
+[node name="options" type="VBoxContainer" parent="." unique_id=714158421]
 visible = false
 offset_left = 410.0
 offset_top = 473.0
@@ -83,32 +83,32 @@ offset_right = 1481.0
 offset_bottom = 982.0
 scale = Vector2(0.273316, 0.25472)
 
-[node name="Button4" type="Button" parent="options"]
+[node name="Button4" type="Button" parent="options" unique_id=1270784790]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
 theme_override_styles/hover = SubResource("StyleBoxFlat_eqlbv")
 text = "Graphic Settings"
 
-[node name="Button5" type="Button" parent="options"]
+[node name="Button5" type="Button" parent="options" unique_id=1929096251]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
 theme_override_styles/hover = SubResource("StyleBoxFlat_xa0t4")
 text = "Keyboard"
 
-[node name="Button6" type="Button" parent="options"]
+[node name="Button6" type="Button" parent="options" unique_id=1412637476]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
 theme_override_styles/hover = SubResource("StyleBoxFlat_ao72p")
 text = "Back"
 
-[node name="MoveSound2" type="AudioStreamPlayer" parent="options"]
+[node name="MoveSound2" type="AudioStreamPlayer" parent="options" unique_id=492199509]
 stream = ExtResource("5_d1dax")
 volume_db = -6.252
 
-[node name="SelectSound2" type="AudioStreamPlayer" parent="options"]
+[node name="SelectSound2" type="AudioStreamPlayer" parent="options" unique_id=1046729689]
 stream = ExtResource("6_eqlbv")
 
 [connection signal="mouse_entered" from="Menu1/Button" to="Menu1" method="_on_button_mouse_entered"]

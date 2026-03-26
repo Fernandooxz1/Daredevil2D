@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bmflohqxtk51h"]
+[gd_scene format=3 uid="uid://bmflohqxtk51h"]
 
 [ext_resource type="Script" uid="uid://b3einmntpv01k" path="res://scripts/lobby.gd" id="1_5gu6x"]
 [ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_5gu6x"]
@@ -6,22 +6,55 @@
 [ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="4_pc087"]
 [ext_resource type="AudioStream" uid="uid://b0l10rbil8y25" path="res://assets/Audio/mouse_click_menus.mp3" id="5_apkv3"]
 
+[sub_resource type="Shader" id="Shader_pc087"]
+code = "shader_type canvas_item;
+
+uniform vec4 fog_color = vec4(0.8, 0.5, 0.5, 0.1); // Rojo suave para el estilo Daredevil
+uniform float speed_x = 0.0005; 
+uniform float speed_y = 0.0005;
+uniform float density = 1.0;
+
+float noise(vec2 coord) {
+    return fract(sin(dot(coord, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+float fog_pattern(vec2 coord) {
+    vec2 p = coord * density;
+    float n = noise(p);
+    n += noise(p + vec2(5, 0.1)) * 0.1;
+    return n / 1.5;
+}
+
+void fragment() {
+    vec2 moving_coord = FRAGCOORD.xy + vec2(speed_x, speed_y) * TIME;
+    float fog_val = fog_pattern(moving_coord * 0.01);
+    float alpha = smoothstep(0.9, 0.1, fog_val) * fog_color.a;
+    COLOR = vec4(fog_color.rgb, alpha);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_omrgh"]
+shader = SubResource("Shader_pc087")
+shader_parameter/fog_color = Vector4(0.8, 0.5, 0.5, 0.1)
+shader_parameter/speed_x = 0.001
+shader_parameter/speed_y = 0.001
+shader_parameter/density = 1.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o1atq"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1atq"]
 bg_color = Color(0.933333, 0, 0, 0.698039)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o1atq"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5gu6x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5gu6x"]
 bg_color = Color(0.933333, 0, 0, 0.741176)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5gu6x"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q60fs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q60fs"]
 bg_color = Color(0.933333, 0, 0, 0.784314)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q60fs"]
-
-[node name="lobby" type="Control"]
+[node name="lobby" type="Control" unique_id=1694206026]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,7 +63,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_5gu6x")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=443310298]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -40,14 +73,23 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.632225, 1.9493e-06, 3.36915e-07, 1)
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=919706734]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 scale = Vector2(0.901177, 0.900451)
 texture = ExtResource("2_5gu6x")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="LobbyFog" type="ColorRect" parent="." unique_id=1421274785]
+material = SubResource("ShaderMaterial_omrgh")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1821539982]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -63,38 +105,38 @@ grow_vertical = 2
 scale = Vector2(2.25474, 1.86977)
 alignment = 1
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="Button" type="Button" parent="VBoxContainer" unique_id=1014853449]
 texture_filter = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_q60fs")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/hover = SubResource("StyleBoxFlat_o1atq")
 theme_override_styles/normal = SubResource("StyleBoxTexture_o1atq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_o1atq")
 text = "Play"
 
-[node name="Button2" type="Button" parent="VBoxContainer"]
+[node name="Button2" type="Button" parent="VBoxContainer" unique_id=350616138]
 texture_filter = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_q60fs")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/hover = SubResource("StyleBoxFlat_5gu6x")
 theme_override_styles/normal = SubResource("StyleBoxTexture_5gu6x")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5gu6x")
 text = "Options"
 
-[node name="Button3" type="Button" parent="VBoxContainer"]
+[node name="Button3" type="Button" parent="VBoxContainer" unique_id=1418145451]
 texture_filter = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_q60fs")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/hover = SubResource("StyleBoxFlat_q60fs")
 theme_override_styles/normal = SubResource("StyleBoxTexture_q60fs")
+theme_override_styles/hover = SubResource("StyleBoxFlat_q60fs")
 text = "Quit"
 
-[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=1604075698]
 stream = ExtResource("4_pc087")
 volume_db = -6.252
 
-[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=1290383851]
 stream = ExtResource("5_apkv3")
 
 [connection signal="mouse_entered" from="VBoxContainer/Button" to="." method="_on_button_mouse_entered"]

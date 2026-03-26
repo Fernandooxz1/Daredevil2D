@@ -1,6 +1,6 @@
-[gd_scene load_steps=16 format=3 uid="uid://dstekqnxxnt7y"]
+[gd_scene format=3 uid="uid://dstekqnxxnt7y"]
 
-[ext_resource type="Script" uid="uid://dcybf73y6cwhj" path="res://scenes/gameOver.gd" id="1_h8i2o"]
+[ext_resource type="Script" uid="uid://dcybf73y6cwhj" path="res://scripts/gameOver.gd" id="1_h8i2o"]
 [ext_resource type="Texture2D" uid="uid://3gwv6jpvea6d" path="res://assets/sprites/gameover_1.png" id="2_hvwf0"]
 [ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="2_mt7yr"]
 [ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="3_qwp2v"]
@@ -26,17 +26,17 @@ frame_4/duration = 1.0
 frame_5/texture = ExtResource("7_kfspf")
 frame_5/duration = 1.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r8puk"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ke020"]
 bg_color = Color(0.933333, 0, 0, 0.494118)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r8puk"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_taj7i"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hvwf0"]
 bg_color = Color(0.933333, 0, 0, 0.529412)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_taj7i"]
-
-[node name="gameover" type="Control"]
+[node name="gameover" type="Control" unique_id=1666611795]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -45,13 +45,13 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_h8i2o")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=480722996]
 layout_mode = 0
 offset_right = 1154.0
 offset_bottom = 651.0
 texture = SubResource("AnimatedTexture_poahg")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1844179859]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
@@ -68,30 +68,30 @@ grow_vertical = 2
 scale = Vector2(1.32604, 2.32196)
 alignment = 1
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="Button" type="Button" parent="VBoxContainer" unique_id=1664567560]
 texture_filter = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_mt7yr")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/hover = SubResource("StyleBoxFlat_ke020")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_r8puk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ke020")
 text = "
 "
 
-[node name="Button2" type="Button" parent="VBoxContainer"]
+[node name="Button2" type="Button" parent="VBoxContainer" unique_id=555635295]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_mt7yr")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/hover = SubResource("StyleBoxFlat_hvwf0")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_taj7i")
+theme_override_styles/hover = SubResource("StyleBoxFlat_hvwf0")
 text = "
 "
 
-[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=354474807]
 stream = ExtResource("3_qwp2v")
 volume_db = -6.252
 
-[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer"]
+[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=1744142815]
 stream = ExtResource("4_3gj0k")
 
 [connection signal="mouse_entered" from="VBoxContainer/Button" to="." method="_on_button_mouse_entered"]

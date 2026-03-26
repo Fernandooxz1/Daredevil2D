@@ -5,7 +5,7 @@ signal actual_weapon
 @export var gravity := 1200
 @export var speed := 200
 
-# --- Estado y energía ---
+#Estado y energía
 var Egen: int = 1
 var Rdegen: int = 1
 var senojo: int = 0
@@ -25,7 +25,7 @@ var is_attacking := false
 var combo_step := 0
 var can_combo := false
 
-# --- Movimiento ---
+#  Movimiento
 var jump_speed := 600
 var acceleration := 1000
 var friction := 4500
@@ -33,8 +33,8 @@ var run_multiplier := 2.0
 var relojitodigo = 0
 var sholodigo = 1
 
-# --- Referencias ---
-@onready var combo_timer := $ComboTimer  # Agrega un Timer hijo del personaje y conéctalo
+# referencias 
+@onready var combo_timer := $ComboTimer  # Agrega un Timer hijo del personaje
 @onready var red_suite = $RedSuite
 @onready var hitboxC = $HitboxComponent
 @onready var hitbox = $HitboxComponent/HitShapeDD
@@ -69,14 +69,14 @@ func _physics_process(delta):
 	var change_weapon := Input.is_action_just_pressed("Cambiar Arma")
 
 
-	# Rutina de Combos
+	# rutina de combos
 	if ataco:
 		if !is_attacking:
 			_start_combo_attack(1)
 		elif can_combo:
 			_start_combo_attack(combo_step + 1)
 
-	# Regeneración de energía
+	# regeneración de energía
 	Egen += 1
 	if Egen > 10:
 		Egen = 0
@@ -123,7 +123,7 @@ func _physics_process(delta):
 	Enojado(senojo)
 	move_and_slide()
 
-# -------------------- Animación --------------------
+#  Animación 
 
 func _update_animation(is_blocking, is_grounded: bool, direction: float, is_running: bool, is_attacking: bool, is_crouching: bool) -> void:
 	self.anim = "idle"
@@ -183,7 +183,7 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 	collision.scale = collision_scale
 	await red_suite.animation_finished
 
-# -------------------- Actualizar daño --------------------
+# Actualizar daño
 func _update_damage(a, w):
 	var hit_data: Dictionary = {}
 
@@ -220,7 +220,7 @@ func _update_damage(a, w):
 			await activar_hitbox(offset,rotation,scale)
 			quitar_energia(1, 1)
 	
-# -------------------- Utilidades --------------------
+# Utilidades
 
 func quitar_energia(D_act_rel, cansancio):
 	Egen += 1
@@ -272,8 +272,7 @@ func activar_hitbox(pos: Vector2,rot,scale: Vector2) -> void:
 	await get_tree().create_timer(0.1).timeout
 	hitbox.disabled = true
 
-# -------------------- Muerte --------------------
-
+ # muerte
 func _process_death() -> void:
 	red_suite.position = Vector2.ZERO
 	red_suite.scale = Vector2(2.3 * facing, 2.3)
