@@ -78,7 +78,7 @@ theme_override_fonts/font = ExtResource("3_nmn1p")
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxEmpty_w238l")
 theme_override_styles/hover = SubResource("StyleBoxFlat_nmn1p")
-text = "Graphic settings"
+text = "Sound"
 
 [node name="Button2" type="Button" parent="VBoxContainer" unique_id=1205478118]
 layout_mode = 2

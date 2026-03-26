@@ -1,7 +1,7 @@
 extends Area2D
-class_name itemComponent
+class_name ItemPickup
 
-@export var cura: int = 10
+@export var heal_amount: int = 10
 
 func _ready() -> void:
 	connect("area_entered", Callable(self, "_on_area_entered"))
@@ -9,5 +9,5 @@ func _ready() -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	if area is HealthComponent:
-		area.take_heal(cura)
+		area.take_heal(heal_amount)
 		$"..".queue_free()

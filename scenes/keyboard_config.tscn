@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://dkeybrdcfg001"]
+
+[ext_resource type="Script" uid="uid://bemq33sxtvvl2" path="res://scripts/keyboard_config.gd" id="1_kbcfg"]
+[ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_kbcfg"]
+[ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_kbcfg"]
+[ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="4_kbcfg"]
+[ext_resource type="AudioStream" uid="uid://b0l10rbil8y25" path="res://assets/Audio/mouse_click_menus.mp3" id="5_kbcfg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_btn1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn1"]
+bg_color = Color(0.933333, 0, 0, 0.741176)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_btn2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn2"]
+bg_color = Color(0.933333, 0, 0, 0.741176)
+
+[node name="KeyboardConfig" type="Control" unique_id=1778694713]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kbcfg")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=58093545]
+modulate = Color(0.2, 0.2, 0.2, 1)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(0.901557, 0.899732)
+texture = ExtResource("2_kbcfg")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=717226786]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 40.0
+offset_right = -80.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="VBoxContainer" unique_id=981984078]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.933333, 0.2, 0.2, 1)
+theme_override_fonts/font = ExtResource("3_kbcfg")
+theme_override_font_sizes/font_size = 40
+text = "Configure keyboard"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=122343867]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=572953174]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="KeyListContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=1943585744]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=267694086]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer" unique_id=989936210]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0.6, 1)
+theme_override_fonts/font = ExtResource("3_kbcfg")
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1846050898]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="ResetButton" type="Button" parent="VBoxContainer/ButtonsContainer" unique_id=268132854]
+custom_minimum_size = Vector2(250, 45)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_kbcfg")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxEmpty_btn1")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn1")
+text = "Restaurar por defecto"
+
+[node name="BackButton" type="Button" parent="VBoxContainer/ButtonsContainer" unique_id=1360159623]
+custom_minimum_size = Vector2(250, 45)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_kbcfg")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxEmpty_btn2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn2")
+text = "Atrás"
+
+[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=1476765407]
+stream = ExtResource("4_kbcfg")
+volume_db = -6.252
+
+[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=309908038]
+stream = ExtResource("5_kbcfg")
+
+[connection signal="mouse_entered" from="VBoxContainer/ButtonsContainer/ResetButton" to="." method="_on_button_hover"]
+[connection signal="pressed" from="VBoxContainer/ButtonsContainer/ResetButton" to="." method="_on_reset_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/ButtonsContainer/BackButton" to="." method="_on_button_hover"]
+[connection signal="pressed" from="VBoxContainer/ButtonsContainer/BackButton" to="." method="_on_back_pressed"]
