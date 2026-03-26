@@ -8,6 +8,7 @@ const ACTION_NAMES: Dictionary = {
 	"right": "Derecha",
 	"crouch": "Agacharse",
 	"attack": "Atacar",
+	"hability1": "Patada",
 	"blokear": "Bloquear",
 	"Cambiar Arma": "Cambiar Arma",
 	"Pausa": "Pausa",
@@ -58,7 +59,10 @@ func _build_key_list() -> void:
 func _get_action_key_name(action: String) -> String:
 	var events = InputMap.action_get_events(action)
 	if events.size() > 0:
-		return events[0].as_text()
+		var key_text = events[0].as_text()
+		# Quitar el sufijo "(Physical)" si existe
+		key_text = key_text.replace(" (Physical)", "")
+		return key_text
 	return "Sin asignar"
 
 func _on_remap_button_pressed(action: String, btn: Button) -> void:
@@ -87,8 +91,9 @@ func _input(event: InputEvent) -> void:
 			InputMap.action_erase_events(action_to_remap)
 			InputMap.action_add_event(action_to_remap, event)
 
-			button_to_update.text = event.as_text()
-			status_label.text = ACTION_NAMES[action_to_remap] + " → " + event.as_text()
+			var remap_text = event.as_text().replace(" (Physical)", "")
+			button_to_update.text = remap_text
+			status_label.text = ACTION_NAMES[action_to_remap] + " → " + remap_text
 			waiting_for_input = false
 			get_viewport().set_input_as_handled()
 

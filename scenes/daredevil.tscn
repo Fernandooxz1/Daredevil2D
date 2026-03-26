@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=3 uid="uid://bbelo0p6gc24u"]
+[gd_scene format=3 uid="uid://bbelo0p6gc24u"]
 
 [ext_resource type="Texture2D" uid="uid://cql38afi52cj5" path="res://assets/sprites/attack_two_handed_weapon.png" id="1_1xhoh"]
 [ext_resource type="Texture2D" uid="uid://dibbaauuo8tvy" path="res://assets/sprites/hit.png" id="1_008a6"]
@@ -18,9 +18,12 @@
 [ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scripts/hitbox.gd" id="11_c82jl"]
 [ext_resource type="Script" uid="uid://ggr6kugd2gdf" path="res://scripts/health_component.gd" id="12_wtd7q"]
 [ext_resource type="Texture2D" uid="uid://c6ff44fbhmktf" path="res://assets/sprites/Daredevil/patada.png" id="13_kp7v8"]
-[ext_resource type="AudioStream" path="res://assets/Audio/hearhbeat.mp3" id="14_hbeat"]
-[ext_resource type="AudioStream" path="res://assets/Audio/punch2.mp3" id="15_pnch2"]
-[ext_resource type="AudioStream" path="res://assets/Audio/punch3.mp3" id="16_pnch3"]
+[ext_resource type="AudioStream" uid="uid://begdegdfh4kus" path="res://assets/Audio/hearhbeat.mp3" id="14_hbeat"]
+[ext_resource type="AudioStream" uid="uid://c58ji16s6o1w1" path="res://assets/Audio/punch2.mp3" id="15_pnch2"]
+[ext_resource type="AudioStream" uid="uid://cunjxfvidi6ka" path="res://assets/Audio/punch3.mp3" id="16_pnch3"]
+[ext_resource type="AudioStream" uid="uid://br3uqqx4qbcy0" path="res://assets/Audio/kick.mp3" id="17_kick"]
+[ext_resource type="AudioStream" uid="uid://cne5v6jm1gtxv" path="res://assets/Audio/running.mp3" id="18_running"]
+[ext_resource type="AudioStream" uid="uid://2spc8jt8xaly" path="res://assets/Audio/breathing fast.mp3" id="19_breathing"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g5qpc"]
 atlas = ExtResource("9_olym4")
@@ -104,7 +107,27 @@ region = Rect2(0, 0, 1024, 1024)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ctjg8"]
 atlas = ExtResource("13_kp7v8")
-region = Rect2(0, 0, 1024, 1024)
+region = Rect2(200, 19, 574, 1005)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pn7ym"]
+atlas = ExtResource("13_kp7v8")
+region = Rect2(1024, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ppr55"]
+atlas = ExtResource("13_kp7v8")
+region = Rect2(2048, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h78yi"]
+atlas = ExtResource("13_kp7v8")
+region = Rect2(3072, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_blwxd"]
+atlas = ExtResource("13_kp7v8")
+region = Rect2(4096, 0, 1024, 1024)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lymjf"]
+atlas = ExtResource("13_kp7v8")
+region = Rect2(5120, 0, 1024, 1024)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hluos"]
 atlas = ExtResource("9_olym4")
@@ -303,10 +326,25 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ctjg8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pn7ym")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ppr55")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h78yi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_blwxd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lymjf")
 }],
 "loop": false,
 "name": &"kick",
-"speed": 10.0
+"speed": 30.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -364,57 +402,68 @@ height = 15.3717
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c82jl"]
 
-[node name="Daredevil" type="CharacterBody2D"]
+[node name="Daredevil" type="CharacterBody2D" unique_id=517639174]
 position = Vector2(167, 491)
 scale = Vector2(0.101592, 0.118214)
 collision_layer = 2
 
-[node name="RedSuite" type="AnimatedSprite2D" parent="."]
+[node name="RedSuite" type="AnimatedSprite2D" parent="." unique_id=1610126085]
 texture_filter = 1
 texture_repeat = 1
-position = Vector2(-88.5897, 42.2961)
+position = Vector2(-49.216454, -16.918375)
+scale = Vector2(1.9135169, 1.6880702)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"run"
-frame = 3
-frame_progress = 1.0
+animation = &"kick"
 
-[node name="CollisionDD" type="CollisionShape2D" parent="."]
+[node name="CollisionDD" type="CollisionShape2D" parent="." unique_id=1645870417]
 position = Vector2(-78.746, 16.9184)
 scale = Vector2(74.492, 59.3084)
 shape = SubResource("CapsuleShape2D_m6s4t")
 
-[node name="HitboxComponent" type="Area2D" parent="."]
+[node name="HitboxComponent" type="Area2D" parent="." unique_id=29448027]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("11_c82jl")
 damage = 20
 
-[node name="HitShapeDD" type="CollisionShape2D" parent="HitboxComponent"]
+[node name="HitShapeDD" type="CollisionShape2D" parent="HitboxComponent" unique_id=851609466]
 light_mask = 2
 visibility_layer = 2
 position = Vector2(-49.2165, 0)
 scale = Vector2(8.5424, 8.40894)
 shape = SubResource("CapsuleShape2D_xki8k")
 
-[node name="HealthComponent" type="Area2D" parent="."]
+[node name="HealthComponent" type="Area2D" parent="." unique_id=1379768768]
 collision_layer = 2
 collision_mask = 20
 script = ExtResource("12_wtd7q")
 
-[node name="HealthShapeDD" type="CollisionShape2D" parent="HealthComponent"]
+[node name="HealthShapeDD" type="CollisionShape2D" parent="HealthComponent" unique_id=354822249]
 position = Vector2(-19.6866, 25.3777)
 scale = Vector2(19.71, 32.4267)
 shape = SubResource("CapsuleShape2D_c82jl")
 debug_color = Color(0, 0.886275, 0, 0.419608)
 
-[node name="HeartbeatSFX" type="AudioStreamPlayer" parent="."]
+[node name="HeartbeatSFX" type="AudioStreamPlayer" parent="." unique_id=1983377124]
 stream = ExtResource("14_hbeat")
 volume_db = -5.0
 
-[node name="Punch2SFX" type="AudioStreamPlayer" parent="."]
+[node name="Punch2SFX" type="AudioStreamPlayer" parent="." unique_id=935012077]
 stream = ExtResource("15_pnch2")
 volume_db = -3.0
 
-[node name="Punch3SFX" type="AudioStreamPlayer" parent="."]
+[node name="Punch3SFX" type="AudioStreamPlayer" parent="." unique_id=2077728206]
 stream = ExtResource("16_pnch3")
 volume_db = -3.0
+
+[node name="KickSFX" type="AudioStreamPlayer" parent="." unique_id=941050485]
+stream = ExtResource("17_kick")
+volume_db = -11.211
+
+[node name="RunningSFX" type="AudioStreamPlayer" parent="." unique_id=174301833]
+stream = ExtResource("18_running")
+volume_db = -5.0
+
+[node name="BreathingFastSFX" type="AudioStreamPlayer" parent="." unique_id=813380240]
+stream = ExtResource("19_breathing")
+volume_db = 6.123

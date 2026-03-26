@@ -6,7 +6,8 @@ signal weapon_changed
 @export var speed := 200
 
 # Estado
-var energy_regen_tick: int = 1
+var energy_regen_tick: int = 0
+var energy_drain_tick: int = 0
 var rage_decay_tick: int = 1
 var is_rage_full: bool = false
 var is_enraged: bool = false
@@ -15,6 +16,7 @@ var already_dead := false
 var current_weapon: int = 1
 var facing := 1
 var punch_sound_toggle: bool = false
+var is_kicking := false
 
 # Flags de combate
 var is_attacking := false
@@ -40,6 +42,9 @@ var run_multiplier := 2.0
 @onready var heartbeat_sfx = $HeartbeatSFX
 @onready var punch2_sfx = $Punch2SFX
 @onready var punch3_sfx = $Punch3SFX
+@onready var kick_sfx = $KickSFX
+@onready var running_sfx = $RunningSFX
+@onready var breathing_fast_sfx = $BreathingFastSFX
 @onready var anim = "idle"
 
 const GAME_OVER_SCENE_PATH := "res://scenes/gameover.tscn"
@@ -52,6 +57,7 @@ func _ready() -> void:
 	health_comp.on_damage_took.connect(_on_damage_took)
 	health_comp.on_health_changed.connect(_on_health_changed)
 	heartbeat_sfx.finished.connect(_on_heartbeat_finished)
+	breathing_fast_sfx.finished.connect(_on_breathing_fast_finished)
 
 func _on_dead() -> void:
 	is_dead = true
@@ -61,24 +67,28 @@ func _physics_process(delta):
 	var direction := Input.get_axis("left", "right")
 	var is_running := Input.is_action_pressed("run")
 	var attack_pressed := Input.is_action_just_pressed("attack")
+	var kick_pressed := Input.is_action_just_pressed("hability1")
 	var jump_pressed := Input.is_action_just_pressed("jump")
 	var is_crouching := Input.is_action_pressed("crouch")
 	var is_blocking := Input.is_action_pressed("blokear")
 	var change_weapon := Input.is_action_just_pressed("Cambiar Arma")
 
-	# Rutina de combos
-	if attack_pressed:
+	# Patada (F key)
+	if kick_pressed and not is_attacking and not is_kicking and not is_running and energy_bar.value > 20:
+		_perform_kick()
+
+	# Rutina de combos (no permitir mientras corre)
+	if attack_pressed and not (is_running and direction != 0):
 		if !is_attacking:
 			_start_combo_attack(1)
 		elif can_combo:
 			_start_combo_attack(combo_step + 1)
 
-	# Regeneración de energía
+	# Regeneración de energía (cada 3 ticks recupera +2)
 	energy_regen_tick += 1
-	if energy_regen_tick > 10:
+	if energy_regen_tick >= 3:
 		energy_regen_tick = 0
-	if energy_regen_tick == 10:
-		energy_bar.value = min(energy_bar.value + 1, 100)
+		energy_bar.value = min(energy_bar.value + 2, 100)
 
 	if not is_grounded:
 		velocity.y += gravity * delta
@@ -91,14 +101,14 @@ func _physics_process(delta):
 		current_weapon = current_weapon % 3 + 1
 		weapon_changed.emit(current_weapon)
 
-	# Saltos
+	# Saltos (costo fijo al saltar, no drena en el aire)
 	if jump_pressed and is_on_wall() and energy_bar.value > 0 and is_running and not is_grounded:
 		velocity.x = 600 * -facing
 		velocity.y = -jump_speed
-		drain_energy(1, 10)
+		energy_bar.value = max(energy_bar.value - 5, 0)
 	elif jump_pressed and is_grounded and energy_bar.value > 0:
 		velocity.y = -jump_speed
-		drain_energy(1, 10)
+		energy_bar.value = max(energy_bar.value - 5, 0)
 
 	# Movimiento
 	if is_crouching and is_grounded:
@@ -109,12 +119,32 @@ func _physics_process(delta):
 		var target_speed = speed * (run_multiplier if is_running and energy_bar.value > 20 else 0.75)
 		velocity.x = move_toward(velocity.x, direction * target_speed, acceleration * delta)
 		if target_speed == speed * run_multiplier:
-			drain_energy(0, 2)
+			# Drenar energía al correr (cada 8 ticks gasta 1)
+			drain_energy(1.0)
+			# Sonido de correr (solo en el suelo)
+			if is_grounded and not running_sfx.playing:
+				running_sfx.play()
+			elif not is_grounded and running_sfx.playing:
+				running_sfx.stop()
+		else:
+			if running_sfx.playing:
+				running_sfx.stop()
 	else:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
+		if running_sfx.playing:
+			running_sfx.stop()
 
-	# Animaciones y estado
-	_update_animation(is_blocking, is_grounded, direction, is_running, is_attacking, is_crouching)
+	# Respiración agitada cuando la energía es baja
+	if energy_bar.value <= 35:
+		if not breathing_fast_sfx.playing:
+			breathing_fast_sfx.play()
+	else:
+		if breathing_fast_sfx.playing:
+			breathing_fast_sfx.stop()
+
+	# Animaciones y estado (no sobreescribir durante patada)
+	if not is_kicking:
+		_update_animation(is_blocking, is_grounded, direction, is_running, is_attacking, is_crouching)
 	_update_damage(anim, current_weapon)
 	is_rage_full = check_rage_full()
 	process_rage(is_rage_full)
@@ -165,6 +195,7 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 	else:
 		anim = "run" if is_running and energy_bar.value > 20 else "walk"
 		sprite_scale = Vector2(facing * (2.2 if is_running else 1.6), 2.2 if is_running else 1.5)
+		
 
 	red_suite.play(anim)
 	red_suite.position = sprite_pos
@@ -187,6 +218,7 @@ func _update_damage(anim_name, weapon_id):
 				"hit2": hit_data = {"damage": 20, "offset": Vector2(300, -200), "rotation": 0.5 * PI, "scale": Vector2(6, 10)}
 				"hit3": hit_data = {"damage": 20, "offset": Vector2(300, -200), "rotation": 0.5 * PI, "scale": Vector2(6, 10)}
 				"hit4": hit_data = {"damage": 20, "offset": Vector2(300, -200), "rotation": 0.5 * PI, "scale": Vector2(6, 10)}
+				"kick": hit_data = {"damage": 25, "offset": Vector2(350, -150), "rotation": 0.5 * PI, "scale": Vector2(8, 12)}
 				_: hitbox_component.damage = 20
 		2:
 			match anim_name:
@@ -209,17 +241,12 @@ func _update_damage(anim_name, weapon_id):
 			var hit_scale = hit_data["scale"]
 			offset.x *= facing
 			await activate_hitbox(offset, hit_rotation, hit_scale)
-			drain_energy(1, 1)
+			drain_energy(2.5)
 
 # --- Utilidades ---
 
-func drain_energy(force_drain: int, fatigue: int):
-	energy_regen_tick += 1
-	if energy_regen_tick > 10:
-		energy_regen_tick = 0
-	if energy_regen_tick == 10 or force_drain:
-		energy_bar.value -= fatigue
-	energy_bar.value = max(energy_bar.value, -15)
+func drain_energy(amount: int):
+	energy_bar.value = max(energy_bar.value - amount, 0)
 
 func check_rage_full() -> bool:
 	return rage_bar.value == 100
@@ -258,6 +285,10 @@ func _on_health_changed(new_health):
 func _on_heartbeat_finished():
 	if health_comp.current_health > 0 and health_comp.current_health <= health_comp.max_health * 0.10:
 		heartbeat_sfx.play()
+
+func _on_breathing_fast_finished():
+	if energy_bar.value <= 15:
+		breathing_fast_sfx.play()
 
 func set_health_shape(pos: Vector2, scale: Vector2) -> void:
 	health_shape.disabled = false
@@ -327,3 +358,30 @@ func _start_combo_attack(step):
 func _on_combo_timer_timeout() -> void:
 	can_combo = false
 	combo_step = 0
+
+# --- Patada ---
+
+func _perform_kick():
+	is_kicking = true
+	is_attacking = true
+	kick_sfx.play()
+	anim = "kick"
+	red_suite.play("kick")
+	red_suite.scale = Vector2(facing * 1.0, 1.0)
+
+	# Activar hitbox de patada
+	hitbox_component.damage = 35
+	var offset = Vector2(350 * facing, -150)
+	hitbox.position = offset
+	hitbox.rotation = 0.5 * PI * facing
+	hitbox.scale = Vector2(8, 12)
+	hitbox.disabled = false
+	await get_tree().create_timer(0.15).timeout
+	hitbox.disabled = true
+
+	# Drenar más energía que un golpe normal
+	drain_energy(3.5)
+
+	await red_suite.animation_finished
+	is_kicking = false
+	is_attacking = false
