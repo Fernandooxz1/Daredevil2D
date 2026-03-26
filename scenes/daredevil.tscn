@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://bbelo0p6gc24u"]
+[gd_scene load_steps=55 format=3 uid="uid://bbelo0p6gc24u"]
 
 [ext_resource type="Texture2D" uid="uid://cql38afi52cj5" path="res://assets/sprites/attack_two_handed_weapon.png" id="1_1xhoh"]
 [ext_resource type="Texture2D" uid="uid://dibbaauuo8tvy" path="res://assets/sprites/hit.png" id="1_008a6"]
@@ -18,6 +18,9 @@
 [ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scripts/hitbox.gd" id="11_c82jl"]
 [ext_resource type="Script" uid="uid://ggr6kugd2gdf" path="res://scripts/health_component.gd" id="12_wtd7q"]
 [ext_resource type="Texture2D" uid="uid://c6ff44fbhmktf" path="res://assets/sprites/Daredevil/patada.png" id="13_kp7v8"]
+[ext_resource type="AudioStream" path="res://assets/Audio/hearhbeat.mp3" id="14_hbeat"]
+[ext_resource type="AudioStream" path="res://assets/Audio/punch2.mp3" id="15_pnch2"]
+[ext_resource type="AudioStream" path="res://assets/Audio/punch3.mp3" id="16_pnch3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g5qpc"]
 atlas = ExtResource("9_olym4")
@@ -403,3 +406,15 @@ position = Vector2(-19.6866, 25.3777)
 scale = Vector2(19.71, 32.4267)
 shape = SubResource("CapsuleShape2D_c82jl")
 debug_color = Color(0, 0.886275, 0, 0.419608)
+
+[node name="HeartbeatSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_hbeat")
+volume_db = -5.0
+
+[node name="Punch2SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15_pnch2")
+volume_db = -3.0
+
+[node name="Punch3SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_pnch3")
+volume_db = -3.0

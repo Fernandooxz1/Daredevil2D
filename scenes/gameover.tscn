@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dstekqnxxnt7y"]
+[gd_scene load_steps=2 format=3 uid="uid://dstekqnxxnt7y"]
 
 [ext_resource type="Script" uid="uid://dcybf73y6cwhj" path="res://scripts/gameOver.gd" id="1_h8i2o"]
 [ext_resource type="Texture2D" uid="uid://3gwv6jpvea6d" path="res://assets/sprites/gameover_1.png" id="2_hvwf0"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://b7og68f4jihdc" path="res://assets/sprites/gameover_4.png" id="5_xy3a7"]
 [ext_resource type="Texture2D" uid="uid://dmfadxdsssw51" path="res://assets/sprites/gameover_5.png" id="6_qv4t0"]
 [ext_resource type="Texture2D" uid="uid://r0iotms0rbh1" path="res://assets/sprites/gameover_6.png" id="7_kfspf"]
+[ext_resource type="AudioStream" path="res://assets/Audio/gameover.mp3" id="5_gosfx"]
 
 [sub_resource type="AnimatedTexture" id="AnimatedTexture_poahg"]
 frames = 6
@@ -93,6 +94,11 @@ volume_db = -6.252
 
 [node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=1744142815]
 stream = ExtResource("4_3gj0k")
+
+[node name="GameOverSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_gosfx")
+autoplay = true
+volume_db = -3.0
 
 [connection signal="mouse_entered" from="VBoxContainer/Button" to="." method="_on_button_mouse_entered"]
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_button_pressed"]

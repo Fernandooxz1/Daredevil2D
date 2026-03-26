@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://dsndcfg00001"]
+
+[ext_resource type="Script" uid="uid://dgw1d4syr08fy" path="res://scripts/sound_config.gd" id="1_sndcfg"]
+[ext_resource type="Texture2D" uid="uid://c5aupnnp1vu8h" path="res://assets/sprites/lobby menu.jpg" id="2_sndcfg"]
+[ext_resource type="FontFile" uid="uid://dlf4mwcxim2a4" path="res://assets/fonts/m5x7.ttf" id="3_sndcfg"]
+[ext_resource type="AudioStream" uid="uid://cjqb6ndokl4v8" path="res://assets/Audio/Minimalist4.mp3" id="4_sndcfg"]
+[ext_resource type="AudioStream" uid="uid://b0l10rbil8y25" path="res://assets/Audio/mouse_click_menus.mp3" id="5_sndcfg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_back"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_back"]
+bg_color = Color(0.933333, 0, 0, 0.741176)
+
+[node name="SoundConfig" type="Control" unique_id=817885978]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sndcfg")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1954439589]
+modulate = Color(0.2, 0.2, 0.2, 1)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(0.901557, 0.899732)
+texture = ExtResource("2_sndcfg")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=869356744]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -100.0
+offset_right = 220.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Title" type="Label" parent="VBoxContainer" unique_id=804035147]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.933333, 0.2, 0.2, 1)
+theme_override_fonts/font = ExtResource("3_sndcfg")
+theme_override_font_sizes/font_size = 40
+text = "SONIDO"
+horizontal_alignment = 1
+
+[node name="VolumeLabel" type="Label" parent="VBoxContainer" unique_id=35262947]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_sndcfg")
+theme_override_font_sizes/font_size = 28
+text = "Volumen: 100%"
+horizontal_alignment = 1
+
+[node name="VolumeSlider" type="HSlider" parent="VBoxContainer" unique_id=712144629]
+custom_minimum_size = Vector2(350, 20)
+layout_mode = 2
+value = 100.0
+
+[node name="BackButton" type="Button" parent="VBoxContainer" unique_id=612690379]
+custom_minimum_size = Vector2(200, 45)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_sndcfg")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxEmpty_back")
+theme_override_styles/hover = SubResource("StyleBoxFlat_back")
+text = "Atrás"
+
+[node name="MoveSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=999960286]
+stream = ExtResource("4_sndcfg")
+volume_db = -6.252
+
+[node name="SelectSound" type="AudioStreamPlayer" parent="VBoxContainer" unique_id=1663562589]
+stream = ExtResource("5_sndcfg")
+
+[connection signal="value_changed" from="VBoxContainer/VolumeSlider" to="." method="_on_volume_slider_changed"]
+[connection signal="mouse_entered" from="VBoxContainer/BackButton" to="." method="_on_button_hover"]
+[connection signal="pressed" from="VBoxContainer/BackButton" to="." method="_on_back_pressed"]

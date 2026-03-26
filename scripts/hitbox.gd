@@ -1,17 +1,14 @@
 extends Area2D
-class_name HitboxComponent #daño
+class_name HitboxComponent
 
-@export var damage :int = 2
+@export var damage: int = 2
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	area_entered.connect(hit)
+	area_entered.connect(_on_area_entered)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func hit(area):
+func _on_area_entered(area):
 	if area is HealthComponent:
 		area.take_damage(damage)
 
-
 func _on_health_component_on_dead() -> void:
-	pass # Replace with function body.
+	pass

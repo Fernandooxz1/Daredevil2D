@@ -152,5 +152,5 @@ shape = SubResource("RectangleShape2D_xinjc")
 stream = ExtResource("13_xinjc")
 volume_db = -16.306
 
-[connection signal="actual_weapon" from="Daredevil" to="Daredevil/Camera2D2/HUD" method="_on_daredevil_actual_weapon"]
+[connection signal="weapon_changed" from="Daredevil" to="Daredevil/Camera2D2/HUD" method="_on_weapon_changed"]
 [connection signal="timeout" from="Daredevil/ComboTimer" to="Daredevil" method="_on_combo_timer_timeout"]

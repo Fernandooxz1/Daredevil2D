@@ -134,6 +134,6 @@ texture_progress = ExtResource("7_yk101")
 tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
-[connection signal="onDamageTook" from="HealthComponent" to="." method="_on_health_component_on_damage_took"]
-[connection signal="onDead" from="HealthComponent" to="." method="_on_health_component_on_dead"]
-[connection signal="onHealthChanged" from="HealthComponent" to="." method="_on_health_component_on_health_changed"]
+[connection signal="on_damage_took" from="HealthComponent" to="." method="_on_health_component_on_damage_took"]
+[connection signal="on_dead" from="HealthComponent" to="." method="_on_health_component_on_dead"]
+[connection signal="on_health_changed" from="HealthComponent" to="." method="_on_health_component_on_health_changed"]

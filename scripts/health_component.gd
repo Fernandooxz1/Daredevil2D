@@ -1,36 +1,34 @@
 extends Area2D
-class_name HealthComponent #vida
+class_name HealthComponent
 
-signal onDead
-signal onDamageTook(deltavida:int)
-signal onHealthChanged(health: int)
+signal on_dead
+signal on_damage_took(damage_amount: int)
+signal on_health_changed(health: int)
 
 @export var max_health: int = 100
-var current_health : int = 0
-var old_health : int
+var current_health: int = 0
 
 func _ready() -> void:
 	current_health = max_health
 
 func take_heal(value: int):
-	set_health(value)
+	_set_health(value)
 
 func take_damage(damage: int):
 	var value = abs(damage)
-	set_health(-value)
+	_set_health(-value)
 
-func set_health(value: int):
-	old_health = current_health
-	current_health = current_health + value
-	current_health = clamp (current_health,0,max_health)
-	
+func _set_health(value: int):
+	var old_health = current_health
+	current_health = clamp(current_health + value, 0, max_health)
+
 	if old_health != current_health:
-		onHealthChanged.emit(current_health)
+		on_health_changed.emit(current_health)
 	if current_health <= 0:
-		dead()
+		_die()
 		return
-	elif current_health >= 0 and current_health < old_health :
-		onDamageTook.emit(-value)
+	elif current_health < old_health:
+		on_damage_took.emit(-value)
 
-func dead():
-	onDead.emit()
+func _die():
+	on_dead.emit()

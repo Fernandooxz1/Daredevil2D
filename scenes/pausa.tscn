@@ -22,6 +22,7 @@ script = ExtResource("1_qtdsr")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1205880596]
 visible = false
+modulate = Color(0.2, 0.2, 0.2, 1)
 self_modulate = Color(1, 1, 1, 0.901961)
 texture_filter = 1
 texture_repeat = 1
@@ -88,7 +89,7 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_1vvwb")
 theme_override_font_sizes/font_size = 200
 theme_override_styles/hover = SubResource("StyleBoxFlat_eqlbv")
-text = "Graphic Settings"
+text = "Sound"
 
 [node name="Button5" type="Button" parent="options" unique_id=1929096251]
 layout_mode = 2
@@ -111,6 +112,109 @@ volume_db = -6.252
 [node name="SelectSound2" type="AudioStreamPlayer" parent="options" unique_id=1046729689]
 stream = ExtResource("6_eqlbv")
 
+[node name="KeyboardPanel" type="VBoxContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 100.0
+offset_top = 60.0
+offset_right = -100.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="KeyboardPanel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1vvwb")
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.933333, 0.2, 0.2, 1)
+text = "CONFIGURAR TECLADO"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="KeyboardPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="KeyListContainer" type="VBoxContainer" parent="KeyboardPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="StatusLabel" type="Label" parent="KeyboardPanel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1vvwb")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 1, 0.6, 1)
+text = ""
+horizontal_alignment = 1
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="KeyboardPanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 30
+
+[node name="ResetButton" type="Button" parent="KeyboardPanel/ButtonsHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 40)
+theme_override_fonts/font = ExtResource("3_1vvwb")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_eqlbv")
+text = "Restaurar por defecto"
+
+[node name="BackButton" type="Button" parent="KeyboardPanel/ButtonsHBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 40)
+theme_override_fonts/font = ExtResource("3_1vvwb")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_xa0t4")
+text = "Atrás"
+
+[node name="SoundPanel" type="VBoxContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -80.0
+offset_right = 200.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="SoundPanel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1vvwb")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.933333, 0.2, 0.2, 1)
+text = "SONIDO"
+horizontal_alignment = 1
+
+[node name="VolumeLabel" type="Label" parent="SoundPanel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_1vvwb")
+theme_override_font_sizes/font_size = 24
+text = "Volumen: 100%"
+horizontal_alignment = 1
+
+[node name="VolumeSlider" type="HSlider" parent="SoundPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 20)
+max_value = 100.0
+value = 100.0
+
+[node name="BackButton" type="Button" parent="SoundPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 40)
+theme_override_fonts/font = ExtResource("3_1vvwb")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_ao72p")
+text = "Atrás"
+
 [connection signal="mouse_entered" from="Menu1/Button" to="Menu1" method="_on_button_mouse_entered"]
 [connection signal="pressed" from="Menu1/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="Menu1/Button" to="Menu1" method="_on_button_pressed"]
@@ -120,12 +224,11 @@ stream = ExtResource("6_eqlbv")
 [connection signal="mouse_entered" from="Menu1/Button3" to="Menu1" method="_on_button_3_mouse_entered"]
 [connection signal="pressed" from="Menu1/Button3" to="." method="_on_button_3_pressed"]
 [connection signal="pressed" from="Menu1/Button3" to="Menu1" method="_on_button_3_pressed"]
-[connection signal="mouse_entered" from="options/Button4" to="options" method="_on_button_4_mouse_entered"]
 [connection signal="pressed" from="options/Button4" to="." method="_on_button_4_pressed"]
-[connection signal="pressed" from="options/Button4" to="options" method="_on_button_4_pressed"]
-[connection signal="mouse_entered" from="options/Button5" to="options" method="_on_button_5_mouse_entered"]
 [connection signal="pressed" from="options/Button5" to="." method="_on_button_5_pressed"]
-[connection signal="pressed" from="options/Button5" to="options" method="_on_button_5_pressed"]
-[connection signal="mouse_entered" from="options/Button6" to="options" method="_on_button_6_mouse_entered"]
 [connection signal="pressed" from="options/Button6" to="." method="_on_button_6_pressed"]
-[connection signal="pressed" from="options/Button6" to="options" method="_on_button_6_pressed"]
+[connection signal="pressed" from="KeyboardPanel/ButtonsHBox/ResetButton" to="." method="_on_reset_keys_pressed"]
+[connection signal="pressed" from="KeyboardPanel/ButtonsHBox/BackButton" to="." method="_on_keyboard_back_pressed"]
+[connection signal="value_changed" from="SoundPanel/VolumeSlider" to="." method="_on_volume_slider_changed"]
+[connection signal="pressed" from="SoundPanel/BackButton" to="." method="_on_sound_back_pressed"]
+
