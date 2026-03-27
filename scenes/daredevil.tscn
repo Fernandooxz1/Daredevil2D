@@ -2,7 +2,6 @@
 
 [ext_resource type="Texture2D" uid="uid://cql38afi52cj5" path="res://assets/sprites/attack_two_handed_weapon.png" id="1_1xhoh"]
 [ext_resource type="Texture2D" uid="uid://dibbaauuo8tvy" path="res://assets/sprites/hit.png" id="1_008a6"]
-[ext_resource type="Texture2D" uid="uid://df2k2j72j5ikg" path="res://assets/sprites/Daredevil/Atakes4.png" id="1_18ktq"]
 [ext_resource type="Texture2D" uid="uid://bw81x3e15e6es" path="res://assets/sprites/crouch.png" id="1_mpqdg"]
 [ext_resource type="Texture2D" uid="uid://cbal1rsdrk3d1" path="res://assets/sprites/idle.png" id="2_ef4hk"]
 [ext_resource type="Texture2D" uid="uid://nv2k474y5aj0" path="res://assets/sprites/crouch_hit.png" id="2_xki8k"]
@@ -12,9 +11,10 @@
 [ext_resource type="Texture2D" uid="uid://ckh21pfytftat" path="res://assets/sprites/DDwalk.png" id="3_ef4hk"]
 [ext_resource type="Texture2D" uid="uid://cm20dk2q1vfp6" path="res://assets/sprites/jump.png" id="3_p8c0w"]
 [ext_resource type="Texture2D" uid="uid://dwuwwurc060lq" path="res://assets/sprites/salto_hit.png" id="4_wqvkv"]
-[ext_resource type="Texture2D" uid="uid://djmnjhuid04xh" path="res://assets/sprites/attack_two_handed_weapon-sheet.png" id="7_1xhoh"]
-[ext_resource type="Texture2D" uid="uid://c5g38x8xekl52" path="res://assets/sprites/Daredevil/golpe hacia arriba.png" id="8_olym4"]
+[ext_resource type="Texture2D" uid="uid://pjvwj3gms15g" path="res://assets/sprites/hits.png" id="8_muoqp"]
+[ext_resource type="Texture2D" uid="uid://l0kke35spq3t" path="res://assets/sprites/uppercutt.png" id="9_12tic"]
 [ext_resource type="Texture2D" uid="uid://ct2ptbueu6xgp" path="res://assets/sprites/Daredevil/Atakes3.png" id="9_olym4"]
+[ext_resource type="Texture2D" uid="uid://snyjbrav1ei8" path="res://assets/sprites/attack_two_handed_weapon-sheet.png.png" id="10_12tic"]
 [ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scripts/hitbox.gd" id="11_c82jl"]
 [ext_resource type="Script" uid="uid://ggr6kugd2gdf" path="res://scripts/health_component.gd" id="12_wtd7q"]
 [ext_resource type="Texture2D" uid="uid://c6ff44fbhmktf" path="res://assets/sprites/Daredevil/patada.png" id="13_kp7v8"]
@@ -61,45 +61,17 @@ region = Rect2(491, 0, 241, 1024)
 atlas = ExtResource("3_c82jl")
 region = Rect2(748, 0, 308, 1024)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jd6rt"]
-atlas = ExtResource("8_olym4")
-region = Rect2(0, 0, 1121, 1200)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_b5630"]
-atlas = ExtResource("1_18ktq")
-region = Rect2(1496, 0, 473, 978)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xjs4q"]
-atlas = ExtResource("1_18ktq")
-region = Rect2(1023, 0, 473, 978)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_muoqp"]
-atlas = ExtResource("1_18ktq")
-region = Rect2(550, 0, 473, 978)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_12tic"]
-atlas = ExtResource("1_18ktq")
-region = Rect2(21, 0, 544, 978)
+atlas = ExtResource("8_muoqp")
+region = Rect2(1536, 0, 512, 512)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_pkqbu"]
-atlas = ExtResource("9_olym4")
-region = Rect2(818, 552, 409, 552)
+[sub_resource type="AtlasTexture" id="AtlasTexture_jd6rt"]
+atlas = ExtResource("9_12tic")
+region = Rect2(89, 77, 300, 400)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_h7002"]
-atlas = ExtResource("9_olym4")
-region = Rect2(0, 562, 429, 562)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_h28ht"]
-atlas = ExtResource("9_olym4")
-region = Rect2(0, 0, 409, 630)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_oeg6s"]
-atlas = ExtResource("9_olym4")
-region = Rect2(836, 0, 418, 647)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kp7v8"]
-atlas = ExtResource("7_1xhoh")
-region = Rect2(61, 31, 810, 604)
+[sub_resource type="AtlasTexture" id="AtlasTexture_o8acq"]
+atlas = ExtResource("10_12tic")
+region = Rect2(250, 113, 550, 460)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xki8k"]
 atlas = ExtResource("4_wqvkv")
@@ -230,7 +202,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jd6rt")
+"texture": SubResource("AtlasTexture_12tic")
 }],
 "loop": false,
 "name": &"hit2",
@@ -238,28 +210,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_b5630")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_b5630")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_b5630")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_b5630")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xjs4q")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_muoqp")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_12tic")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_b5630")
+"texture": ExtResource("1_008a6")
 }],
 "loop": false,
 "name": &"hit3",
@@ -267,25 +218,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_pkqbu")
+"texture": SubResource("AtlasTexture_jd6rt")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_pkqbu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pkqbu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_h7002")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_h28ht")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_oeg6s")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_oeg6s")
+"texture": SubResource("AtlasTexture_jd6rt")
 }],
 "loop": false,
 "name": &"hit4",
@@ -293,7 +229,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_kp7v8")
+"texture": SubResource("AtlasTexture_o8acq")
 }],
 "loop": false,
 "name": &"hit_baston",
@@ -341,10 +277,37 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_lymjf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lymjf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lymjf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lymjf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lymjf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lymjf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_blwxd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h78yi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ppr55")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pn7ym")
 }],
 "loop": false,
 "name": &"kick",
-"speed": 30.0
+"speed": 32.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -413,7 +376,8 @@ texture_repeat = 1
 position = Vector2(-49.216454, -16.918375)
 scale = Vector2(1.9135169, 1.6880702)
 sprite_frames = SubResource("SpriteFrames_cwo24")
-animation = &"kick"
+animation = &"hit4"
+frame_progress = 1.0
 
 [node name="CollisionDD" type="CollisionShape2D" parent="." unique_id=1645870417]
 position = Vector2(-78.746, 16.9184)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bfq7enxl0is4o"]
+[gd_scene format=3 uid="uid://bfq7enxl0is4o"]
 
 [ext_resource type="Texture2D" uid="uid://cp6745gfkc5si" path="res://assets/sprites/ladronIdle.png" id="1_n8kyn"]
 [ext_resource type="Script" uid="uid://btb7fb7nsx5hp" path="res://scripts/scriptLadron.gd" id="1_yk101"]
@@ -75,25 +75,25 @@ height = 92.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_q8myo"]
 
-[node name="Ladron" type="CharacterBody2D"]
+[node name="Ladron" type="CharacterBody2D" unique_id=15934327]
 position = Vector2(2, 3)
 scale = Vector2(0.985396, 1.0058)
 collision_layer = 4
 script = ExtResource("1_yk101")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=654537945]
 position = Vector2(2.28988, 6.26581)
 rotation = 0.0129428
 scale = Vector2(0.192937, 0.187931)
 sprite_frames = SubResource("SpriteFrames_dbi3t")
 animation = &"take_damage"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=5821906]
 position = Vector2(-2.02964, 12.925)
 scale = Vector2(1.09621, 1.1213)
 shape = SubResource("CapsuleShape2D_n8kyn")
 
-[node name="HitboxComponent" type="Area2D" parent="."]
+[node name="HitboxComponent" type="Area2D" parent="." unique_id=2000622742]
 position = Vector2(-1.01482, 3.97693)
 collision_layer = 4
 collision_mask = 2
@@ -101,12 +101,12 @@ script = ExtResource("5_ydokj")
 damage = 10
 metadata/_custom_type_script = "uid://c6eqkofolywxl"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent" unique_id=889829922]
 position = Vector2(-1.01482, -12.925)
 scale = Vector2(1.11386, 0.278164)
 shape = SubResource("CapsuleShape2D_sirfx")
 
-[node name="HealthComponent" type="Area2D" parent="."]
+[node name="HealthComponent" type="Area2D" parent="." unique_id=868117099]
 light_mask = 2
 visibility_layer = 2
 collision_layer = 4
@@ -114,21 +114,20 @@ collision_mask = 2
 script = ExtResource("6_yk101")
 metadata/_custom_type_script = "uid://ggr6kugd2gdf"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HealthComponent"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HealthComponent" unique_id=1453497150]
 light_mask = 2
 visibility_layer = 2
 position = Vector2(-2.24113e-05, 7.87144)
 scale = Vector2(1.28624, 3.56342)
 shape = SubResource("CapsuleShape2D_q8myo")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="."]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="." unique_id=1845087741]
 offset_left = -47.6966
 offset_top = -62.6367
 offset_right = 1272.3
 offset_bottom = 225.363
 scale = Vector2(0.0641343, 0.0471643)
 min_value = -28.0
-max_value = 115.0
 value = 100.0
 texture_progress = ExtResource("7_yk101")
 tint_progress = Color(0, 1, 0, 1)

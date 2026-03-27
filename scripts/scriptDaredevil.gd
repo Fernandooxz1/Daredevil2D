@@ -15,10 +15,9 @@ var is_dead := false
 var already_dead := false
 var current_weapon: int = 1
 var facing := 1
-var punch_sound_toggle: bool = false
 var is_kicking := false
 
-# Flags de combate
+# Combate
 var is_attacking := false
 var combo_step := 0
 var can_combo := false
@@ -73,18 +72,18 @@ func _physics_process(delta):
 	var is_blocking := Input.is_action_pressed("blokear")
 	var change_weapon := Input.is_action_just_pressed("Cambiar Arma")
 
-	# Patada (F key)
+	# Patada
 	if kick_pressed and not is_attacking and not is_kicking and not is_running and energy_bar.value > 20:
 		_perform_kick()
 
-	# Rutina de combos (no permitir mientras corre)
-	if attack_pressed and not (is_running and direction != 0):
-		if !is_attacking:
-			_start_combo_attack(1)
-		elif can_combo:
+	# Combos (no permitir mientras corre)
+	if attack_pressed and not (is_running and direction != 0) and energy_bar.value > 0:
+		if can_combo and combo_step > 0:
 			_start_combo_attack(combo_step + 1)
+		elif !is_attacking:
+			_start_combo_attack(1)
 
-	# Regeneración de energía (cada 3 ticks recupera +2)
+	# Regenerar energia (cada 3 ticks recupera +2)
 	energy_regen_tick += 1
 	if energy_regen_tick >= 3:
 		energy_regen_tick = 0
@@ -101,7 +100,7 @@ func _physics_process(delta):
 		current_weapon = current_weapon % 3 + 1
 		weapon_changed.emit(current_weapon)
 
-	# Saltos (costo fijo al saltar, no drena en el aire)
+	# Saltos (costo fijo, no drena en el aire)
 	if jump_pressed and is_on_wall() and energy_bar.value > 0 and is_running and not is_grounded:
 		velocity.x = 600 * -facing
 		velocity.y = -jump_speed
@@ -119,7 +118,7 @@ func _physics_process(delta):
 		var target_speed = speed * (run_multiplier if is_running and energy_bar.value > 20 else 0.75)
 		velocity.x = move_toward(velocity.x, direction * target_speed, acceleration * delta)
 		if target_speed == speed * run_multiplier:
-			# Drenar energía al correr (cada 8 ticks gasta 1)
+			# Drenar energia al correr
 			drain_energy(1.0)
 			# Sonido de correr (solo en el suelo)
 			if is_grounded and not running_sfx.playing:
@@ -134,7 +133,7 @@ func _physics_process(delta):
 		if running_sfx.playing:
 			running_sfx.stop()
 
-	# Respiración agitada cuando la energía es baja
+	# Respiracion agitada cuando la energia es baja
 	if energy_bar.value <= 35:
 		if not breathing_fast_sfx.playing:
 			breathing_fast_sfx.play()
@@ -142,15 +141,15 @@ func _physics_process(delta):
 		if breathing_fast_sfx.playing:
 			breathing_fast_sfx.stop()
 
-	# Animaciones y estado (no sobreescribir durante patada)
-	if not is_kicking:
+	# Animaciones (no sobreescribir durante patada ni combos)
+	if not is_kicking and not is_attacking:
 		_update_animation(is_blocking, is_grounded, direction, is_running, is_attacking, is_crouching)
-	_update_damage(anim, current_weapon)
+		_update_damage(anim, current_weapon)
 	is_rage_full = check_rage_full()
 	process_rage(is_rage_full)
 	move_and_slide()
 
-# --- Animación ---
+# Animacion
 
 func _update_animation(is_blocking, is_grounded: bool, direction: float, is_running: bool, attacking: bool, is_crouching: bool) -> void:
 	self.anim = "idle"
@@ -170,7 +169,7 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 			anim = "idle"
 			set_health_shape(Vector2.ZERO, Vector2(15, 30))
 
-	# Animaciones según el estado
+	# Animaciones segun el estado
 	if not is_grounded:
 		anim = "jump_hit" if attacking and energy_bar.value > 0 else "jump"
 		sprite_scale = Vector2(facing * 0.975, 0.975)
@@ -190,6 +189,7 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 					sprite_scale = Vector2(facing * 2, 2)
 		elif is_blocking and energy_bar.value > 0:
 			anim = "blocking"
+			drain_energy(1.5)
 			sprite_scale = Vector2(facing * 2.3, 2)
 			health_shape.disabled = true
 	else:
@@ -202,9 +202,8 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 	red_suite.scale = sprite_scale
 	collision.position = collision_pos
 	collision.scale = collision_scale
-	await red_suite.animation_finished
 
-# --- Daño ---
+# Daño (solo corre cuando NO esta en combo ni patada)
 
 func _update_damage(anim_name, weapon_id):
 	var hit_data: Dictionary = {}
@@ -216,8 +215,8 @@ func _update_damage(anim_name, weapon_id):
 				"crouch_hit": hit_data = {"damage": 15, "offset": Vector2(350, -50), "rotation": 0.5 * PI, "scale": Vector2(6, 10)}
 				"hit": hit_data = {"damage": 20, "offset": Vector2(300, -200), "rotation": 0.5 * PI, "scale": Vector2(6, 10)}
 				"hit2": hit_data = {"damage": 20, "offset": Vector2(300, -200), "rotation": 0.5 * PI, "scale": Vector2(6, 10)}
-				"hit3": hit_data = {"damage": 20, "offset": Vector2(300, -200), "rotation": 0.5 * PI, "scale": Vector2(6, 10)}
-				"hit4": hit_data = {"damage": 20, "offset": Vector2(300, -200), "rotation": 0.5 * PI, "scale": Vector2(6, 10)}
+				"hit3": hit_data = {"damage": 25, "offset": Vector2(300, -200), "rotation": 0.5 * PI, "scale": Vector2(6, 10)}
+				"hit4": hit_data = {"damage": 35, "offset": Vector2(300, -200), "rotation": 0.5 * PI, "scale": Vector2(7, 11)}
 				"kick": hit_data = {"damage": 25, "offset": Vector2(350, -150), "rotation": 0.5 * PI, "scale": Vector2(8, 12)}
 				_: hitbox_component.damage = 20
 		2:
@@ -241,11 +240,10 @@ func _update_damage(anim_name, weapon_id):
 			var hit_scale = hit_data["scale"]
 			offset.x *= facing
 			await activate_hitbox(offset, hit_rotation, hit_scale)
-			drain_energy(2.5)
 
-# --- Utilidades ---
+# Utilidades
 
-func drain_energy(amount: int):
+func drain_energy(amount: float):
 	energy_bar.value = max(energy_bar.value - amount, 0)
 
 func check_rage_full() -> bool:
@@ -303,7 +301,7 @@ func activate_hitbox(pos: Vector2, rot, scale: Vector2) -> void:
 	await get_tree().create_timer(0.1).timeout
 	hitbox.disabled = true
 
-# --- Muerte ---
+# Muerte
 
 func _process_death() -> void:
 	red_suite.position = Vector2.ZERO
@@ -321,45 +319,194 @@ func _process_death() -> void:
 		await get_tree().create_timer(1.0).timeout
 		get_tree().change_scene_to_file(GAME_OVER_SCENE_PATH)
 
-# --- Combos ---
+# Combos
 
 func _start_combo_attack(step):
+	# Elegir combo segun el arma equipada
+	match current_weapon:
+		1:
+			_start_fist_combo(step)
+		2:
+			_start_boo_combo(step)
+		3:
+			_start_fist_combo(step)
+
+# Combo puños (arma 1), 4 golpes
+
+func _start_fist_combo(step):
 	is_attacking = true
 	can_combo = false
+	combo_timer.stop()  # Cancelar timer de combo anterior para que no resetee combo_step
 	combo_step = step
 
-	# Alternating punch sounds
-	if punch_sound_toggle:
-		punch2_sfx.play()
-	else:
-		punch3_sfx.play()
-	punch_sound_toggle = !punch_sound_toggle
+	# Configuracion por paso (cambiar sprite_scale para ajustar cada golpe)
+	var hit_anim := "hit"
+	var sprite_scale := Vector2(facing * 0.9, 1.0)
+	var hit_damage := 5
+	var hit_offset := Vector2(300, -200)
+	var hit_rotation := 0.5 * PI
+	var hit_scale := Vector2(6, 10)
+	var energy_cost := 5.0
 
 	match step:
 		1:
-			anim = "hit"
+			hit_anim = "hit"
+			sprite_scale = Vector2(facing * 0.9, 1.0)  # <-- Ajustar escala hit1
+			hit_damage = 5
+			punch2_sfx.play()
+			print("hit1")
 		2:
-			anim = "hit2"
+			hit_anim = "hit2"
+			sprite_scale = Vector2(facing * 2.0, 2.0)  # <-- Ajustar escala hit2
+			hit_damage = 5
+			punch3_sfx.play()
+			print("hit2")
 		3:
-			anim = "hit3"
+			hit_anim = "hit3"
+			sprite_scale = Vector2(facing * 0.9, 1.0)  # <-- Ajustar escala hit3
+			hit_damage = 10
+			punch2_sfx.play()
+			print("hit3")
 		4:
-			anim = "hit4"
+			hit_anim = "hit4"
+			sprite_scale = Vector2(facing * 3.0, 2.5)  # <-- Ajustar escala hit4 (uppercut)
+			hit_damage = 15
+			hit_offset = Vector2(300, -200)
+			hit_scale = Vector2(7, 11)
+			energy_cost = 8.0
+			punch3_sfx.play()
+			print("hit4")
 		_:
-			anim = "hit"
 			combo_step = 1
+			punch2_sfx.play()
 
-	red_suite.play(anim)
-	await red_suite.animation_finished
+	anim = hit_anim
+	drain_energy(energy_cost)
+
+	# Reproducir animacion con la escala del paso actual
+	red_suite.play(hit_anim)
+	red_suite.scale = sprite_scale
+	red_suite.position = Vector2.ZERO
+
+	# Activar hitbox una sola vez
+	hitbox_component.damage = hit_damage
+	var offset = hit_offset
+	offset.x *= facing
+	hitbox.position = offset
+	hitbox.rotation = hit_rotation * facing
+	hitbox.scale = hit_scale
+	hitbox.disabled = false
+
+	# Esperar duracion de la animacion
+	var anim_duration = _get_anim_duration(hit_anim)
+	await get_tree().create_timer(max(anim_duration * 0.3, 0.05)).timeout
+	hitbox.disabled = true
+	await get_tree().create_timer(max(anim_duration * 0.7, 0.05)).timeout
 
 	is_attacking = false
-	can_combo = true
-	combo_timer.start(0.5)
+
+	# Despues del ultimo golpe (hit4) el combo termina, el proximo ataque empieza de cero
+	if combo_step >= 4:
+		can_combo = false
+		combo_step = 0
+	else:
+		can_combo = true
+		combo_timer.start(0.5)
+
+# Combo baston / Boo (arma 2), 3 golpes
+
+func _start_boo_combo(step):
+	is_attacking = true
+	can_combo = false
+	combo_timer.stop()  # Cancelar timer de combo anterior para que no resetee combo_step
+
+	# El boo solo tiene 3 golpes, si llega a mas reinicia
+	if step > 3:
+		step = 1
+	combo_step = step
+
+	# Configuracion por paso (cambiar sprite_scale para ajustar cada golpe)
+	var hit_anim := "boo_hit1"
+	var sprite_scale := Vector2(facing * 2.0, 2.0)
+	var hit_damage := 15
+	var hit_offset := Vector2(250, -100)
+	var hit_rotation := 0.4 * PI
+	var hit_scale := Vector2(6, 25)
+	var energy_cost := 10.0
+	var expose_after := false  # Solo el golpe 3 deja expuesto
+
+	match step:
+		1:
+			hit_anim = "boo_hit1"
+			sprite_scale = Vector2(facing * 2.0, 2.0)  # <-- Ajustar escala boo_hit1
+			hit_damage = 15
+			energy_cost = 10.0
+			punch2_sfx.play()  # Placeholder, cambiar por sfx del boo
+			print("boo_hit1")
+		2:
+			hit_anim = "boo_hit2"
+			sprite_scale = Vector2(facing * 2.0, 2.0)  # <-- Ajustar escala boo_hit2
+			hit_damage = 15
+			energy_cost = 10.0
+			punch3_sfx.play()  # Placeholder, cambiar por sfx del boo
+			print("boo_hit2")
+		3:
+			hit_anim = "boo_hit3"
+			sprite_scale = Vector2(facing * 2.0, 2.0)  # <-- Ajustar escala boo_hit3 (golpe fuerte)
+			hit_damage = 30
+			hit_offset = Vector2(300, -100)
+			hit_scale = Vector2(8, 28)
+			energy_cost = 20.0
+			expose_after = true  # Queda vulnerable 0.2s despues del golpe
+			punch3_sfx.play()  # Placeholder, cambiar por sfx del golpe fuerte
+			print("boo_hit3")
+		_:
+			combo_step = 1
+			punch2_sfx.play()
+
+	anim = hit_anim
+	drain_energy(energy_cost)
+
+	# Reproducir animacion con la escala del paso actual
+	red_suite.play(hit_anim)
+	red_suite.scale = sprite_scale
+	red_suite.position = Vector2.ZERO
+
+	# Activar hitbox una sola vez
+	hitbox_component.damage = hit_damage
+	var offset = hit_offset
+	offset.x *= facing
+	hitbox.position = offset
+	hitbox.rotation = hit_rotation * facing
+	hitbox.scale = hit_scale
+	hitbox.disabled = false
+
+	# Esperar duracion de la animacion
+	var anim_duration = _get_anim_duration(hit_anim)
+	await get_tree().create_timer(max(anim_duration * 0.3, 0.05)).timeout
+	hitbox.disabled = true
+	await get_tree().create_timer(max(anim_duration * 0.7, 0.05)).timeout
+
+	# Ventana de exposicion despues del golpe 3 (no puede actuar)
+	if expose_after:
+		print("boo_exposed!")
+		await get_tree().create_timer(0.2).timeout
+
+	is_attacking = false
+
+	# Despues del ultimo golpe (hit3) el combo termina, el proximo ataque empieza de cero
+	if combo_step >= 3:
+		can_combo = false
+		combo_step = 0
+	else:
+		can_combo = true
+		combo_timer.start(0.5)
 
 func _on_combo_timer_timeout() -> void:
 	can_combo = false
 	combo_step = 0
 
-# --- Patada ---
+# Patada
 
 func _perform_kick():
 	is_kicking = true
@@ -369,19 +516,34 @@ func _perform_kick():
 	red_suite.play("kick")
 	red_suite.scale = Vector2(facing * 1.0, 1.0)
 
-	# Activar hitbox de patada
-	hitbox_component.damage = 35
+	# Hitbox de la patada
+	hitbox_component.damage = 15
 	var offset = Vector2(350 * facing, -150)
 	hitbox.position = offset
 	hitbox.rotation = 0.5 * PI * facing
 	hitbox.scale = Vector2(8, 12)
 	hitbox.disabled = false
-	await get_tree().create_timer(0.15).timeout
+
+	# Drenar energia de la patada
+	drain_energy(15.0)
+
+	# Esperar duracion de la animacion
+	var kick_duration = _get_anim_duration("kick")
+	await get_tree().create_timer(max(kick_duration * 0.3, 0.05)).timeout
 	hitbox.disabled = true
-
-	# Drenar más energía que un golpe normal
-	drain_energy(3.5)
-
-	await red_suite.animation_finished
+	await get_tree().create_timer(max(kick_duration * 0.7, 0.05)).timeout
 	is_kicking = false
 	is_attacking = false
+
+# Calcular duracion real de una animacion a partir de sus frames
+
+func _get_anim_duration(anim_name: String) -> float:
+	var frames = red_suite.sprite_frames
+	var count = frames.get_frame_count(anim_name)
+	var speed = frames.get_animation_speed(anim_name)
+	if speed <= 0 or count <= 0:
+		return 0.4
+	var total := 0.0
+	for i in range(count):
+		total += frames.get_frame_duration(anim_name, i)
+	return total / speed
