@@ -20,6 +20,7 @@ var punch_sound_toggle: bool = false
 var is_attacking := false
 var combo_step := 0
 var can_combo := false
+var hitbox_active_this_attack: bool = false
 
 # Movimiento
 var jump_speed := 600
@@ -95,10 +96,10 @@ func _physics_process(delta):
 	if jump_pressed and is_on_wall() and energy_bar.value > 0 and is_running and not is_grounded:
 		velocity.x = 600 * -facing
 		velocity.y = -jump_speed
-		drain_energy(1, 10)
+		drain_energy(true, 10)
 	elif jump_pressed and is_grounded and energy_bar.value > 0:
 		velocity.y = -jump_speed
-		drain_energy(1, 10)
+		drain_energy(true, 10)
 
 	# Movimiento
 	if is_crouching and is_grounded:
@@ -109,7 +110,7 @@ func _physics_process(delta):
 		var target_speed = speed * (run_multiplier if is_running and energy_bar.value > 20 else 0.75)
 		velocity.x = move_toward(velocity.x, direction * target_speed, acceleration * delta)
 		if target_speed == speed * run_multiplier:
-			drain_energy(0, 2)
+			drain_energy(false, 2)
 	else:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
 
@@ -122,7 +123,7 @@ func _physics_process(delta):
 
 # --- Animación ---
 
-func _update_animation(is_blocking, is_grounded: bool, direction: float, is_running: bool, attacking: bool, is_crouching: bool) -> void:
+func _update_animation(is_blocking: bool, is_grounded: bool, direction: float, is_running: bool, attacking: bool, is_crouching: bool) -> void:
 	self.anim = "idle"
 	var sprite_scale = Vector2(facing * 2.2, 2.0)
 	var sprite_pos = Vector2.ZERO
@@ -171,11 +172,13 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 	red_suite.scale = sprite_scale
 	collision.position = collision_pos
 	collision.scale = collision_scale
-	await red_suite.animation_finished
 
 # --- Daño ---
 
-func _update_damage(anim_name, weapon_id):
+func _update_damage(anim_name: String, weapon_id: int) -> void:
+	if not is_attacking:
+		hitbox_active_this_attack = false
+
 	var hit_data: Dictionary = {}
 
 	match weapon_id:
@@ -201,7 +204,8 @@ func _update_damage(anim_name, weapon_id):
 				"hit_baston": hit_data = {"damage": 10, "offset": Vector2(250, -100), "rotation": 0.4 * PI, "scale": Vector2(6, 25)}
 				_: hitbox_component.damage = 15
 
-	if hit_data:
+	if hit_data and is_attacking and not hitbox_active_this_attack:
+		hitbox_active_this_attack = true
 		hitbox_component.damage = hit_data["damage"]
 		if energy_bar.value > 0:
 			var offset = hit_data["offset"]
@@ -209,11 +213,11 @@ func _update_damage(anim_name, weapon_id):
 			var hit_scale = hit_data["scale"]
 			offset.x *= facing
 			await activate_hitbox(offset, hit_rotation, hit_scale)
-			drain_energy(1, 1)
+			drain_energy(true, 1)
 
 # --- Utilidades ---
 
-func drain_energy(force_drain: int, fatigue: int):
+func drain_energy(force_drain: bool, fatigue: int) -> void:
 	energy_regen_tick += 1
 	if energy_regen_tick > 10:
 		energy_regen_tick = 0
@@ -240,13 +244,13 @@ func process_rage(rage_full: bool) -> void:
 			is_enraged = false
 			hitbox_component.damage -= 20
 
-func add_rage(amount):
+func add_rage(amount: int) -> void:
 	rage_bar.value = min(rage_bar.value + amount, 100)
 
-func _on_damage_took(damage_amount) -> void:
+func _on_damage_took(damage_amount: int) -> void:
 	add_rage(damage_amount)
 
-func _on_health_changed(new_health):
+func _on_health_changed(new_health: int) -> void:
 	var threshold = health_comp.max_health * 0.10
 	if new_health > 0 and new_health <= threshold:
 		if not heartbeat_sfx.playing:
@@ -255,7 +259,7 @@ func _on_health_changed(new_health):
 		if heartbeat_sfx.playing:
 			heartbeat_sfx.stop()
 
-func _on_heartbeat_finished():
+func _on_heartbeat_finished() -> void:
 	if health_comp.current_health > 0 and health_comp.current_health <= health_comp.max_health * 0.10:
 		heartbeat_sfx.play()
 
@@ -264,7 +268,7 @@ func set_health_shape(pos: Vector2, scale: Vector2) -> void:
 	health_shape.position = pos
 	health_shape.scale = scale
 
-func activate_hitbox(pos: Vector2, rot, scale: Vector2) -> void:
+func activate_hitbox(pos: Vector2, rot: float, scale: Vector2) -> void:
 	hitbox.position = pos
 	hitbox.rotation = rot * facing
 	hitbox.scale = scale
@@ -292,7 +296,7 @@ func _process_death() -> void:
 
 # --- Combos ---
 
-func _start_combo_attack(step):
+func _start_combo_attack(step: int) -> void:
 	is_attacking = true
 	can_combo = false
 	combo_step = step
