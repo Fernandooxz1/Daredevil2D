@@ -24,6 +24,7 @@
 [ext_resource type="AudioStream" uid="uid://br3uqqx4qbcy0" path="res://assets/Audio/kick.mp3" id="17_kick"]
 [ext_resource type="AudioStream" uid="uid://cne5v6jm1gtxv" path="res://assets/Audio/running.mp3" id="18_running"]
 [ext_resource type="AudioStream" uid="uid://2spc8jt8xaly" path="res://assets/Audio/breathing fast.mp3" id="19_breathing"]
+[ext_resource type="Texture2D" path="res://assets/lights/radial_light.tres" id="20_light"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g5qpc"]
 atlas = ExtResource("9_olym4")
@@ -139,7 +140,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_g5qpc")
 }],
-"loop": false,
+"loop": 0,
 "name": &"Victory",
 "speed": 5.0
 }, {
@@ -147,7 +148,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_olym4")
 }],
-"loop": false,
+"loop": 0,
 "name": &"baston_idle",
 "speed": 5.0
 }, {
@@ -155,7 +156,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_kl2xt")
 }],
-"loop": false,
+"loop": 0,
 "name": &"blocking",
 "speed": 5.0
 }, {
@@ -163,7 +164,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_c82jl")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crouch",
 "speed": 5.0
 }, {
@@ -171,7 +172,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_wtd7q")
 }],
-"loop": false,
+"loop": 0,
 "name": &"crouch_hit",
 "speed": 5.0
 }, {
@@ -188,7 +189,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pueqy")
 }],
-"loop": false,
+"loop": 0,
 "name": &"dead",
 "speed": 5.0
 }, {
@@ -196,7 +197,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("1_008a6")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hit",
 "speed": 10.0
 }, {
@@ -204,7 +205,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_12tic")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hit2",
 "speed": 10.0
 }, {
@@ -212,7 +213,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("1_008a6")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hit3",
 "speed": 10.0
 }, {
@@ -223,7 +224,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_jd6rt")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hit4",
 "speed": 10.0
 }, {
@@ -231,7 +232,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_o8acq")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hit_baston",
 "speed": 10.0
 }, {
@@ -239,7 +240,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("2_ef4hk")
 }],
-"loop": false,
+"loop": 0,
 "name": &"idle",
 "speed": 5.0
 }, {
@@ -247,7 +248,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("3_p8c0w")
 }],
-"loop": false,
+"loop": 0,
 "name": &"jump",
 "speed": 5.0
 }, {
@@ -255,7 +256,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_xki8k")
 }],
-"loop": false,
+"loop": 0,
 "name": &"jump_hit",
 "speed": 10.0
 }, {
@@ -305,7 +306,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pn7ym")
 }],
-"loop": false,
+"loop": 0,
 "name": &"kick",
 "speed": 32.0
 }, {
@@ -313,7 +314,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_hluos")
 }],
-"loop": false,
+"loop": 0,
 "name": &"kick2",
 "speed": 10.0
 }, {
@@ -321,7 +322,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_18ktq")
 }],
-"loop": false,
+"loop": 0,
 "name": &"morido",
 "speed": 10.0
 }, {
@@ -338,7 +339,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_mpqdg")
 }],
-"loop": false,
+"loop": 0,
 "name": &"run",
 "speed": 6.0
 }, {
@@ -352,7 +353,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ega6g")
 }],
-"loop": false,
+"loop": 0,
 "name": &"walk",
 "speed": 5.0
 }]
@@ -364,6 +365,7 @@ height = 15.3717
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xki8k"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c82jl"]
+height = 24.522034
 
 [node name="Daredevil" type="CharacterBody2D" unique_id=517639174]
 position = Vector2(167, 491)
@@ -410,11 +412,13 @@ debug_color = Color(0, 0.886275, 0, 0.419608)
 
 [node name="HeartbeatSFX" type="AudioStreamPlayer" parent="." unique_id=1983377124]
 stream = ExtResource("14_hbeat")
-volume_db = -5.0
+volume_db = -9.561
+pitch_scale = 1.25
 
 [node name="Punch2SFX" type="AudioStreamPlayer" parent="." unique_id=935012077]
 stream = ExtResource("15_pnch2")
 volume_db = -3.0
+pitch_scale = 0.65
 
 [node name="Punch3SFX" type="AudioStreamPlayer" parent="." unique_id=2077728206]
 stream = ExtResource("16_pnch3")
@@ -423,11 +427,22 @@ volume_db = -3.0
 [node name="KickSFX" type="AudioStreamPlayer" parent="." unique_id=941050485]
 stream = ExtResource("17_kick")
 volume_db = -11.211
+pitch_scale = 1.08
 
 [node name="RunningSFX" type="AudioStreamPlayer" parent="." unique_id=174301833]
 stream = ExtResource("18_running")
 volume_db = -5.0
+pitch_scale = 1.17
 
 [node name="BreathingFastSFX" type="AudioStreamPlayer" parent="." unique_id=813380240]
 stream = ExtResource("19_breathing")
-volume_db = 6.123
+volume_db = -5.737
+pitch_scale = 1.04
+
+[node name="LuzLectura" type="PointLight2D" parent="."]
+position = Vector2(-49, 0)
+scale = Vector2(3.5, 3.5)
+color = Color(0.77, 0.23, 0.34, 1)
+energy = 0.65
+shadow_enabled = false
+texture = ExtResource("20_light")

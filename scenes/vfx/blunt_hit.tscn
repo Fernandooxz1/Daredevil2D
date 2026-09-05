@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/vfx/spark_streak.png" id="1_vnqik"]
+[ext_resource type="Script" path="res://scenes/vfx/blunt_hit.gd" id="2_7ron2"]
+
+[sub_resource type="Gradient" id="Gradient_psm5v"]
+offsets = PackedFloat32Array(0, 1, 0.4, 0.75)
+colors = PackedColorArray(1, 1, 1, 1, 0.3, 0.3, 0.32, 0, 0.85, 0.85, 0.88, 0.6, 0.55, 0.55, 0.58, 0.2)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_rfvta"]
+gradient = SubResource("Gradient_psm5v")
+
+[sub_resource type="Curve" id="Curve_0kl6t"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.6, 0.7), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_v65kq"]
+curve = SubResource("Curve_0kl6t")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3o0fs"]
+particle_flag_align_y = true
+spread = 50.0
+initial_velocity_min = 120.0
+initial_velocity_max = 220.0
+gravity = Vector3(0, 200, 0)
+damping_min = 250.0
+damping_max = 380.0
+scale_min = 0.25
+scale_max = 0.5
+scale_curve = SubResource("CurveTexture_v65kq")
+color_ramp = SubResource("GradientTexture1D_rfvta")
+
+[node name="BluntHit" type="GPUParticles2D" unique_id=1705110625]
+emitting = false
+amount = 4
+texture = ExtResource("1_vnqik")
+lifetime = 0.15
+one_shot = true
+explosiveness = 0.95
+randomness = 0.3
+process_material = SubResource("ParticleProcessMaterial_3o0fs")
+script = ExtResource("2_7ron2")

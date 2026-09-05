@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://j77lw8kvlgu0"]
+[gd_scene load_steps=23 format=3 uid="uid://j77lw8kvlgu0"]
 
 [ext_resource type="Script" uid="uid://ci6e5ke6wxs7h" path="res://scripts/hud.gd" id="1_qkknv"]
 [ext_resource type="Texture2D" uid="uid://drnoi0d0sgpcn" path="res://assets/sprites/DD sense.png" id="3_hd3ao"]
@@ -22,49 +22,61 @@
 [ext_resource type="Texture2D" uid="uid://b8admi3fkxb74" path="res://assets/sprites/Health_Bar/DDLogo.png" id="17_uxdf7"]
 [ext_resource type="Texture2D" uid="uid://d1njsfgy1ol7r" path="res://assets/sprites/Health_Bar/EMar.png" id="18_qpprf"]
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_unshaded"]
+light_mode = 1
+
 [node name="HUD" type="Node2D"]
+material = SubResource("CanvasItemMaterial_unshaded")
 position = Vector2(337, 419)
 scale = Vector2(3.88328, 3.49963)
 script = ExtResource("1_qkknv")
 
 [node name="DdFace2" type="Sprite2D" parent="."]
+use_parent_material = true
 position = Vector2(162.234, 63.1496)
 scale = Vector2(0.267719, 0.254279)
 texture = ExtResource("4_6fi6k")
 
 [node name="DdSense" type="Sprite2D" parent="."]
+use_parent_material = true
 position = Vector2(212.449, 496.052)
 rotation = 3.14159
 scale = Vector2(0.059013, -0.0788568)
 texture = ExtResource("3_hd3ao")
 
 [node name="Dual-wield" type="Sprite2D" parent="."]
+use_parent_material = true
 visible = false
 position = Vector2(163.007, 173.161)
 scale = Vector2(0.272057, 0.327341)
 texture = ExtResource("4_iypfu")
 
 [node name="Baston" type="Sprite2D" parent="."]
+use_parent_material = true
 visible = false
 position = Vector2(163.007, 173.161)
 scale = Vector2(0.272057, 0.327341)
 texture = ExtResource("5_3xg78")
 
 [node name="Puños" type="Sprite2D" parent="."]
+use_parent_material = true
 position = Vector2(163.007, 173.161)
 scale = Vector2(0.194828, 0.214471)
 texture = ExtResource("6_48y67")
 
 [node name="SenseDd" type="Sprite2D" parent="."]
+use_parent_material = true
 position = Vector2(140.345, 496.91)
 scale = Vector2(0.0983972, 0.0981487)
 texture = ExtResource("6_0m4u7")
 
 [node name="HealthBar" type="Node2D" parent="."]
+use_parent_material = true
 position = Vector2(22.1462, -34.5751)
 scale = Vector2(0.802441, 0.713112)
 
 [node name="TPB100" type="TextureProgressBar" parent="HealthBar"]
+use_parent_material = true
 offset_left = 231.058
 offset_top = 89.3562
 offset_right = 1551.06
@@ -80,6 +92,7 @@ tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB80" type="TextureProgressBar" parent="HealthBar"]
+use_parent_material = true
 visible = false
 offset_left = 236.192
 offset_top = 99.3738
@@ -96,6 +109,7 @@ tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB60" type="TextureProgressBar" parent="HealthBar"]
+use_parent_material = true
 visible = false
 offset_left = 233.946
 offset_top = 89.757
@@ -112,6 +126,7 @@ tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB40" type="TextureProgressBar" parent="HealthBar"]
+use_parent_material = true
 visible = false
 offset_left = 233.304
 offset_top = 92.1611
@@ -128,6 +143,7 @@ tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="TPB20" type="TextureProgressBar" parent="HealthBar"]
+use_parent_material = true
 visible = false
 offset_left = 231.7
 offset_top = 91.7604
@@ -145,6 +161,7 @@ tint_progress = Color(0, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="EnergyBar" type="TextureProgressBar" parent="."]
+use_parent_material = true
 offset_left = 217.085
 offset_top = 91.4382
 offset_right = 1537.09
@@ -160,6 +177,7 @@ tint_progress = Color(1, 1, 0, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="RageBar" type="TextureProgressBar" parent="."]
+use_parent_material = true
 offset_left = 211.162
 offset_top = 33.7178
 offset_right = 1531.16

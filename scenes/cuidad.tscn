@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://c054f5ea76f47"]
+[gd_scene load_steps=6 format=3 uid="uid://c054f5ea76f47"]
 
 [ext_resource type="Texture2D" uid="uid://xw8jvydjlrcq" path="res://assets/fondos/fondo city 2.png" id="1_df84d"]
 
@@ -7,6 +7,12 @@ size = Vector2(1173, 60)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5wp4n"]
 size = Vector2(71.5, 602.5)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_ground"]
+polygon = PackedVector2Array(-586.5, -30, 586.5, -30, 586.5, 30, -586.5, 30)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_wall"]
+polygon = PackedVector2Array(-35.75, -301.25, 35.75, -301.25, 35.75, 301.25, -35.75, 301.25)
 
 [node name="Cuidad_inicio" type="Node2D"]
 position = Vector2(3, -23)
@@ -27,3 +33,11 @@ shape = SubResource("RectangleShape2D_df84d")
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(316, 332)
 shape = SubResource("RectangleShape2D_5wp4n")
+
+[node name="OccluderGround" type="LightOccluder2D" parent="StaticBody2D"]
+position = Vector2(581, 636)
+occluder = SubResource("OccluderPolygon2D_ground")
+
+[node name="OccluderWall" type="LightOccluder2D" parent="StaticBody2D"]
+position = Vector2(316, 332)
+occluder = SubResource("OccluderPolygon2D_wall")

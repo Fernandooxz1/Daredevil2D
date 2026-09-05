@@ -29,22 +29,50 @@ var attack_count := 0  # Para que ataque varias veces seguidas
 var attacks_since_charge := 0  # Contador para decidir cuando cargar
 
 # Referencias
-@onready var player: Node2D = get_parent().get_node("Daredevil")
+@onready var player: Node2D = get_parent().get_node_or_null("Daredevil") if get_parent() else null
 @onready var heart_drop_scene = preload("res://scenes/items/heart.tscn")
 @onready var animation: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: CollisionShape2D = $HitboxComponent/CollisionShape2D
 @onready var healthbox: CollisionShape2D = $HealthComponent/CollisionShape2D
 @onready var collision_shape = $CollisionShape2D
 @onready var direction = 1
+@onready var alert_icon: Node2D = get_node_or_null("AlertIcon")
+
+var _highlight_tween: Tween = null
+var _alert_tween: Tween = null
+var _flash_tween: Tween = null
+var _enemy_mat: ShaderMaterial = null
+var is_air_launched: bool = false
+var _last_hit_frame: int = -1
 
 func _ready():
+	add_to_group("detectables")
+	if animation and animation.material is ShaderMaterial:
+		animation.material = animation.material.duplicate()
+		_enemy_mat = animation.material as ShaderMaterial
+	if not alert_icon:
+		alert_icon = get_node_or_null("AlertIcon")
+	if alert_icon:
+		alert_icon.visible = false
 	hitbox.disabled = true
 	current_state = State.IDLE
 	cooldown_duration = randf_range(0.4, 1.0)
+	if has_node("HealthComponent"):
+		$HealthComponent.on_hit_received.connect(_on_hit_received)
 
 # Loop principal
 
 func _physics_process(delta):
+	if not player or not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("player")
+	if not player:
+		return
+
+	# Actualizar silueta / realce segun el modo de Daredevil
+	var in_combat: bool = (player.get("is_combat_stance") == true or player.get("is_radar_active") == true)
+	if _enemy_mat and (_highlight_tween == null or not _highlight_tween.is_valid()):
+		_enemy_mat.set_shader_parameter("radar_highlight", in_combat)
+
 	direction = sign(player.position.x - position.x)
 	var distance = abs(player.position.x - position.x)
 
@@ -222,10 +250,13 @@ func _state_charge_windup(distance: float, delta: float):
 	if animation.animation != "take_damage":
 		animation.play("take_damage")
 
-	# Si lo golpean durante la carga, se cancela (ya manejado por is_stunned)
+	# Si Daredevil esta en Modo Combate / Radar, mostrar advertencia telegrafiada
+	var show_warning: bool = (player != null and (player.get("is_combat_stance") == true or player.get("is_radar_active") == true))
+	_show_attack_warning(show_warning)
 
 	# Cuando termina la carga, embestir
 	if state_timer <= 0:
+		_show_attack_warning(false)
 		current_state = State.CHARGE_RUSH
 		state_timer = 1.2  # Tiempo maximo de embestida antes de frenar
 
@@ -255,14 +286,25 @@ func _state_charge_rush(distance: float, delta: float):
 # Procesar aturdimiento
 
 func _process_stun(delta: float):
+	_show_attack_warning(false)
 	stun_timer -= delta
-	if stun_timer <= 0.15:
-		velocity.x = 0
-	if stun_timer <= 0:
+
+	if is_air_launched:
+		# En el aire desacelera levemente con fricción de aire
+		velocity.x = move_toward(velocity.x, 0.0, 120.0 * delta)
+		# Si toca el suelo cayendo (velocity.y >= 0), concluye el lanzamiento aéreo
+		if is_on_floor() and velocity.y >= 0.0:
+			is_air_launched = false
+			velocity.x = 0.0
+	else:
+		# En el suelo desliza suavemente con fricción
+		velocity.x = move_toward(velocity.x, 0.0, 500.0 * delta)
+
+	if stun_timer <= 0.0 and not is_air_launched:
 		is_stunned = false
 		is_attacking = false
 		can_attack = true
-		stun_immunity = 0.6  # 0.6 segundos sin poder ser aturdido de nuevo
+		stun_immunity = 0.2  # Breve ventana de protección post-combo
 		# Despues de recibir golpe, retroceder un poco antes de volver
 		current_state = State.RETREAT
 		state_timer = randf_range(0.15, 0.3)
@@ -366,17 +408,131 @@ func _end_attack_early():
 func _on_health_component_on_health_changed(health: int) -> void:
 	$TextureProgressBar.value = health
 
+func _on_hit_received(hit_data: Dictionary) -> void:
+	apply_hit_impact(hit_data)
+
 func _on_health_component_on_damage_took(damage_amount) -> void:
-	if is_stunned or stun_immunity > 0:
+	var hit_data = $HealthComponent.last_hit_data if has_node("HealthComponent") else {}
+	apply_hit_impact(hit_data, damage_amount)
+
+func apply_hit_impact(hit_data: Dictionary = {}, damage_amount: int = 0) -> void:
+	if is_dead:
 		return
+
+	var current_frame = Engine.get_process_frames()
+	if _last_hit_frame == current_frame:
+		return
+	_last_hit_frame = current_frame
+
+	# Interrumpir acciones y estados del enemigo
+	is_attacking = false
+	if hitbox:
+		hitbox.disabled = true
+	_show_attack_warning(false)
 	is_stunned = true
-	_stop("take_damage")
-	velocity.x = -sign(direction) * 100
-	stun_timer = clamp(damage_amount * 0.015, 0.08, 0.3)
+	stun_immunity = 0.0 # Permitir encadenar golpes de combo
+	if animation:
+		_stop("take_damage")
+
+	# 4. Hit Flash en Enemigos: destello blanco puro durante 0.05s
+	play_hit_flash(0.05)
+
+	# Determinar dirección de retroceso opuesta al atacante
+	var knockback_dir: float = -1.0
+	if player and is_instance_valid(player):
+		var diff = player.global_position.x - global_position.x
+		if abs(diff) > 0.01:
+			knockback_dir = -sign(diff)
+		elif "facing" in player:
+			knockback_dir = float(player.facing)
+	else:
+		knockback_dir = -float(direction if direction != 0 else 1)
+
+	# 3. Física de Knockback Diferenciada
+	var attack_type = str(hit_data.get("attack_type", ""))
+	var combo_step = int(hit_data.get("combo_step", 1))
+
+	match attack_type:
+		"hit1", "hit2":
+			# Golpes 1 y 2: micro-stagger horizontal (retroceso de 90px/s)
+			velocity.x = knockback_dir * 90.0
+			velocity.y = 0.0
+			stun_timer = 0.18
+			is_air_launched = false
+		"hit3":
+			# Golpe 3: stagger medio (180px/s)
+			velocity.x = knockback_dir * 180.0
+			velocity.y = 0.0
+			stun_timer = 0.25
+			is_air_launched = false
+		"hit4":
+			# Golpe 4 (Uppercut): lanzamiento aéreo elevando al ladrón para rematarlo!
+			velocity = Vector2(knockback_dir * 260.0, -420.0)
+			stun_timer = 0.70
+			is_air_launched = true
+		"kick":
+			# Patada: empuje horizontal fuerte
+			velocity.x = knockback_dir * 450.0
+			velocity.y = 0.0
+			stun_timer = 0.35
+			is_air_launched = false
+		"boo1", "boo2":
+			velocity.x = knockback_dir * 120.0
+			velocity.y = 0.0
+			stun_timer = 0.20
+			is_air_launched = false
+		"boo3":
+			velocity.x = knockback_dir * 380.0
+			velocity.y = -180.0
+			stun_timer = 0.45
+			is_air_launched = false
+		_:
+			if combo_step == 4:
+				velocity = Vector2(knockback_dir * 260.0, -420.0)
+				stun_timer = 0.70
+				is_air_launched = true
+			elif combo_step == 3:
+				velocity.x = knockback_dir * 180.0
+				velocity.y = 0.0
+				stun_timer = 0.25
+				is_air_launched = false
+			else:
+				velocity.x = knockback_dir * 90.0
+				velocity.y = 0.0
+				stun_timer = 0.18
+				is_air_launched = false
+
+func play_hit_flash(duration: float = 0.05) -> void:
+	if _enemy_mat:
+		_enemy_mat.set_shader_parameter("hit_flash", 1.0)
+		if _flash_tween and _flash_tween.is_valid():
+			_flash_tween.kill()
+		if is_inside_tree():
+			_flash_tween = create_tween()
+			_flash_tween.tween_interval(duration)
+			_flash_tween.tween_callback(func():
+				if _enemy_mat:
+					_enemy_mat.set_shader_parameter("hit_flash", 0.0)
+			)
+	elif animation:
+		var orig_mod = animation.modulate
+		animation.modulate = Color(5.0, 5.0, 5.0, 1.0)
+		if _flash_tween and _flash_tween.is_valid():
+			_flash_tween.kill()
+		if is_inside_tree():
+			_flash_tween = create_tween()
+			_flash_tween.tween_interval(duration)
+			_flash_tween.tween_callback(func():
+				if animation:
+					animation.modulate = orig_mod
+			)
 
 func _on_health_component_on_dead() -> void:
+	_show_attack_warning(false)
 	is_dead = true
-	healthbox.set_deferred("disabled", true)
+	play_hit_flash(0.05)
+	if healthbox:
+		healthbox.set_deferred("disabled", true)
 	spawn_drop(heart_drop_scene, Vector2(0, -10))
 
 # Crear drop al morir
@@ -385,3 +541,46 @@ func spawn_drop(scene, offset: Vector2):
 	var instance = scene.instantiate()
 	instance.global_position = global_position + offset
 	get_parent().call_deferred("add_child", instance)
+
+# ==============================================================================
+# RADAR SENSE & TELEGRAPHING
+# ==============================================================================
+
+func on_radar_ping(origin: Vector2, radius: float) -> void:
+	var dist = global_position.distance_to(origin)
+	if dist <= radius:
+		_highlight_silhouette(0.8)
+
+func _highlight_silhouette(duration: float) -> void:
+	if is_dead:
+		return
+	if _enemy_mat:
+		_enemy_mat.set_shader_parameter("radar_highlight", true)
+	if _highlight_tween and _highlight_tween.is_valid():
+		_highlight_tween.kill()
+	_highlight_tween = create_tween()
+	animation.modulate = Color(2.4, 0.35, 0.35, 1.0)
+	_highlight_tween.tween_property(animation, "modulate", Color(1.0, 1.0, 1.0, 1.0), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_highlight_tween.tween_callback(func():
+		var in_combat: bool = player != null and (player.get("is_combat_stance") == true or player.get("is_radar_active") == true)
+		if _enemy_mat:
+			_enemy_mat.set_shader_parameter("radar_highlight", in_combat)
+	)
+
+func _show_attack_warning(show_it: bool) -> void:
+	if not alert_icon or not is_instance_valid(alert_icon):
+		alert_icon = get_node_or_null("AlertIcon")
+	if not alert_icon:
+		return
+
+	if show_it and not is_dead:
+		if not alert_icon.visible:
+			alert_icon.visible = true
+			alert_icon.scale = Vector2(0.2, 0.2)
+			if _alert_tween and _alert_tween.is_valid():
+				_alert_tween.kill()
+			_alert_tween = create_tween()
+			_alert_tween.tween_property(alert_icon, "scale", Vector2(1.25, 1.25), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			_alert_tween.tween_property(alert_icon, "scale", Vector2(1.0, 1.0), 0.08)
+	else:
+		alert_icon.visible = false

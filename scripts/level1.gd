@@ -13,7 +13,8 @@ extends Node2D
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	$Tamer.play()
-	AudioManager2.get_node("AudioStreamPlayer").stop()
+	if has_node("/root/AudioManager2"):
+		get_node("/root/AudioManager2/AudioStreamPlayer").stop()
 
 	health_comp.connect("on_health_changed", Callable(hud, "_on_health_changed"))
 	health_comp_thief.connect("on_health_changed", Callable(thief, "_on_health_changed"))

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ddub6mcsnqdrj"]
 
-[ext_resource type="Texture2D" uid="uid://csrh0rvdwkabp" path="res://assets/fondos/citiy backgrounds/city 8/5.png" id="1_62vm5"]
+[ext_resource type="Texture2D" uid="uid://bx33duggebg1" path="res://assets/fondos/citiy backgrounds/city 8/5.png" id="1_62vm5"]
 
 [node name="cuidad2" type="Node2D"]
 

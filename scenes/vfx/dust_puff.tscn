@@ -1,0 +1,43 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/vfx/dust_puff.png" id="1_40hx0"]
+[ext_resource type="Script" path="res://scenes/vfx/dust_puff.gd" id="2_b3g3d"]
+
+[sub_resource type="Gradient" id="Gradient_eqlcp"]
+offsets = PackedFloat32Array(0, 1, 0.35, 0.7)
+colors = PackedColorArray(0.85, 0.85, 0.88, 0.55, 0.3, 0.3, 0.32, 0, 0.7, 0.7, 0.72, 0.4, 0.5, 0.5, 0.52, 0.2)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3tds8"]
+gradient = SubResource("Gradient_eqlcp")
+
+[sub_resource type="Curve" id="Curve_bbdux"]
+_data = [Vector2(0, 0.4), 0.0, 0.0, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_4n1mq"]
+curve = SubResource("Curve_bbdux")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ubunv"]
+emission_shape = 1
+emission_sphere_radius = 5.0
+direction = Vector3(0, -1, 0)
+spread = 50.0
+initial_velocity_min = 25.0
+initial_velocity_max = 65.0
+gravity = Vector3(0, -25, 0)
+damping_min = 30.0
+damping_max = 50.0
+scale_min = 0.5
+scale_curve = SubResource("CurveTexture_4n1mq")
+color_ramp = SubResource("GradientTexture1D_3tds8")
+
+[node name="DustPuff" type="GPUParticles2D" unique_id=315604457]
+emitting = false
+amount = 10
+texture = ExtResource("1_40hx0")
+lifetime = 0.38
+one_shot = true
+explosiveness = 0.85
+randomness = 0.4
+process_material = SubResource("ParticleProcessMaterial_ubunv")
+script = ExtResource("2_b3g3d")

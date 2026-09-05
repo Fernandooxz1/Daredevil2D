@@ -8,6 +8,17 @@
 [ext_resource type="Script" uid="uid://c6eqkofolywxl" path="res://scripts/hitbox.gd" id="5_ydokj"]
 [ext_resource type="Script" uid="uid://ggr6kugd2gdf" path="res://scripts/health_component.gd" id="6_yk101"]
 [ext_resource type="Texture2D" uid="uid://s4exena7y2k6" path="res://assets/sprites/Health_Bar/health.png" id="7_yk101"]
+[ext_resource type="Shader" path="res://assets/shaders/enemy_outline.gdshader" id="8_outline_shader"]
+[ext_resource type="Texture2D" path="res://assets/lights/radial_light.tres" id="9_radial_light"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ladron_outline"]
+shader = ExtResource("8_outline_shader")
+shader_parameter/outline_color = Color(0.9, 0.95, 1, 0.95)
+shader_parameter/outline_width = 1.6
+shader_parameter/radar_highlight = false
+shader_parameter/radar_outline_color = Color(3.5, 0.2, 0.15, 1)
+shader_parameter/radar_tint_color = Color(1.8, 0.15, 0.1, 1)
+shader_parameter/base_brightness = 1.25
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ydokj"]
 atlas = ExtResource("2_1retn")
@@ -82,6 +93,7 @@ collision_layer = 4
 script = ExtResource("1_yk101")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=654537945]
+material = SubResource("ShaderMaterial_ladron_outline")
 position = Vector2(2.28988, 6.26581)
 rotation = 0.0129428
 scale = Vector2(0.192937, 0.187931)
@@ -131,7 +143,31 @@ min_value = -28.0
 value = 100.0
 texture_progress = ExtResource("7_yk101")
 tint_progress = Color(0, 1, 0, 1)
-metadata/_edit_use_anchors_ = true
+[node name="AlertIcon" type="Node2D" parent="."]
+visible = false
+position = Vector2(0, -68)
+
+[node name="AlertLight" type="PointLight2D" parent="AlertIcon"]
+color = Color(3.5, 0.3, 0.2, 1)
+energy = 2.2
+texture = ExtResource("9_radial_light")
+texture_scale = 0.25
+
+[node name="AlertGlow" type="Sprite2D" parent="AlertIcon"]
+modulate = Color(3.5, 0.3, 0.2, 0.45)
+scale = Vector2(0.08, 0.08)
+texture = ExtResource("9_radial_light")
+
+[node name="Label" type="Label" parent="AlertIcon"]
+modulate = Color(4, 0.25, 0.2, 1)
+offset_left = -20.0
+offset_top = -25.0
+offset_right = 20.0
+offset_bottom = 25.0
+theme_override_font_sizes/font_size = 32
+text = "!"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="on_damage_took" from="HealthComponent" to="." method="_on_health_component_on_damage_took"]
 [connection signal="on_dead" from="HealthComponent" to="." method="_on_health_component_on_dead"]

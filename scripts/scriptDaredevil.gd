@@ -1,6 +1,15 @@
 extends CharacterBody2D
 
 signal weapon_changed
+signal radar_activated(duration: float)
+signal radar_deactivated
+signal radar_pulse(origin: Vector2, radius: float)
+signal radar_cooldown_updated(remaining: float, total: float)
+signal combat_stance_changed(is_combat: bool)
+
+const RADAR_PULSE_INTERVAL: float = 1.25
+const RADAR_DAMAGE_MULTIPLIER: float = 1.30
+const RADAR_STAMINA_COST_REDUCTION: float = 0.75
 
 @export var gravity := 1200
 @export var speed := 200
@@ -17,16 +26,29 @@ var current_weapon: int = 1
 var facing := 1
 var is_kicking := false
 
+# Cambio de Postura / Modo (Stance Switch)
+var is_combat_stance: bool = false
+var is_radar_active: bool = false # Sincronizado para retrocompatibilidad
+var radar_pulse_timer: float = 0.0
+var radar_overlay_rect: ColorRect = null
+var radar_tween: Tween = null
+
 # Combate
 var is_attacking := false
 var combo_step := 0
 var can_combo := false
 
-# Movimiento
+# Movimiento & Game Feel
 var jump_speed := 600
 var acceleration := 1000
 var friction := 4500
 var run_multiplier := 2.0
+
+@export var coyote_time: float = 0.12
+@export var jump_buffer: float = 0.12
+var coyote_timer: float = 0.0
+var jump_buffer_timer: float = 0.0
+var was_in_air: bool = false
 
 # Referencias
 @onready var combo_timer := $ComboTimer
@@ -49,6 +71,8 @@ var run_multiplier := 2.0
 const GAME_OVER_SCENE_PATH := "res://scenes/gameover.tscn"
 
 func _ready() -> void:
+	add_to_group("player")
+	radar_overlay_rect = get_tree().get_first_node_in_group("radar_overlay")
 	hitbox.disabled = true
 	health_shape.disabled = false
 	rage_bar.value = 0
@@ -60,6 +84,12 @@ func _ready() -> void:
 
 func _on_dead() -> void:
 	is_dead = true
+	if is_combat_stance:
+		is_combat_stance = false
+		is_radar_active = false
+		_set_radar_overlay_active(false)
+		radar_deactivated.emit()
+		combat_stance_changed.emit(false)
 
 func _physics_process(delta):
 	var is_grounded := is_on_floor()
@@ -71,13 +101,40 @@ func _physics_process(delta):
 	var is_crouching := Input.is_action_pressed("crouch")
 	var is_blocking := Input.is_action_pressed("blokear")
 	var change_weapon := Input.is_action_just_pressed("Cambiar Arma")
+	var toggle_stance_pressed := Input.is_action_just_pressed("poder1")
+
+	# Actualizar temporizadores de Coyote Time y Jump Buffer (Game Feel)
+	if is_grounded:
+		if was_in_air:
+			was_in_air = false
+			if is_inside_tree() and get_parent():
+				DustPuff.spawn(get_parent(), global_position, Vector2(0, 54))
+		coyote_timer = coyote_time
+	else:
+		was_in_air = true
+		coyote_timer = max(coyote_timer - delta, 0.0)
+
+	if jump_pressed:
+		jump_buffer_timer = jump_buffer
+	else:
+		jump_buffer_timer = max(jump_buffer_timer - delta, 0.0)
+
+	# Procesar pulsos ritmicos en modo combate
+	_process_radar_sense(delta)
+
+	# Alternar entre Modo Exploración y Modo Combate (Stance Switch)
+	if toggle_stance_pressed and not is_dead:
+		toggle_combat_stance()
+
+	# Solo se permite sprint en Modo Exploración
+	var can_sprint: bool = (not is_combat_stance) and is_running and energy_bar.value > 20
 
 	# Patada
-	if kick_pressed and not is_attacking and not is_kicking and not is_running and energy_bar.value > 20:
+	if kick_pressed and not is_attacking and not is_kicking and not can_sprint and energy_bar.value > 20:
 		_perform_kick()
 
 	# Combos (no permitir mientras corre)
-	if attack_pressed and not (is_running and direction != 0) and energy_bar.value > 0:
+	if attack_pressed and not (can_sprint and direction != 0) and energy_bar.value > 0:
 		if can_combo and combo_step > 0:
 			_start_combo_attack(combo_step + 1)
 		elif !is_attacking:
@@ -100,24 +157,50 @@ func _physics_process(delta):
 		current_weapon = current_weapon % 3 + 1
 		weapon_changed.emit(current_weapon)
 
-	# Saltos (costo fijo, no drena en el aire)
-	if jump_pressed and is_on_wall() and energy_bar.value > 0 and is_running and not is_grounded:
+	# Saltos (con Coyote Time y Jump Buffering de 120ms)
+	if jump_pressed and is_on_wall() and energy_bar.value > 0 and can_sprint and not is_grounded:
+		# Wall Jump
 		velocity.x = 600 * -facing
 		velocity.y = -jump_speed
 		energy_bar.value = max(energy_bar.value - 5, 0)
-	elif jump_pressed and is_grounded and energy_bar.value > 0:
+		coyote_timer = 0.0
+		jump_buffer_timer = 0.0
+		if is_inside_tree() and get_parent():
+			DustPuff.spawn(get_parent(), global_position, Vector2(0, 54))
+	elif jump_buffer_timer > 0.0 and coyote_timer > 0.0 and energy_bar.value > 0:
+		# Salto ejecutado con buffer o coyote time
 		velocity.y = -jump_speed
 		energy_bar.value = max(energy_bar.value - 5, 0)
+		coyote_timer = 0.0
+		jump_buffer_timer = 0.0
+		if is_inside_tree() and get_parent():
+			DustPuff.spawn(get_parent(), global_position, Vector2(0, 54))
 
-	# Movimiento
+	# Movimiento y Tradeoff de Postura
 	if is_crouching and is_grounded:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
+		if running_sfx.playing:
+			running_sfx.stop()
 	elif direction != 0:
 		facing = sign(direction)
-		run_multiplier = 2.0 if energy_bar.value > 40 else 1.25
-		var target_speed = speed * (run_multiplier if is_running and energy_bar.value > 20 else 0.75)
+		var target_speed: float = 0.0
+		var is_sprinting: bool = false
+
+		if is_combat_stance:
+			# Modo Combate / Radar Stance: Postura de guardia/boxeo calculada. NO puede correr.
+			target_speed = speed * 0.8
+		else:
+			# Modo Exploración: Movilidad ágil completa con carrera rápida
+			run_multiplier = 2.0 if energy_bar.value > 40 else 1.25
+			if can_sprint:
+				target_speed = speed * run_multiplier
+				is_sprinting = true
+			else:
+				target_speed = speed * 1.0
+
 		velocity.x = move_toward(velocity.x, direction * target_speed, acceleration * delta)
-		if target_speed == speed * run_multiplier:
+
+		if is_sprinting:
 			# Drenar energia al correr
 			drain_energy(1.0)
 			# Sonido de correr (solo en el suelo)
@@ -143,7 +226,8 @@ func _physics_process(delta):
 
 	# Animaciones (no sobreescribir durante patada ni combos)
 	if not is_kicking and not is_attacking:
-		_update_animation(is_blocking, is_grounded, direction, is_running, is_attacking, is_crouching)
+		var active_running: bool = can_sprint and direction != 0
+		_update_animation(is_blocking, is_grounded, direction, active_running, is_attacking, is_crouching)
 		_update_damage(anim, current_weapon)
 	is_rage_full = check_rage_full()
 	process_rage(is_rage_full)
@@ -234,6 +318,10 @@ func _update_damage(anim_name, weapon_id):
 
 	if hit_data:
 		hitbox_component.damage = hit_data["damage"]
+		hitbox_component.attack_type = anim_name
+		hitbox_component.attacker = self
+		hitbox_component.hit_stop_duration = 0.08 if (anim_name == "hit4" or anim_name == "kick") else 0.04
+		hitbox_component.trauma_amount = 0.45 if (anim_name == "hit4" or anim_name == "kick") else 0.15
 		if energy_bar.value > 0:
 			var offset = hit_data["offset"]
 			var hit_rotation = hit_data["rotation"]
@@ -347,30 +435,45 @@ func _start_fist_combo(step):
 	var hit_rotation := 0.5 * PI
 	var hit_scale := Vector2(6, 10)
 	var energy_cost := 5.0
+	var hit_type := "hit1"
+	var hit_stop_dur := 0.04
+	var hit_trauma := 0.12
 
 	match step:
 		1:
 			hit_anim = "hit"
 			sprite_scale = Vector2(facing * 0.9, 1.0)  # <-- Ajustar escala hit1
 			hit_damage = 5
+			hit_type = "hit1"
+			hit_stop_dur = 0.04
+			hit_trauma = 0.12
 			punch2_sfx.play()
 			print("hit1")
 		2:
 			hit_anim = "hit2"
 			sprite_scale = Vector2(facing * 2.0, 2.0)  # <-- Ajustar escala hit2
 			hit_damage = 5
+			hit_type = "hit2"
+			hit_stop_dur = 0.04
+			hit_trauma = 0.15
 			punch3_sfx.play()
 			print("hit2")
 		3:
 			hit_anim = "hit3"
 			sprite_scale = Vector2(facing * 0.9, 1.0)  # <-- Ajustar escala hit3
 			hit_damage = 10
+			hit_type = "hit3"
+			hit_stop_dur = 0.04
+			hit_trauma = 0.22
 			punch2_sfx.play()
 			print("hit3")
 		4:
 			hit_anim = "hit4"
 			sprite_scale = Vector2(facing * 3.0, 2.5)  # <-- Ajustar escala hit4 (uppercut)
 			hit_damage = 15
+			hit_type = "hit4"
+			hit_stop_dur = 0.08  # Micro-pausa prolongada en uppercut
+			hit_trauma = 0.45    # Sacudida contundente
 			hit_offset = Vector2(300, -200)
 			hit_scale = Vector2(7, 11)
 			energy_cost = 8.0
@@ -381,15 +484,26 @@ func _start_fist_combo(step):
 			punch2_sfx.play()
 
 	anim = hit_anim
-	drain_energy(energy_cost)
+	var current_stamina_ratio = RADAR_STAMINA_COST_REDUCTION if is_radar_active else 1.0
+	drain_energy(energy_cost * current_stamina_ratio)
+
+	if is_radar_active:
+		add_rage(5.0)
 
 	# Reproducir animacion con la escala del paso actual
 	red_suite.play(hit_anim)
 	red_suite.scale = sprite_scale
 	red_suite.position = Vector2.ZERO
 
-	# Activar hitbox una sola vez
-	hitbox_component.damage = hit_damage
+	# Activar hitbox una sola vez con los parámetros de impacto
+	var current_multiplier = RADAR_DAMAGE_MULTIPLIER if is_radar_active else 1.0
+	hitbox_component.damage = int(hit_damage * current_multiplier)
+	hitbox_component.attack_type = hit_type
+	hitbox_component.combo_step = step
+	hitbox_component.hit_stop_duration = hit_stop_dur
+	hitbox_component.trauma_amount = hit_trauma
+	hitbox_component.attacker = self
+
 	var offset = hit_offset
 	offset.x *= facing
 	hitbox.position = offset
@@ -434,12 +548,18 @@ func _start_boo_combo(step):
 	var hit_scale := Vector2(6, 25)
 	var energy_cost := 10.0
 	var expose_after := false  # Solo el golpe 3 deja expuesto
+	var hit_type := "boo1"
+	var hit_stop_dur := 0.04
+	var hit_trauma := 0.15
 
 	match step:
 		1:
 			hit_anim = "boo_hit1"
 			sprite_scale = Vector2(facing * 2.0, 2.0)  # <-- Ajustar escala boo_hit1
 			hit_damage = 15
+			hit_type = "boo1"
+			hit_stop_dur = 0.04
+			hit_trauma = 0.15
 			energy_cost = 10.0
 			punch2_sfx.play()  # Placeholder, cambiar por sfx del boo
 			print("boo_hit1")
@@ -447,6 +567,9 @@ func _start_boo_combo(step):
 			hit_anim = "boo_hit2"
 			sprite_scale = Vector2(facing * 2.0, 2.0)  # <-- Ajustar escala boo_hit2
 			hit_damage = 15
+			hit_type = "boo2"
+			hit_stop_dur = 0.04
+			hit_trauma = 0.18
 			energy_cost = 10.0
 			punch3_sfx.play()  # Placeholder, cambiar por sfx del boo
 			print("boo_hit2")
@@ -454,6 +577,9 @@ func _start_boo_combo(step):
 			hit_anim = "boo_hit3"
 			sprite_scale = Vector2(facing * 2.0, 2.0)  # <-- Ajustar escala boo_hit3 (golpe fuerte)
 			hit_damage = 30
+			hit_type = "boo3"
+			hit_stop_dur = 0.08
+			hit_trauma = 0.45
 			hit_offset = Vector2(300, -100)
 			hit_scale = Vector2(8, 28)
 			energy_cost = 20.0
@@ -465,15 +591,26 @@ func _start_boo_combo(step):
 			punch2_sfx.play()
 
 	anim = hit_anim
-	drain_energy(energy_cost)
+	var current_stamina_ratio = RADAR_STAMINA_COST_REDUCTION if is_radar_active else 1.0
+	drain_energy(energy_cost * current_stamina_ratio)
+
+	if is_radar_active:
+		add_rage(5.0)
 
 	# Reproducir animacion con la escala del paso actual
 	red_suite.play(hit_anim)
 	red_suite.scale = sprite_scale
 	red_suite.position = Vector2.ZERO
 
-	# Activar hitbox una sola vez
-	hitbox_component.damage = hit_damage
+	# Activar hitbox una sola vez con los parámetros de combate
+	var current_multiplier = RADAR_DAMAGE_MULTIPLIER if is_radar_active else 1.0
+	hitbox_component.damage = int(hit_damage * current_multiplier)
+	hitbox_component.attack_type = hit_type
+	hitbox_component.combo_step = step
+	hitbox_component.hit_stop_duration = hit_stop_dur
+	hitbox_component.trauma_amount = hit_trauma
+	hitbox_component.attacker = self
+
 	var offset = hit_offset
 	offset.x *= facing
 	hitbox.position = offset
@@ -516,8 +653,15 @@ func _perform_kick():
 	red_suite.play("kick")
 	red_suite.scale = Vector2(facing * 1.0, 1.0)
 
-	# Hitbox de la patada
-	hitbox_component.damage = 15
+	# Hitbox de la patada (Game Feel: 0.08s freeze frame y trauma shake potente)
+	var current_multiplier = RADAR_DAMAGE_MULTIPLIER if is_radar_active else 1.0
+	hitbox_component.damage = int(15 * current_multiplier)
+	hitbox_component.attack_type = "kick"
+	hitbox_component.combo_step = 1
+	hitbox_component.hit_stop_duration = 0.08
+	hitbox_component.trauma_amount = 0.40
+	hitbox_component.attacker = self
+
 	var offset = Vector2(350 * facing, -150)
 	hitbox.position = offset
 	hitbox.rotation = 0.5 * PI * facing
@@ -525,7 +669,11 @@ func _perform_kick():
 	hitbox.disabled = false
 
 	# Drenar energia de la patada
-	drain_energy(15.0)
+	var current_stamina_ratio = RADAR_STAMINA_COST_REDUCTION if is_radar_active else 1.0
+	drain_energy(15.0 * current_stamina_ratio)
+
+	if is_radar_active:
+		add_rage(5.0)
 
 	# Esperar duracion de la animacion
 	var kick_duration = _get_anim_duration("kick")
@@ -534,6 +682,9 @@ func _perform_kick():
 	await get_tree().create_timer(max(kick_duration * 0.7, 0.05)).timeout
 	is_kicking = false
 	is_attacking = false
+
+func perform_hit_stop(duration: float = 0.04) -> void:
+	HitStopHelper.freeze(get_tree(), duration)
 
 # Calcular duracion real de una animacion a partir de sus frames
 
@@ -547,3 +698,66 @@ func _get_anim_duration(anim_name: String) -> float:
 	for i in range(count):
 		total += frames.get_frame_duration(anim_name, i)
 	return total / speed
+
+
+# ==============================================================================
+# CAMBIO DE POSTURA / MODO COMBATE (STANCE SWITCH)
+# ==============================================================================
+
+func toggle_combat_stance() -> void:
+	if is_dead:
+		return
+
+	is_combat_stance = !is_combat_stance
+	is_radar_active = is_combat_stance
+	radar_pulse_timer = 0.0
+
+	_set_radar_overlay_active(is_combat_stance)
+
+	if is_combat_stance:
+		radar_activated.emit(0.0)
+		combat_stance_changed.emit(true)
+		_emit_radar_pulse()
+	else:
+		radar_deactivated.emit()
+		combat_stance_changed.emit(false)
+
+func try_activate_radar_sense() -> void:
+	toggle_combat_stance()
+
+func _process_radar_sense(delta: float) -> void:
+	if is_combat_stance:
+		radar_pulse_timer -= delta
+		if radar_pulse_timer <= 0.0:
+			radar_pulse_timer = RADAR_PULSE_INTERVAL
+			_emit_radar_pulse()
+
+func _emit_radar_pulse() -> void:
+	radar_pulse.emit(global_position, 850.0)
+	if heartbeat_sfx:
+		heartbeat_sfx.play()
+	if is_inside_tree():
+		get_tree().call_group("detectables", "on_radar_ping", global_position, 850.0)
+
+func _set_radar_overlay_active(active: bool) -> void:
+	if not radar_overlay_rect or not is_instance_valid(radar_overlay_rect):
+		if is_inside_tree():
+			radar_overlay_rect = get_tree().get_first_node_in_group("radar_overlay")
+	if not radar_overlay_rect or not radar_overlay_rect.material is ShaderMaterial:
+		return
+
+	var mat = radar_overlay_rect.material as ShaderMaterial
+	if radar_tween and radar_tween.is_valid():
+		radar_tween.kill()
+	radar_tween = create_tween()
+
+	if active:
+		mat.set_shader_parameter("is_active", true)
+		var current_intensity = mat.get_shader_parameter("intensity")
+		var start_val: float = float(current_intensity) if current_intensity != null else 0.0
+		radar_tween.tween_method(func(val: float): mat.set_shader_parameter("intensity", val), start_val, 1.0, 0.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	else:
+		var current_intensity = mat.get_shader_parameter("intensity")
+		var start_val: float = float(current_intensity) if current_intensity != null else 0.0
+		radar_tween.tween_method(func(val: float): mat.set_shader_parameter("intensity", val), start_val, 0.0, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		radar_tween.tween_callback(func(): mat.set_shader_parameter("is_active", false))
