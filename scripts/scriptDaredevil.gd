@@ -11,12 +11,31 @@ const RADAR_PULSE_INTERVAL: float = 1.25
 const RADAR_DAMAGE_MULTIPLIER: float = 1.30
 const RADAR_STAMINA_COST_REDUCTION: float = 0.75
 
+# Sistema de Energía y Estamina (Fase 1)
+const MAX_ENERGY: float = 100.0
+const RECOVERY_DELAY_EXPLORATION: float = 0.8
+const RECOVERY_DELAY_COMBAT: float = 1.2
+const REGEN_RATE_EXPLORATION: float = 32.0
+const REGEN_RATE_COMBAT: float = 24.0
+const SPRINT_ENERGY_COST_PER_SEC: float = 18.2
+const BLOCK_HOLD_ENERGY_COST_PER_SEC: float = 6.0
+const EXHAUSTION_RECOVERY_THRESHOLD: float = 30.0
+
+const BLOCK_SFX = preload("res://assets/Audio/blockedshield.mp3")
+
 @export var gravity := 1200
 @export var speed := 200
 
+# Estado de Estamina & Bloqueo
+var energy: float = 100.0
+var stamina_recovery_timer: float = 0.0
+var parry_window_timer: float = 0.0
+var is_exhausted: bool = false
+var is_guard_broken: bool = false
+var guard_break_timer: float = 0.0
+var block_sfx_player: AudioStreamPlayer = null
+
 # Estado
-var energy_regen_tick: int = 0
-var energy_drain_tick: int = 0
 var rage_decay_tick: int = 1
 var is_rage_full: bool = false
 var is_enraged: bool = false
@@ -51,36 +70,48 @@ var jump_buffer_timer: float = 0.0
 var was_in_air: bool = false
 
 # Referencias
-@onready var combo_timer := $ComboTimer
-@onready var red_suite = $RedSuite
-@onready var hitbox_component = $HitboxComponent
-@onready var hitbox = $HitboxComponent/HitShapeDD
-@onready var health_shape = $HealthComponent/HealthShapeDD
-@onready var health_comp = $HealthComponent
-@onready var collision = $CollisionDD
-@onready var energy_bar = $Camera2D2/HUD/EnergyBar
-@onready var rage_bar = $Camera2D2/HUD/RageBar
-@onready var heartbeat_sfx = $HeartbeatSFX
-@onready var punch2_sfx = $Punch2SFX
-@onready var punch3_sfx = $Punch3SFX
-@onready var kick_sfx = $KickSFX
-@onready var running_sfx = $RunningSFX
-@onready var breathing_fast_sfx = $BreathingFastSFX
+@onready var combo_timer = $ComboTimer if has_node("ComboTimer") else null
+@onready var red_suite = $RedSuite if has_node("RedSuite") else null
+@onready var hitbox_component = $HitboxComponent if has_node("HitboxComponent") else null
+@onready var hitbox = $HitboxComponent/HitShapeDD if has_node("HitboxComponent/HitShapeDD") else null
+@onready var health_shape = $HealthComponent/HealthShapeDD if has_node("HealthComponent/HealthShapeDD") else null
+@onready var health_comp = $HealthComponent if has_node("HealthComponent") else null
+@onready var collision = $CollisionDD if has_node("CollisionDD") else null
+@onready var energy_bar = $Camera2D2/HUD/EnergyBar if has_node("Camera2D2/HUD/EnergyBar") else null
+@onready var rage_bar = $Camera2D2/HUD/RageBar if has_node("Camera2D2/HUD/RageBar") else null
+@onready var heartbeat_sfx = $HeartbeatSFX if has_node("HeartbeatSFX") else null
+@onready var punch2_sfx = $Punch2SFX if has_node("Punch2SFX") else null
+@onready var punch3_sfx = $Punch3SFX if has_node("Punch3SFX") else null
+@onready var kick_sfx = $KickSFX if has_node("KickSFX") else null
+@onready var running_sfx = $RunningSFX if has_node("RunningSFX") else null
+@onready var breathing_fast_sfx = $BreathingFastSFX if has_node("BreathingFastSFX") else null
 @onready var anim = "idle"
 
 const GAME_OVER_SCENE_PATH := "res://scenes/gameover.tscn"
 
 func _ready() -> void:
 	add_to_group("player")
-	radar_overlay_rect = get_tree().get_first_node_in_group("radar_overlay")
-	hitbox.disabled = true
-	health_shape.disabled = false
-	rage_bar.value = 0
-	energy_bar.value = 100
-	health_comp.on_damage_took.connect(_on_damage_took)
-	health_comp.on_health_changed.connect(_on_health_changed)
-	heartbeat_sfx.finished.connect(_on_heartbeat_finished)
-	breathing_fast_sfx.finished.connect(_on_breathing_fast_finished)
+	if is_inside_tree():
+		radar_overlay_rect = get_tree().get_first_node_in_group("radar_overlay")
+	if hitbox:
+		hitbox.disabled = true
+	if health_shape:
+		health_shape.disabled = false
+	if rage_bar:
+		rage_bar.value = 0
+	energy = MAX_ENERGY
+	if energy_bar:
+		energy_bar.max_value = MAX_ENERGY
+		energy_bar.value = energy
+	if health_comp:
+		health_comp.on_damage_took.connect(_on_damage_took)
+		health_comp.on_health_changed.connect(_on_health_changed)
+	if heartbeat_sfx:
+		heartbeat_sfx.finished.connect(_on_heartbeat_finished)
+	if breathing_fast_sfx:
+		breathing_fast_sfx.finished.connect(_on_breathing_fast_finished)
+	if hitbox_component:
+		hitbox_component.on_hit_landed.connect(_on_hitbox_landed)
 
 func _on_dead() -> void:
 	is_dead = true
@@ -103,6 +134,26 @@ func _physics_process(delta):
 	var change_weapon := Input.is_action_just_pressed("Cambiar Arma")
 	var toggle_stance_pressed := Input.is_action_just_pressed("poder1")
 
+	# Actualizar temporizadores de estamina, parry y guard break
+	var can_regen_stamina: bool = (stamina_recovery_timer <= 0.0)
+	if stamina_recovery_timer > 0.0:
+		stamina_recovery_timer = max(stamina_recovery_timer - delta, 0.0)
+		can_regen_stamina = false
+	if parry_window_timer > 0.0:
+		parry_window_timer = max(parry_window_timer - delta, 0.0)
+	if is_guard_broken:
+		guard_break_timer -= delta
+		if guard_break_timer <= 0.0:
+			is_guard_broken = false
+
+	# Abrir ventana de parry al presionar bloqueo
+	if Input.is_action_just_pressed("blokear") and not is_guard_broken and energy > 0.0:
+		parry_window_timer = 0.15
+
+	# Drenaje continuo por mantener guardia
+	if is_blocking and not is_guard_broken and energy > 0.0 and not is_attacking and not is_kicking:
+		drain_energy(BLOCK_HOLD_ENERGY_COST_PER_SEC * delta)
+
 	# Actualizar temporizadores de Coyote Time y Jump Buffer (Game Feel)
 	if is_grounded:
 		if was_in_air:
@@ -123,28 +174,31 @@ func _physics_process(delta):
 	_process_radar_sense(delta)
 
 	# Alternar entre Modo Exploración y Modo Combate (Stance Switch)
-	if toggle_stance_pressed and not is_dead:
+	if toggle_stance_pressed and not is_dead and not is_guard_broken:
 		toggle_combat_stance()
 
-	# Solo se permite sprint en Modo Exploración
-	var can_sprint: bool = (not is_combat_stance) and is_running and energy_bar.value > 20
+	# Condición de sprint: solo en exploración, sin fatiga, con energía > 10.0 y sin guard break
+	var can_sprint: bool = (not is_combat_stance) and (not is_exhausted) and is_running and energy > 10.0 and not is_guard_broken
 
-	# Patada
-	if kick_pressed and not is_attacking and not is_kicking and not can_sprint and energy_bar.value > 20:
+	# Patada (cuesta 20.0 base, 15.0 con radar)
+	if kick_pressed and not is_attacking and not is_kicking and not can_sprint and energy >= 20.0 and not is_guard_broken:
 		_perform_kick()
 
-	# Combos (no permitir mientras corre)
-	if attack_pressed and not (can_sprint and direction != 0) and energy_bar.value > 0:
+	# Combos (no permitir mientras corre ni durante guard break)
+	if attack_pressed and not (can_sprint and direction != 0) and energy >= 5.0 and not is_guard_broken:
 		if can_combo and combo_step > 0:
 			_start_combo_attack(combo_step + 1)
 		elif !is_attacking:
 			_start_combo_attack(1)
 
-	# Regenerar energia (cada 3 ticks recupera +2)
-	energy_regen_tick += 1
-	if energy_regen_tick >= 3:
-		energy_regen_tick = 0
-		energy_bar.value = min(energy_bar.value + 2, 100)
+	# Regeneración pasiva continua con delta
+	var is_currently_sprinting: bool = can_sprint and direction != 0 and is_running and is_grounded
+	var is_actively_blocking: bool = is_blocking and not is_guard_broken and energy > 0.0
+	if can_regen_stamina and not is_currently_sprinting and not is_actively_blocking and not is_guard_broken:
+		var regen_rate = REGEN_RATE_COMBAT if is_combat_stance else REGEN_RATE_EXPLORATION
+		energy = min(energy + regen_rate * delta, MAX_ENERGY)
+		if energy_bar:
+			energy_bar.value = energy
 
 	if not is_grounded:
 		velocity.y += gravity * delta
@@ -153,33 +207,37 @@ func _physics_process(delta):
 		_process_death()
 		return
 
-	if change_weapon:
+	if change_weapon and not is_guard_broken:
 		current_weapon = current_weapon % 3 + 1
 		weapon_changed.emit(current_weapon)
 
 	# Saltos (con Coyote Time y Jump Buffering de 120ms)
-	if jump_pressed and is_on_wall() and energy_bar.value > 0 and can_sprint and not is_grounded:
-		# Wall Jump
+	if jump_pressed and is_on_wall() and (not is_exhausted) and energy >= 12.0 and can_sprint and not is_grounded and not is_guard_broken:
+		# Wall Jump (12.0 estamina)
 		velocity.x = 600 * -facing
 		velocity.y = -jump_speed
-		energy_bar.value = max(energy_bar.value - 5, 0)
+		drain_energy(12.0)
 		coyote_timer = 0.0
 		jump_buffer_timer = 0.0
 		if is_inside_tree() and get_parent():
 			DustPuff.spawn(get_parent(), global_position, Vector2(0, 54))
-	elif jump_buffer_timer > 0.0 and coyote_timer > 0.0 and energy_bar.value > 0:
-		# Salto ejecutado con buffer o coyote time
+	elif jump_buffer_timer > 0.0 and coyote_timer > 0.0 and energy >= 6.0 and not is_guard_broken:
+		# Salto de piso (6.0 estamina)
 		velocity.y = -jump_speed
-		energy_bar.value = max(energy_bar.value - 5, 0)
+		drain_energy(6.0)
 		coyote_timer = 0.0
 		jump_buffer_timer = 0.0
 		if is_inside_tree() and get_parent():
 			DustPuff.spawn(get_parent(), global_position, Vector2(0, 54))
 
 	# Movimiento y Tradeoff de Postura
-	if is_crouching and is_grounded:
+	if is_guard_broken:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
-		if running_sfx.playing:
+		if running_sfx and running_sfx.playing:
+			running_sfx.stop()
+	elif is_crouching and is_grounded:
+		velocity.x = move_toward(velocity.x, 0, friction * delta)
+		if running_sfx and running_sfx.playing:
 			running_sfx.stop()
 	elif direction != 0:
 		facing = sign(direction)
@@ -190,9 +248,11 @@ func _physics_process(delta):
 			# Modo Combate / Radar Stance: Postura de guardia/boxeo calculada. NO puede correr.
 			target_speed = speed * 0.8
 		else:
-			# Modo Exploración: Movilidad ágil completa con carrera rápida
-			run_multiplier = 2.0 if energy_bar.value > 40 else 1.25
-			if can_sprint:
+			# Modo Exploración
+			if is_exhausted:
+				target_speed = speed * 0.70
+			elif can_sprint:
+				run_multiplier = 2.0 if energy > 40.0 else 1.25
 				target_speed = speed * run_multiplier
 				is_sprinting = true
 			else:
@@ -201,28 +261,28 @@ func _physics_process(delta):
 		velocity.x = move_toward(velocity.x, direction * target_speed, acceleration * delta)
 
 		if is_sprinting:
-			# Drenar energia al correr
-			drain_energy(1.0)
+			# Drenar energia al correr continuo
+			drain_energy(SPRINT_ENERGY_COST_PER_SEC * delta)
 			# Sonido de correr (solo en el suelo)
-			if is_grounded and not running_sfx.playing:
+			if is_grounded and running_sfx and not running_sfx.playing:
 				running_sfx.play()
-			elif not is_grounded and running_sfx.playing:
+			elif not is_grounded and running_sfx and running_sfx.playing:
 				running_sfx.stop()
 		else:
-			if running_sfx.playing:
+			if running_sfx and running_sfx.playing:
 				running_sfx.stop()
 	else:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
-		if running_sfx.playing:
+		if running_sfx and running_sfx.playing:
 			running_sfx.stop()
 
-	# Respiracion agitada cuando la energia es baja
-	if energy_bar.value <= 35:
-		if not breathing_fast_sfx.playing:
-			breathing_fast_sfx.play()
-	else:
-		if breathing_fast_sfx.playing:
-			breathing_fast_sfx.stop()
+	# Manejo de fatiga y respiración agitada
+	if is_exhausted and energy >= EXHAUSTION_RECOVERY_THRESHOLD:
+		is_exhausted = false
+	if is_exhausted and breathing_fast_sfx and not breathing_fast_sfx.playing:
+		breathing_fast_sfx.play()
+	elif not is_exhausted and energy > 35.0 and breathing_fast_sfx and breathing_fast_sfx.playing:
+		breathing_fast_sfx.stop()
 
 	# Animaciones (no sobreescribir durante patada ni combos)
 	if not is_kicking and not is_attacking:
@@ -255,7 +315,7 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 
 	# Animaciones segun el estado
 	if not is_grounded:
-		anim = "jump_hit" if attacking and energy_bar.value > 0 else "jump"
+		anim = "jump_hit" if attacking and energy > 0 else "jump"
 		sprite_scale = Vector2(facing * 0.975, 0.975)
 	elif is_crouching:
 		anim = "crouch_hit" if attacking else "crouch"
@@ -263,7 +323,7 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 		sprite_pos = Vector2(facing * 50, 150) if attacking else Vector2(0, 150)
 		set_health_shape(Vector2(0, 250), Vector2(15, 25))
 	elif direction == 0:
-		if attacking and energy_bar.value > 0:
+		if attacking and energy > 0:
 			match current_weapon:
 				1:
 					anim = "hit"
@@ -271,13 +331,12 @@ func _update_animation(is_blocking, is_grounded: bool, direction: float, is_runn
 				2, 3:
 					anim = "hit_baston"
 					sprite_scale = Vector2(facing * 2, 2)
-		elif is_blocking and energy_bar.value > 0:
+		elif is_blocking and energy > 0.0 and not is_guard_broken:
 			anim = "blocking"
-			drain_energy(1.5)
 			sprite_scale = Vector2(facing * 2.3, 2)
-			health_shape.disabled = true
+			health_shape.disabled = false
 	else:
-		anim = "run" if is_running and energy_bar.value > 20 else "walk"
+		anim = "run" if is_running and energy > 10.0 and not is_exhausted else "walk"
 		sprite_scale = Vector2(facing * (2.2 if is_running else 1.6), 2.2 if is_running else 1.5)
 		
 
@@ -322,7 +381,7 @@ func _update_damage(anim_name, weapon_id):
 		hitbox_component.attacker = self
 		hitbox_component.hit_stop_duration = 0.08 if (anim_name == "hit4" or anim_name == "kick") else 0.04
 		hitbox_component.trauma_amount = 0.45 if (anim_name == "hit4" or anim_name == "kick") else 0.15
-		if energy_bar.value > 0:
+		if energy > 0:
 			var offset = hit_data["offset"]
 			var hit_rotation = hit_data["rotation"]
 			var hit_scale = hit_data["scale"]
@@ -331,11 +390,96 @@ func _update_damage(anim_name, weapon_id):
 
 # Utilidades
 
-func drain_energy(amount: float):
-	energy_bar.value = max(energy_bar.value - amount, 0)
+func drain_energy(amount: float) -> void:
+	energy = max(energy - amount, 0.0)
+	if energy_bar:
+		energy_bar.value = energy
+	stamina_recovery_timer = RECOVERY_DELAY_COMBAT if is_combat_stance else RECOVERY_DELAY_EXPLORATION
+	if energy <= 0.0:
+		is_exhausted = true
+
+func refund_energy(amount: float) -> void:
+	energy = min(energy + amount, MAX_ENERGY)
+	if energy_bar:
+		energy_bar.value = energy
+	if is_exhausted and energy >= EXHAUSTION_RECOVERY_THRESHOLD:
+		is_exhausted = false
+
+func _play_block_sfx(pitch: float = 1.0) -> void:
+	if not block_sfx_player:
+		block_sfx_player = AudioStreamPlayer.new()
+		block_sfx_player.name = "BlockSFXPlayer"
+		block_sfx_player.stream = BLOCK_SFX
+		block_sfx_player.volume_db = -4.0
+		add_child(block_sfx_player)
+	block_sfx_player.pitch_scale = pitch
+	block_sfx_player.play()
+
+func trigger_guard_break() -> void:
+	is_guard_broken = true
+	guard_break_timer = 0.8
+	is_exhausted = true
+	is_attacking = false
+	is_kicking = false
+	can_combo = false
+	velocity.x = -facing * 180.0
+	var tree = get_tree()
+	if tree:
+		HitStopHelper.freeze(tree, 0.10)
+	CameraDaredevil.shake(0.35)
+	_play_block_sfx(0.60)
+	if punch3_sfx:
+		punch3_sfx.play()
+	var hud = get_node_or_null("Camera2D2/HUD")
+	if hud and hud.has_method("trigger_insufficient_energy_feedback"):
+		hud.trigger_insufficient_energy_feedback()
+
+func intercept_damage(incoming_damage: int, hit_data: Dictionary = {}) -> int:
+	var is_blocking: bool = Input.is_action_pressed("blokear")
+	if is_blocking and not is_guard_broken and energy > 0.0 and not is_dead:
+		if parry_window_timer > 0.0:
+			# Parry Perfecto: Frame-tight (primeros 0.15s)
+			refund_energy(25.0)
+			add_rage(10.0)
+			_play_block_sfx(1.35)
+			var tree = get_tree()
+			if tree:
+				HitStopHelper.freeze(tree, 0.08)
+			CameraDaredevil.shake(0.20)
+			var attacker_node = hit_data.get("attacker")
+			if attacker_node and is_instance_valid(attacker_node):
+				if attacker_node.has_method("apply_hit_impact"):
+					attacker_node.apply_hit_impact({"attack_type": "hit3", "combo_step": 2})
+				if attacker_node.get("is_stunned") != null:
+					attacker_node.is_stunned = true
+					attacker_node.stun_timer = 0.85
+			return 0
+		else:
+			# Bloqueo Regular
+			var stamina_cost: float = max(float(incoming_damage) * 0.8, 12.0)
+			if energy >= stamina_cost:
+				drain_energy(stamina_cost)
+				_play_block_sfx(1.0)
+				var tree = get_tree()
+				if tree:
+					HitStopHelper.freeze(tree, 0.03)
+				CameraDaredevil.shake(0.08)
+				return 0
+			else:
+				# Guard Break: estamina insuficiente para absorber el impacto
+				drain_energy(energy)
+				trigger_guard_break()
+				return int(float(incoming_damage) * 0.25)
+	return incoming_damage
+
+func _on_hitbox_landed(target_area: HealthComponent, hit_data: Dictionary) -> void:
+	if target_area != health_comp:
+		var attack_type = str(hit_data.get("attack_type", ""))
+		if attack_type == "hit4" or hit_data.get("combo_step") == 4:
+			refund_energy(15.0)
 
 func check_rage_full() -> bool:
-	return rage_bar.value == 100
+	return rage_bar != null and rage_bar.value == 100
 
 func process_rage(rage_full: bool) -> void:
 	if rage_full or is_enraged:
@@ -343,18 +487,20 @@ func process_rage(rage_full: bool) -> void:
 		if rage_decay_tick > 10:
 			rage_decay_tick = 0
 		if rage_decay_tick == 10:
-			rage_bar.value -= 1
-			rage_bar.value = max(rage_bar.value, 0)
+			if rage_bar:
+				rage_bar.value -= 1
+				rage_bar.value = max(rage_bar.value, 0)
 
 		is_enraged = true
 		hitbox_component.damage += 20
 
-		if rage_bar.value == 0:
+		if rage_bar and rage_bar.value == 0:
 			is_enraged = false
 			hitbox_component.damage -= 20
 
 func add_rage(amount):
-	rage_bar.value = min(rage_bar.value + amount, 100)
+	if rage_bar:
+		rage_bar.value = min(rage_bar.value + amount, 100)
 
 func _on_damage_took(damage_amount) -> void:
 	add_rage(damage_amount)
@@ -373,7 +519,7 @@ func _on_heartbeat_finished():
 		heartbeat_sfx.play()
 
 func _on_breathing_fast_finished():
-	if energy_bar.value <= 15:
+	if is_exhausted or energy <= 15.0:
 		breathing_fast_sfx.play()
 
 func set_health_shape(pos: Vector2, scale: Vector2) -> void:
@@ -424,7 +570,8 @@ func _start_combo_attack(step):
 func _start_fist_combo(step):
 	is_attacking = true
 	can_combo = false
-	combo_timer.stop()  # Cancelar timer de combo anterior para que no resetee combo_step
+	if combo_timer:
+		combo_timer.stop()  # Cancelar timer de combo anterior para que no resetee combo_step
 	combo_step = step
 
 	# Configuracion por paso (cambiar sprite_scale para ajustar cada golpe)
@@ -447,7 +594,8 @@ func _start_fist_combo(step):
 			hit_type = "hit1"
 			hit_stop_dur = 0.04
 			hit_trauma = 0.12
-			punch2_sfx.play()
+			if punch2_sfx:
+				punch2_sfx.play()
 			print("hit1")
 		2:
 			hit_anim = "hit2"
@@ -456,7 +604,8 @@ func _start_fist_combo(step):
 			hit_type = "hit2"
 			hit_stop_dur = 0.04
 			hit_trauma = 0.15
-			punch3_sfx.play()
+			if punch3_sfx:
+				punch3_sfx.play()
 			print("hit2")
 		3:
 			hit_anim = "hit3"
@@ -465,7 +614,8 @@ func _start_fist_combo(step):
 			hit_type = "hit3"
 			hit_stop_dur = 0.04
 			hit_trauma = 0.22
-			punch2_sfx.play()
+			if punch2_sfx:
+				punch2_sfx.play()
 			print("hit3")
 		4:
 			hit_anim = "hit4"
@@ -477,11 +627,13 @@ func _start_fist_combo(step):
 			hit_offset = Vector2(300, -200)
 			hit_scale = Vector2(7, 11)
 			energy_cost = 8.0
-			punch3_sfx.play()
+			if punch3_sfx:
+				punch3_sfx.play()
 			print("hit4")
 		_:
 			combo_step = 1
-			punch2_sfx.play()
+			if punch2_sfx:
+				punch2_sfx.play()
 
 	anim = hit_anim
 	var current_stamina_ratio = RADAR_STAMINA_COST_REDUCTION if is_radar_active else 1.0
@@ -525,14 +677,16 @@ func _start_fist_combo(step):
 		combo_step = 0
 	else:
 		can_combo = true
-		combo_timer.start(0.5)
+		if combo_timer:
+			combo_timer.start(0.5)
 
 # Combo baston / Boo (arma 2), 3 golpes
 
 func _start_boo_combo(step):
 	is_attacking = true
 	can_combo = false
-	combo_timer.stop()  # Cancelar timer de combo anterior para que no resetee combo_step
+	if combo_timer:
+		combo_timer.stop()  # Cancelar timer de combo anterior para que no resetee combo_step
 
 	# El boo solo tiene 3 golpes, si llega a mas reinicia
 	if step > 3:
@@ -546,7 +700,7 @@ func _start_boo_combo(step):
 	var hit_offset := Vector2(250, -100)
 	var hit_rotation := 0.4 * PI
 	var hit_scale := Vector2(6, 25)
-	var energy_cost := 10.0
+	var energy_cost := 8.0
 	var expose_after := false  # Solo el golpe 3 deja expuesto
 	var hit_type := "boo1"
 	var hit_stop_dur := 0.04
@@ -560,7 +714,7 @@ func _start_boo_combo(step):
 			hit_type = "boo1"
 			hit_stop_dur = 0.04
 			hit_trauma = 0.15
-			energy_cost = 10.0
+			energy_cost = 8.0
 			punch2_sfx.play()  # Placeholder, cambiar por sfx del boo
 			print("boo_hit1")
 		2:
@@ -570,7 +724,7 @@ func _start_boo_combo(step):
 			hit_type = "boo2"
 			hit_stop_dur = 0.04
 			hit_trauma = 0.18
-			energy_cost = 10.0
+			energy_cost = 8.0
 			punch3_sfx.play()  # Placeholder, cambiar por sfx del boo
 			print("boo_hit2")
 		3:
@@ -582,7 +736,7 @@ func _start_boo_combo(step):
 			hit_trauma = 0.45
 			hit_offset = Vector2(300, -100)
 			hit_scale = Vector2(8, 28)
-			energy_cost = 20.0
+			energy_cost = 15.0
 			expose_after = true  # Queda vulnerable 0.2s despues del golpe
 			punch3_sfx.play()  # Placeholder, cambiar por sfx del golpe fuerte
 			print("boo_hit3")
@@ -637,7 +791,8 @@ func _start_boo_combo(step):
 		combo_step = 0
 	else:
 		can_combo = true
-		combo_timer.start(0.5)
+		if combo_timer:
+			combo_timer.start(0.5)
 
 func _on_combo_timer_timeout() -> void:
 	can_combo = false
@@ -648,7 +803,8 @@ func _on_combo_timer_timeout() -> void:
 func _perform_kick():
 	is_kicking = true
 	is_attacking = true
-	kick_sfx.play()
+	if kick_sfx:
+		kick_sfx.play()
 	anim = "kick"
 	red_suite.play("kick")
 	red_suite.scale = Vector2(facing * 1.0, 1.0)
@@ -670,7 +826,7 @@ func _perform_kick():
 
 	# Drenar energia de la patada
 	var current_stamina_ratio = RADAR_STAMINA_COST_REDUCTION if is_radar_active else 1.0
-	drain_energy(15.0 * current_stamina_ratio)
+	drain_energy(20.0 * current_stamina_ratio)
 
 	if is_radar_active:
 		add_rage(5.0)

@@ -18,6 +18,11 @@ func take_heal(value: int) -> void:
 
 func take_damage(damage: int, hit_data: Dictionary = {}) -> void:
 	last_hit_data = hit_data
+	var target = owner if (owner and owner.has_method("intercept_damage")) else (get_parent() if (get_parent() and get_parent().has_method("intercept_damage")) else null)
+	if target:
+		damage = target.intercept_damage(damage, hit_data)
+		if damage <= 0:
+			return # Mitigado por parry o bloqueo
 	var value = abs(damage)
 	_set_health(-value)
 	if not hit_data.is_empty():

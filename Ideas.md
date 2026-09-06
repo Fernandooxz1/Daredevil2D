@@ -144,5 +144,121 @@ Para que el combate y el movimiento se sientan viscerales, pesados y cinematogr�
 2. [x] **Shader de Resaltado para Enemigos**: Outline y silueta brillante en `Ladron` para distinción inmediata.
 3. [x] **Conversión a Modo Postura (Toggle)**: Convertir la tecla Q en alternancia entre Modo Exploración (rápido) y Modo Combate (daño extra, siluetas, sin sprint).
 4. [x] **Punto C (Game Feel & Juice)**: Screen shake por trauma, hit-stop, knockback con juggle, hit flash, coyote time y VFX 2D.
-5. [ ] **Sistema de Cajas de Fusibles / Farolas Rompibles**: Objetos interactuables en el escenario que apagan luces puntuales y activan el estado ciego en enemigos.
-6. [ ] **Tipos de enemigos con linternas**: Conos de luz 2D que restauran la visión enemiga.
+5. [ ] **Rediseño de Energía / Estamina**: Delay de regeneración, penalización por fatiga y recuperación activa por parry.
+6. [ ] **Sistema de Cajas de Fusibles / Farolas Rompibles**: Objetos interactuables en el escenario que apagan luces puntuales y activan el estado ciego en enemigos.
+7. [ ] **Desarrollo de Nivel Vertical**: Plataformas en azoteas, escaleras de incendio y cables tensores con coleccionables.
+8. [ ] **Tipos de enemigos con linternas**: Conos de luz 2D que restauran la visión enemiga.
+
+---
+
+## 9. Desarrollo de Nivel, Plataformas y Recompensas Temáticas
+
+### A. Plataformas Urbanas en Hell's Kitchen (Verticalidad)
+El nivel actual es horizontal y de prueba. La atmósfera de Daredevil cobra vida al explotar la **verticalidad de Nueva York**:
+* **Escaleras de Incendio de Hierro (Fire Escapes)**: Estructuras metálicas exteriores en los edificios que permiten ascender a cornisas y azoteas. Sonido metálico característico al pisarlas.
+* **Cables Tensores y Tendido Eléctrico**: Cables entre edificios por los que Matt puede correr o equilibrarse para cruzar callejones sin tocar el suelo.
+* **Torres de Agua (Water Towers) y Chimeneas**: Puntos de ventaja elevada ideales para observar rutas de patrulla enemigas o preparar emboscadas aéreas.
+* **Andamios de Construcción y Vigas**: Plataformas semidestruidas donde el wall-jump es fundamental para no caer a callejones llenos de gas o enemigos armados.
+
+### B. Recompensas y Coleccionables Temáticos (Lore de Daredevil)
+En lugar de monedas genéricas, las recompensas deben reforzar la narrativa de abogado de día y justiciero de noche:
+
+| Coleccionable | Tipo de Recompensa | Impacto en el Juego |
+| :--- | :--- | :--- |
+| **Evidencia Legal (Carpetas de Nelson & Murdock)** | Coleccionable Principal de Misión | Documentos incriminatorios de sobornos y lavado de dinero. Conseguir todas las carpetas de un nivel desbloquea el "Veredicto Judicial" (condena al capo del sector y otorga mejoras pasivas). |
+| **Cintas de Casete / Grabaciones de Audio** | Audio-Logs Acústicos | Conversaciones clandestinas de la mafia. Matt detecta su origen en el radar mediante pulsos de sonido rítmicos. Al recogerlas, desbloquean diálogos y lore. |
+| **Fichas de Metro Vintage (MTA Subway Tokens)** | Moneda de Intercambio Callejero | Antiguas fichas de bronce escondidas en respiraderos y callejones. Se utilizan para sobornar a informantes clandestinos (como Turk Barrett) a cambio de códigos de puertas o armas. |
+| **Rosarios / Medallas del Padre Lantom** | Mejoras de Atributo | Reliquias de fe situadas en las alturas de campanarios y cornisas elevadas. Cada 3 rosarios aumentan la capacidad máxima de la barra de Energía o de Furia. |
+| **Piezas de Bastón (Billy Club Parts)** | Mejoras de Equipo | Empuñaduras de titanio, cable de fibra retráctil o pesos de tungsteno que mejoran el alcance, daño o stagger de las armas 2 y 3. |
+
+---
+
+## 10. Rediseño del Sistema de Energía / Estamina
+
+### Diagnóstico del Problema Actual
+Actualmente, la barra de energía se recarga cada 3 ticks sumando +2 sin demora (`energy_regen_tick >= 3`). Esto produce una **estamina virtualmente infinita**: el jugador puede spamear sprints, combos y saltos sin gestionar recursos ni temer el agotamiento, anulando la tensión táctica.
+
+### Propuesta de Rediseño Integral (Gestión Táctica y Tensión)
+
+```
+Acción (Sprint / Salto / Patada)
+          │
+          ▼
+   Gasto de Estamina
+          │
+          ▼
+┌──────────────────────────────────────────────────┐
+│ STAMINA RECOVERY DELAY (0.8s - 1.2s de pausa)    │
+│ La barra NO recarga mientras se siga accionando  │
+└─────────────────────────┬────────────────────────┘
+                          │ (Tras el delay sin gastar)
+                          ▼
+            Regeneración Suave Gradual (+30/seg)
+```
+
+1. **Delay de Recuperación (Recovery Delay)**:
+   - Al realizar una acción que consuma energía, la regeneración se pausa por completo durante **0.8 segundos** (en Modo Exploración) o **1.2 segundos** (en combate). Solo cuando Matt deja de gastar energía comienza la recarga gradual.
+2. **Costes Calibrados por Acción**:
+   - **Sprint sostenido**: 18 puntos por segundo (agotable en ~5.5s de carrera continua).
+   - **Wall Jump**: 12 puntos.
+   - **Patada Contundente**: 20 puntos.
+   - **Bloqueo Sostenido**: 8 puntos/segundo + drenaje por impacto recibido.
+3. **Mecánica de Guard Break (Rotura de Guardia)**:
+   - Si Daredevil bloquea un golpe sin suficiente estamina, sufre un **Guard Break**: la guardia se rompe con un chasquido metálico, sufriendo un stagger de 1 segundo de vulnerabilidad total.
+4. **Estado de Fatiga (Exhaustion)**:
+   - Si la barra llega a **0**, Matt entra en estado exhausto:
+     - Imposible correr (sprint) ni realizar wall jumps.
+     - Velocidad al caminar reducida en un 35%.
+     - Audio activo de respiración jadeante (`BreathingFastSFX`) y latido sordo de advertencia.
+     - No puede volver a correr hasta que la barra se recupere al menos al **30%**.
+5. **Recuperación Activa por Habilidad (Skill-based Refund)**:
+   - **Parry Perfecto**: Bloquear en los primeros 120ms del ataque enemigo no consume energía y devuelve **+25 de estamina** instantáneamente más un bono de furia.
+   - **Remate de Combo (Uppercut Golpe 4)**: Conectar el golpe 4 completo devuelve **+15 de estamina**, premiando el flujo ofensivo.
+
+---
+
+## 11. Mecánicas Expandidas Propuestas para Discutir
+
+* **Gancho de Bastón (Billy Club Grapple & Swing)**:
+  - Lanzar el bastón con cable para engancharse a gárgolas, farolas o vigas altas, permitiendo balanceo estilo péndulo y takedowns aéreos.
+* **Takedowns en la Oscuridad (Silent Stealth Finisher)**:
+  - Si un enemigo está en estado ciego/pánico tras un apagón y Matt se aproxima sigilosamente por la espalda, ejecutar un noqueo silencioso instantáneo.
+* **Distracción Acústica por Rebote**:
+  - Arrojar el bastón contra una persiana metálica, barril o farol lejano para generar un foco acústico que desvíe a los patrulleros.
+* **Detección de Frecuencia Cardíaca (Pulsómetro)**:
+  - El latido del corazón de los ladrones acelera cuando sospechan o tienen miedo, indicando su nivel de alerta a través de la pared antes de abrir una puerta.
+
+---
+
+## 12. Estrategia de Arte y Sprites: Cómo Resolver la Falta de Dibujante
+
+Uno de los mayores retos en el desarrollo indie es la creación de spritesheets coherentes y fluidos. Las IAs de imagen convencionales suelen fallar generando hojas de sprites consistentes (cambian la perspectiva, deforman el estilo y rompen la paleta). Para solucionar este obstáculo y ejecutar todas las ideas al 100%, aplicamos 4 técnicas estándar de la industria indie (como *Dead Cells*, *Celeste* o *Broforce*):
+
+### 1. Mecánicas 100% por Código, Shaders y Audio (Cero Sprites Nuevos)
+La mayoría de las mejores mecánicas no requieren nuevo arte dibujado, sino código y "juice":
+* **Rediseño de Estamina & Fatiga**: Ya disponemos de las animaciones completas de caminar, correr, guardia, agacharse y el audio `BreathingFastSFX`. Todo el sistema se resuelve en `scriptDaredevil.gd` y `hud.gd`.
+* **Rotura de Guardia (Guard Break)**: Reutiliza el frame de impacto/stagger existente del personaje, aplicando una vibración lateral rápida (`shake`) y un tintineo metálico (`blockedshield.mp3`).
+* **Parry Perfecto**: No requiere animación nueva; se produce al conectar la guardia existente en el frame exacto, disparando el hit-stop, un destello blanco puro en el shader y un impacto seco.
+* **Gancho y Cable del Bastón (Grapple & Swing)**: Se implementa con un nodo **`Line2D` procedural** de 2px de grosor (el cable) que une la mano de Matt con el punto de anclaje, rotando matemáticamente el sprite del bastón existente como gancho.
+* **Apagones y Farolas**: Simplemente alternar `light.enabled = false`, hacer un sonido de cristal roto y spawnear chispas de `hit_sparks.tscn`.
+
+### 2. Generación Programática de Pixel Art (Scripts en Python / PIL)
+Para objetos pequeños y coleccionables (16x16 o 24x24 píxeles), las IAs generan manchas borrosas. En su lugar, podemos generar el pixel art exacto mediante scripts de Python (`Pillow`) dibujando cuadrículas de píxeles matemáticas con la paleta cómic noir estricta:
+* **Carpeta de Evidencia**: Rectángulo manila/blanco de 16x12 con solapa roja y líneas grises de texto.
+* **Cinta de Casete**: Carcasa gris oscuro de 18x12 con dos carretes blancos de 3x3 y cinta negra.
+* **Ficha de Metro MTA**: Círculo de 14x14 en bronce/dorado oscuro con la letra "Y" troquelada en el centro.
+* **Rosario / Medalla**: Cadena de cuentas de 1px con cruz blanca/plateada de 7x5.
+* *Ventaja*: Son archivos PNG ultra-nítidos, con transparencia alfa perfecta y escala 1:1 sin deformaciones.
+
+### 3. Animación Procedural y "Juice" en Godot (Motion Tweening)
+Un coleccionable no necesita 30 frames de animación manual. Un único sprite estático de 16x16 adquiere vida profesional con técnicas de motor:
+* **Flotación Senoidal**: Un script de 5 líneas que mueve `position.y += sin(time * 3.0) * 0.4` para que el objeto levite suavemente en el aire.
+* **Sombra Proyectada**: Un elipse semitransparente oscuro en el suelo que escala de forma inversa a la altura del objeto.
+* **Shader de Resplandor Acústico**: El mismo shader de contorno o un destello de brillo que pulsa al compás del latido de Matt en el modo radar.
+
+### 4. Fuentes de Assets Libres y Kitbashing Modular
+Para elementos de escenario (escaleras de incendio, andamios, cables):
+* **OpenGameArt.org y Kenney.nl**: Cientos de paquetes de plataformas industriales y urbanas bajo licencia libre (CC0 / Dominio Público).
+* **Kitbashing / Recorte de Spritesheets**: En la carpeta `assets/sprites/` ya existen texturas urbanas, fondos y edificios de donde se pueden recortar repisas, barandas y tuberías para componer nuevas plataformas sin dibujar desde cero.
+
+

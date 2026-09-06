@@ -54,21 +54,23 @@ static func shake(amount: float) -> void:
 	if current_camera and is_instance_valid(current_camera):
 		current_camera.add_trauma(amount)
 
-func set_camera_limits():
-	if ciudad_node_path.is_empty():
+@export var enable_limits: bool = false
+@export var custom_limit_left: int = -100
+@export var custom_limit_right: int = 4000
+@export var custom_limit_top: int = -600
+@export var custom_limit_bottom: int = 750
+
+func set_camera_limits() -> void:
+	if not enable_limits:
+		# Sin límites restrictivos: la cámara sigue libremente al jugador por todo el nivel
+		limit_left = -10000000
+		limit_right = 10000000
+		limit_top = -10000000
+		limit_bottom = 10000000
 		return
-	if not has_node(ciudad_node_path):
-		return
-	var ciudad = get_node(ciudad_node_path)
 
-	if ciudad and ciudad is Sprite2D:
-		var texture_size = ciudad.texture.get_size()
-		var ciudad_global_pos = ciudad.global_position
-
-		# Calculamos los bordes del fondo
-		var half_screen = get_viewport_rect().size * 0.5
-
-		limit_left = int(ciudad_global_pos.x - texture_size.x / 2 + half_screen.x)
-		limit_right = int(ciudad_global_pos.x + texture_size.x / 2 - half_screen.x)
-		limit_top = int(ciudad_global_pos.y - texture_size.y / 2 + half_screen.y)
-		limit_bottom = int(ciudad_global_pos.y + texture_size.y / 2 - half_screen.y)
+	# Si se activan límites manuales de nivel
+	limit_left = custom_limit_left
+	limit_right = custom_limit_right
+	limit_top = custom_limit_top
+	limit_bottom = custom_limit_bottom

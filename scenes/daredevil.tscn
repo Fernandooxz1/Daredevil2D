@@ -25,6 +25,7 @@
 [ext_resource type="AudioStream" uid="uid://cne5v6jm1gtxv" path="res://assets/Audio/running.mp3" id="18_running"]
 [ext_resource type="AudioStream" uid="uid://2spc8jt8xaly" path="res://assets/Audio/breathing fast.mp3" id="19_breathing"]
 [ext_resource type="Texture2D" path="res://assets/lights/radial_light.tres" id="20_light"]
+[ext_resource type="Script" uid="uid://opajw2qqlwhh" path="res://scripts/scriptDaredevil.gd" id="21_ddscript"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g5qpc"]
 atlas = ExtResource("9_olym4")
@@ -371,6 +372,7 @@ height = 24.522034
 position = Vector2(167, 491)
 scale = Vector2(0.101592, 0.118214)
 collision_layer = 2
+script = ExtResource("21_ddscript")
 
 [node name="RedSuite" type="AnimatedSprite2D" parent="." unique_id=1610126085]
 texture_filter = 1
@@ -446,3 +448,8 @@ color = Color(0.77, 0.23, 0.34, 1)
 energy = 0.65
 shadow_enabled = false
 texture = ExtResource("20_light")
+
+[node name="ComboTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="ComboTimer" to="." method="_on_combo_timer_timeout"]
